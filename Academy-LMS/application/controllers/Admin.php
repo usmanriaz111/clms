@@ -955,6 +955,48 @@ class Admin extends CI_Controller {
     redirect(site_url('admin/courses'), 'refresh');
   }
 
+  // Manage Institutes
+  public function institutes($param1 = '', $param2 = '') {
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    if ($param1 == 'add') {
+      $this->crud_model->add_institute();
+      $this->session->set_flashdata('flash_message', get_phrase('institute_has_been_added_successfully'));
+      redirect('admin/institutes');
+    }
+    elseif ($param1 == 'edit') {
+      $this->crud_model->edit_institute($param2);
+      redirect('admin/institutes');
+    }
+    elseif ($param1 == 'delete') {
+      $this->crud_model->delete_institute($param2);
+      redirect(site_url('admin/institutes'), 'refresh');
+    }
+    elseif ($param1 == 'edit_institute_form') {
+      $page_data['page_name'] = 'institute_edit';
+      $page_data['institute_id'] = $param2;
+      $page_data['page_title'] = get_phrase('institute_edit');
+      $this->load->view('backend/index', $page_data);
+    }
+    $page_data['page_name'] = 'institutes';
+    $page_data['page_title'] = 'institutes';
+    $page_data['institutes'] = $this->crud_model->get_institutes();
+    $this->load->view('backend/index', $page_data);
+    
+  }
+
+  public function institute_form($param1 = "", $param2 = "") {
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    if ($param1 == "add_institute") {
+      $page_data['page_name'] = 'institute_add';
+      $page_data['page_title'] = get_phrase('add_institute');
+    }
+    $this->load->view('backend/index', $page_data);
+  }
+
   // Manage Quizes
   public function quizes($course_id = "", $action = "", $quiz_id = "") {
     if ($this->session->userdata('admin_login') != true) {

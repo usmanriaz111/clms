@@ -16,6 +16,76 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+
+    // Adding institute functionalities
+    public function add_institute(){
+        $validity = $this->check_duplication('on_create', $this->input->post('name'));
+        // echo $validity;
+        // die;
+        if ($validity == false) {
+            $this->session->set_flashdata('error_message', get_phrase('name_duplication'));
+        } else{
+        $data_institute['name'] = html_escape($this->input->post('name'));
+        $data_institute['address'] = html_escape($this->input->post('address'));
+        $data_institute['description'] = html_escape($this->input->post('description'));
+        $data_institute['phone_number'] = html_escape($this->input->post('phone_number'));
+        $this->db->insert('institutes', $data_institute);
+        }
+    }
+
+    //Get Iinstitutes
+
+    public function get_institutes()
+    {
+        $query = $this->db->get('institutes');
+        return $query;
+    }
+
+    public function edit_institute($institute_id = "") {
+        $validity = $this->check_duplication('on_update', $this->input->post('name'), $institute_id);
+        if ($validity) {
+            if (isset($_POST['name'])) {
+                $data_institute['name'] = html_escape($this->input->post('name'));
+            }
+            $data_institute['address'] = html_escape($this->input->post('address'));
+            $data_institute['description'] = html_escape($this->input->post('description'));
+            $data_institute['phone_number'] = html_escape($this->input->post('phone_number'));
+            $this->db->where('id', $institute_id);
+            $this->db->update('institutes', $data_institute);
+            $this->session->set_flashdata('flash_message', get_phrase('institute_update_successfully'));
+
+        }else{
+            $this->session->set_flashdata('error_message', get_phrase('name_duplication'));
+        }
+    }
+
+    public function delete_institute($institute_id = "") {
+        $this->db->where('id', $institute_id);
+        $this->db->delete('institutes');
+        $this->session->set_flashdata('flash_message', get_phrase('institute_deleted_successfully'));
+    }
+
+    public function check_duplication($action = "", $name = "", $institute_id = "") {
+        $duplicate_name_check = $this->db->get_where('institutes', array('name' => $name));
+        if ($action == 'on_create') {
+            if ($duplicate_name_check->num_rows() > 0) {
+                return false;
+            }else {
+                return true;
+            }
+        }elseif ($action == 'on_update') {
+            if ($duplicate_name_check->num_rows() > 0) {
+                if ($duplicate_name_check->row()->id == $institute_id) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }else {
+                return true;
+            }
+        }
+    }
+
     public function get_categories($param1 = "")
     {
         if ($param1 != "") {

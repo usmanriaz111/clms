@@ -48,6 +48,12 @@
 					<span><?php echo get_phrase('courses'); ?></span>
 				</a>
 			</li>
+			<li class="side-nav-item">
+				<a href="<?php echo site_url('admin/institutes'); ?>" class="side-nav-link <?php if ($page_name == 'institutes' || $page_name == 'institute_add' || $page_name == 'institute_edit')echo 'active';?>">
+					<i class="dripicons-archive"></i>
+					<span><?php echo get_phrase('institutes'); ?></span>
+				</a>
+			</li>
 
 			<li class="side-nav-item">
 				<a href="<?php echo site_url('admin/instructors'); ?>" class="side-nav-link <?php if ($page_name == 'instructors' || $page_name == 'instructor_add' || $page_name == 'instructor_edit')echo 'active';?>">
