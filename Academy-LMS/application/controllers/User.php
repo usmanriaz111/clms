@@ -30,9 +30,15 @@ class User extends CI_Controller {
     }
 
     public function index() {
-        if ($this->session->userdata('user_login') == true) {
+         $role_id = $this->session->userdata('role_id');
+        if ($this->session->userdata('user_login') == true && $role_id == 4) {
             $this->courses();
-        }else {
+        }elseif($this->session->userdata('user_login') == true && $role_id == 2){
+            redirect(site_url('home'), 'refresh');
+        }elseif($this->session->userdata('user_login') == true && $role_id == 3){
+            $this->courses();
+        }
+        else {
             redirect(site_url('login'), 'refresh');
         }
     }

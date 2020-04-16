@@ -45,6 +45,12 @@ class Login extends CI_Controller {
             }else if($row->role_id == 2){
                 $this->session->set_userdata('user_login', '1');
                 redirect(site_url('home'), 'refresh');
+            }else if($row->role_id == 3){
+                $this->session->set_userdata('user_login', '1');
+                redirect(site_url('admin/dashboard'), 'refresh');
+            }else if($row->role_id == 4){
+                $this->session->set_userdata('user_login', '1');
+                redirect(site_url('home'), 'refresh');
             }
         }else {
             $this->session->set_flashdata('error_message',get_phrase('invalid_login_credentials'));
