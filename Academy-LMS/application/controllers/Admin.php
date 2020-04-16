@@ -116,6 +116,10 @@ class Admin extends CI_Controller {
     if ($this->session->userdata('admin_login') != true) {
       redirect(site_url('login'), 'refresh');
     }
+    elseif ($param1 == "add") {
+      $this->user_model->add_user(4);
+      redirect(site_url('admin/instructors'), 'refresh');
+    }
     elseif ($param1 == "edit") {
       $this->user_model->edit_user($param2);
       redirect(site_url('admin/instructors'), 'refresh');
@@ -135,6 +139,11 @@ class Admin extends CI_Controller {
     if ($this->session->userdata('admin_login') != true) {
       redirect(site_url('login'), 'refresh');
     }
+    elseif ($param1 == 'add_instructor_form') {
+      $page_data['page_name'] = 'instructor_add';
+      $page_data['page_title'] = get_phrase('instructor_add');
+      $this->load->view('backend/index', $page_data);
+    }
     elseif ($param1 == 'edit_instructor_form') {
       $page_data['page_name'] = 'instructor_edit';
       $page_data['user_id'] = $param2;
@@ -142,6 +151,88 @@ class Admin extends CI_Controller {
       $this->load->view('backend/index', $page_data);
     }
   }
+
+  public function plans($param1 = "", $param2 = "") {
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    elseif ($param1 == "add") {
+      $this->crud_model->add_plan();
+      redirect(site_url('admin/plans'), 'refresh');
+    }
+    elseif ($param1 == "edit") {
+      $this->crud_model->edit_plan($param2);
+      redirect(site_url('admin/plans'), 'refresh');
+    }
+    elseif ($param1 == "delete") {
+      $this->crud_model->delete_plan($param2);
+      redirect(site_url('admin/plans'), 'refresh');
+    }
+
+    $page_data['page_name'] = 'plans';
+    $page_data['page_title'] = get_phrase('plan');
+    $page_data['plans'] = $this->crud_model->get_plans();
+    $this->load->view('backend/index', $page_data);
+  }
+  public function plan_form($param1 = "", $param2 = "") {
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    elseif ($param1 == 'add_plan_form') {
+      $page_data['page_name'] = 'plan_add';
+      $page_data['institutes'] = $this->user_model->get_institute();
+      $page_data['page_title'] = get_phrase('plan_add');
+      $this->load->view('backend/index', $page_data);
+    }
+    elseif ($param1 == 'edit_plan_form') {
+      $page_data['page_name'] = 'plan_edit';
+      $page_data['plan_id'] = $param2;
+      $page_data['institutes'] = $this->user_model->get_institute();
+      $page_data['page_title'] = get_phrase('plan_edit');
+      $this->load->view('backend/index', $page_data);
+    }
+  }
+
+  public function institutes($param1 = "", $param2 = "") {
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    elseif ($param1 == "add") {
+      $this->user_model->add_user(3);
+      redirect(site_url('admin/institutes'), 'refresh');
+    }
+    elseif ($param1 == "edit") {
+      $this->user_model->edit_user($param2);
+      redirect(site_url('admin/institutes'), 'refresh');
+    }
+    elseif ($param1 == "delete") {
+      $this->user_model->delete_user($param2);
+      redirect(site_url('admin/institutes'), 'refresh');
+    }
+
+    $page_data['page_name'] = 'institutes';
+    $page_data['page_title'] = get_phrase('institute');
+    $page_data['institutes'] = $this->user_model->get_institute($param2);
+    $this->load->view('backend/index', $page_data);
+  }
+
+  public function institute_form($param1 = "", $param2 = "") {
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    elseif ($param1 == 'add_insttitue_form') {
+      $page_data['page_name'] = 'institute_add';
+      $page_data['page_title'] = get_phrase('institute_add');
+      $this->load->view('backend/index', $page_data);
+    }
+    elseif ($param1 == 'edit_institute_form') {
+      $page_data['page_name'] = 'institute_edit';
+      $page_data['user_id'] = $param2;
+      $page_data['page_title'] = get_phrase('institute_edit');
+      $this->load->view('backend/index', $page_data);
+    }
+  }
+
 
   public function users($param1 = "", $param2 = "") {
     if ($this->session->userdata('admin_login') != true) {

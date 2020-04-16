@@ -30,7 +30,7 @@ class User_model extends CI_Model {
         return $this->db->get('users');
     }
 
-    public function add_user() {
+    public function add_user($role_id = 2) {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {
             $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
@@ -44,7 +44,14 @@ class User_model extends CI_Model {
             $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
             $data['social_links'] = json_encode($social_link);
             $data['biography'] = $this->input->post('biography');
-            $data['role_id'] = 2;
+            if($role_id == 4){
+                $data['role_id'] = 4;
+            }elseif($role_id == 3){
+                $data['role_id'] = 3;
+            }
+            else{
+                $data['role_id'] = 2;
+            }
             $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
             $data['wishlist'] = json_encode(array());
             $data['watch_history'] = json_encode(array());
@@ -212,6 +219,16 @@ class User_model extends CI_Model {
         $this->session->set_flashdata('flash_message', get_phrase('password_updated'));
     }
 
+
+    public function get_institute($id = 0){
+        if ($id > 0){
+            $this->db->where('id', $id);
+            return $this->db->get('users')->result_array();
+        }else{
+            $this->db->where('role_id', 3);
+            return $this->db->get('users')->result_array();
+        }
+    }
 
     public function get_instructor($id = 0) {
         if ($id > 0) {

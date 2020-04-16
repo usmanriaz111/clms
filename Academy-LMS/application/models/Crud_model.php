@@ -16,6 +16,68 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+
+     //Get plans
+
+     public function get_plans()
+     {
+         $query = $this->db->get('plans')->result_array();
+         return $query;
+     }
+
+    // Adding plan functionalities
+    public function add_plan(){
+        $data_plan['courses'] = html_escape($this->input->post('courses'));
+        $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
+        $data_plan['students'] = html_escape($this->input->post('students'));
+        $data_plan['cloud_space'] = html_escape($this->input->post('cloud_space'));
+        $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
+        $data_plan['date_added'] = strtotime(date('D, d-M-Y'));
+        $this->db->insert('plans', $data_plan);
+        $this->session->set_flashdata('flash_message', get_phrase('plan_added_successfully'));
+    }
+
+    public function edit_plan($plan_id = "") {
+        $data_plan['courses'] = html_escape($this->input->post('courses'));
+        $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
+        $data_plan['students'] = html_escape($this->input->post('students'));
+        $data_plan['cloud_space'] = html_escape($this->input->post('cloud_space'));
+        $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
+        $data_plan['last_modified'] = strtotime(date('D, d-M-Y'));
+        $this->db->where('id', $plan_id);
+        $this->db->update('plans', $data_plan);
+        $this->session->set_flashdata('flash_message', get_phrase('plan_update_successfully'));
+    }
+
+    public function delete_plan($plan_id = "") {
+        $this->db->where('id', $plan_id);
+        $this->db->delete('plans');
+        $this->session->set_flashdata('flash_message', get_phrase('plan_deleted_successfully'));
+    }
+
+    public function check_duplication($action = "", $name = "", $institute_id = "") {
+        $duplicate_name_check = $this->db->get_where('institutes', array('name' => $name));
+        if ($action == 'on_create') {
+            if ($duplicate_name_check->num_rows() > 0) {
+                return false;
+            }else {
+                return true;
+            }
+        }elseif ($action == 'on_update') {
+            if ($duplicate_name_check->num_rows() > 0) {
+                if ($duplicate_name_check->row()->id == $institute_id) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }else {
+                return true;
+            }
+        }
+    }
+
+
+
     public function get_categories($param1 = "")
     {
         if ($param1 != "") {
