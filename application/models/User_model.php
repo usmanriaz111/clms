@@ -39,6 +39,17 @@ class User_model extends CI_Model {
             $data['last_name'] = html_escape($this->input->post('last_name'));
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
+            $user_type = html_escape($this->input->post('type'));
+            if ($user_type == "institute"){
+                $data['type'] = $user_type;
+                $data['institute_id'] = html_escape($this->input->post('institutes'));
+            }elseif($user_type == "freelancer"){
+                $data['type'] = $user_type;
+                $data['institute_id'] = NULL;
+            }
+            else{
+                $data['type'] = NULL;
+            }
             $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
             $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
             $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
@@ -107,6 +118,17 @@ class User_model extends CI_Model {
         if ($validity) {
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
+            $user_type = html_escape($this->input->post('type'));
+            if ($user_type == "institute"){
+                $data['type'] = $user_type;
+                $data['institute_id'] = html_escape($this->input->post('institutes'));
+            }elseif($user_type == "freelancer"){
+                $data['type'] = $user_type;
+                $data['institute_id'] = NULL;
+            }
+            else{
+                $data['type'] = NULL;
+            }
 
             if (isset($_POST['email'])) {
                 $data['email'] = html_escape($this->input->post('email'));
@@ -230,6 +252,11 @@ class User_model extends CI_Model {
         }
     }
 
+    public function get_instructors(){
+        $this->db->where('role_id', 4);
+            return $this->db->get('users')->result_array();
+    }
+
     public function get_instructor($id = 0) {
         if ($id > 0) {
             return $this->db->get_all_user($id);
@@ -271,6 +298,11 @@ class User_model extends CI_Model {
         );
         $result = $this->db->get_where('course', $checker)->num_rows();
         return $result;
+    }
+
+    public function get_institute_name($institute_id){
+        $this->db->where('id', $institute_id);
+        return $this->db->get('users')->result();
     }
 
     public function get_user_image_url($user_id) {
