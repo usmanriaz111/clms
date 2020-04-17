@@ -131,7 +131,7 @@ class Admin extends CI_Controller {
 
     $page_data['page_name'] = 'instructors';
     $page_data['page_title'] = get_phrase('instructor');
-    $page_data['instructors'] = $this->user_model->get_instructor($param2);
+    $page_data['instructors'] = $this->user_model->get_instructors();
     $this->load->view('backend/index', $page_data);
   }
 
@@ -142,11 +142,13 @@ class Admin extends CI_Controller {
     elseif ($param1 == 'add_instructor_form') {
       $page_data['page_name'] = 'instructor_add';
       $page_data['page_title'] = get_phrase('instructor_add');
+      $page_data['institutes'] = $this->user_model->get_institute();
       $this->load->view('backend/index', $page_data);
     }
     elseif ($param1 == 'edit_instructor_form') {
       $page_data['page_name'] = 'instructor_edit';
       $page_data['user_id'] = $param2;
+      $page_data['institutes'] = $this->user_model->get_institute();
       $page_data['page_title'] = get_phrase('instructor_edit');
       $this->load->view('backend/index', $page_data);
     }

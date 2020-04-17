@@ -28,6 +28,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="#instructor_type" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-lock mr-1"></i>
+                                    <span class="d-none d-sm-inline"><?php echo get_phrase('instructor_type'); ?></span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="#login_credentials" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
                                     <span class="d-none d-sm-inline"><?php echo get_phrase('login_credentials'); ?></span>
@@ -116,6 +122,33 @@
                                                 <input type="password" id="password" name="password" class="form-control" required>
                                             </div>
                                         </div>
+                                    </div> <!-- end col -->
+                                </div> <!-- end row -->
+                            </div>
+
+                            <div class="tab-pane" id="instructor_type">
+                                <div class="row">
+                                    <div class="col-12">
+                                    <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                            <input type="radio" id="freelancer" name="type" value="freelancer" checked class="js-instructor-type">
+                                            <label for="male">Freelancer</label>
+                                            <input type="radio" id="instructor_institute" name="type" value="institute" class="js-instructor-type">
+                                            <label for="male">Instructor Institute</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3 js-instructor-institute">
+                                            <label class="col-md-3 col-form-label" for="institutes"><?php echo get_phrase('select_institute'); ?> <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                            <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
+                                            <?php foreach ($institutes as $institute): ?>
+                                            <option value="<?php echo $institute['id']; ?>"><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+                                            <?php endforeach; ?>
+                                            </select>
+                                            </div>
+                                        </div>
+
                                     </div> <!-- end col -->
                                 </div> <!-- end row -->
                             </div>
@@ -216,3 +249,16 @@
         </div> <!-- end card-->
     </div>
 </div>
+
+<script>
+$(function () {
+    $(".js-instructor-institute").hide();
+        $(".js-instructor-type").click(function () {
+            if ($(this).val() == "institute") {
+                $(".js-instructor-institute").show();
+            } else {
+                $(".js-instructor-institute").hide();
+            }
+        });
+    });
+</script>
