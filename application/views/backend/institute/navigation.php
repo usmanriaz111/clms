@@ -24,6 +24,14 @@
 					<span><?php echo get_phrase('courses'); ?></span>
 				</a>
 			</li>
+
+			<li class="side-nav-item">
+				<a href="<?php echo site_url('institute/instructors'); ?>" class="side-nav-link <?php if ($page_name == 'instructors' || $page_name == 'instructor_add' || $page_name == 'instructor_edit')echo 'active';?>">
+					<i class="mdi mdi-incognito"></i>
+					<span><?php echo get_phrase('instructors'); ?></span>
+				</a>
+			</li>
+
 			<li class="side-nav-item">
 				<a href="<?php echo site_url('institute/instructor_revenue'); ?>" class="side-nav-link <?php if ($page_name == 'report' || $page_name == 'invoice')echo 'active';?>">
 					<i class="dripicons-media-shuffle"></i>

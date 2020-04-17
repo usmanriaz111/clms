@@ -431,6 +431,64 @@ class Institute extends CI_Controller {
         echo $video_details['duration'];
     }
 
+    public function instructor_form($param1 = "", $param2 = "") {
+        if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+        }
+        elseif ($param1 == 'add_instructor_form') {
+          $page_data['page_name'] = 'instructor_add';
+          $page_data['page_title'] = get_phrase('instructor_add');
+          $page_data['institutes'] = $this->user_model->get_institute();
+          $this->load->view('backend/index', $page_data);
+        }
+        elseif ($param1 == 'edit_instructor_form') {
+          $page_data['page_name'] = 'instructor_edit';
+          $page_data['user_id'] = $param2;
+          $page_data['institutes'] = $this->user_model->get_institute();
+          $page_data['page_title'] = get_phrase('instructor_edit');
+          $this->load->view('backend/index', $page_data);
+        }
+    }
+
+    public function instructors($param1 = "", $param2 = "") {
+        if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+        }
+        elseif ($param1 == "add") {
+          $this->user_model->add_user(4);
+          redirect(site_url('institute/instructors'), 'refresh');
+        }
+        elseif ($param1 == "edit") {
+          $this->user_model->edit_user($param2);
+          redirect(site_url('institute/instructors'), 'refresh');
+        }
+        elseif ($param1 == "delete") {
+          $this->user_model->delete_user($param2);
+          redirect(site_url('institute/instructors'), 'refresh');
+        }
+       
+        $page_data['page_name'] = 'instructors';
+        $page_data['page_title'] = get_phrase('instructor');
+        $page_data['instructors'] = $this->user_model->get_instructors();
+        $this->load->view('backend/index', $page_data);
+    }
+
+    public function instructor_settings($param1 = "") {
+        if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+        }
+        if ($param1 == 'update') {
+          $this->crud_model->update_instructor_settings();
+          $this->session->set_flashdata('flash_message', get_phrase('instructor_settings_updated'));
+          redirect(site_url('institute/instructor_settings'), 'refresh');
+        }
+    
+        $page_data['page_name'] = 'instructor_settings';
+        $page_data['page_title'] = get_phrase('instructor_settings');
+        $this->load->view('backend/index', $page_data);
+    }
+    
+
     // this function is responsible for managing multiple choice question
     function manage_multiple_choices_options() {
         $page_data['number_of_options'] = $this->input->post('number_of_options');
