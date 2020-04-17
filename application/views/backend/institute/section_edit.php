@@ -2,7 +2,7 @@
     $course_details = $this->crud_model->get_course_by_id($param3)->row_array();
     $section_details = $this->crud_model->get_section('section', $param2)->row_array();
 ?>
-<form action="<?php echo site_url('user/sections/'.$param3.'/edit/'.$param2); ?>" method="post">
+<form action="<?php echo site_url('institute/sections/'.$param3.'/edit/'.$param2); ?>" method="post">
     <div class="form-group">
         <label for="title"><?php echo get_phrase('title'); ?></label>
         <input class="form-control" type="text" name="title" id="title" value="<?php echo $section_details['title']; ?>" required>

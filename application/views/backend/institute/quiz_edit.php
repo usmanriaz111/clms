@@ -2,7 +2,7 @@
 $quiz_details = $this->crud_model->get_lessons('lesson', $param2)->row_array();
 $sections = $this->crud_model->get_section('course', $param3)->result_array();
 ?>
-<form action="<?php echo site_url('user/quizes/'.$param3.'/edit/'.$param2); ?>" method="post">
+<form action="<?php echo site_url('institute/quizes/'.$param3.'/edit/'.$param2); ?>" method="post">
     <div class="form-group">
         <label for="title"><?php echo get_phrase('quiz_title'); ?></label>
         <input class="form-control" type="text" name="title" id="title" value="<?php echo $quiz_details['title']; ?>" required>

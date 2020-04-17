@@ -16,13 +16,13 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title mb-3"><?php echo get_phrase('course_manager'); ?>
-                    <a href="<?php echo site_url('user/preview/'.$course_id); ?>" class="alignToTitle btn btn-outline-secondary btn-rounded btn-sm ml-1" target="_blank"><?php echo get_phrase('view_on_frontend'); ?> <i class="mdi mdi-arrow-right"></i> </a>
-                    <a href="<?php echo site_url('user/courses'); ?>" class="alignToTitle btn btn-outline-secondary btn-rounded btn-sm"><i class=" mdi mdi-keyboard-backspace"></i> <?php echo get_phrase('back_to_course_list'); ?></a>
+                    <a href="<?php echo site_url('institute/preview/'.$course_id); ?>" class="alignToTitle btn btn-outline-secondary btn-rounded btn-sm ml-1" target="_blank"><?php echo get_phrase('view_on_frontend'); ?> <i class="mdi mdi-arrow-right"></i> </a>
+                    <a href="<?php echo site_url('institute/courses'); ?>" class="alignToTitle btn btn-outline-secondary btn-rounded btn-sm"><i class=" mdi mdi-keyboard-backspace"></i> <?php echo get_phrase('back_to_course_list'); ?></a>
                 </h4>
 
                 <div class="row">
                     <div class="col-xl-12">
-                        <form class="required-form" action="<?php echo site_url('user/course_actions/edit/'.$course_id); ?>" method="post" enctype="multipart/form-data">
+                        <form class="required-form" action="<?php echo site_url('institute/course_actions/edit/'.$course_id); ?>" method="post" enctype="multipart/form-data">
                             <div id="basicwizard">
                                 <ul class="nav nav-pills nav-justified form-wizard-header mb-3">
                                     <li class="nav-item">

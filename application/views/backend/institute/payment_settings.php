@@ -20,7 +20,7 @@ $stripe_keys = json_decode($user_data['stripe_keys'], true);
       <div class="card">
         <div class="card-body">
           <h4 class="header-title"><p><?php echo get_phrase('setup_paypal_settings'); ?></p></h4>
-          <form class="" action="<?php echo site_url('user/payment_settings/paypal_settings'); ?>" method="post" enctype="multipart/form-data">
+          <form class="" action="<?php echo site_url('institute/payment_settings/paypal_settings'); ?>" method="post" enctype="multipart/form-data">
 
             <div class="form-group">
               <label><?php echo get_phrase('client_id').' ('.get_phrase('production').')'; ?></label>
@@ -50,7 +50,7 @@ $stripe_keys = json_decode($user_data['stripe_keys'], true);
       <div class="card">
         <div class="card-body">
           <h4 class="header-title"><p><?php echo get_phrase('setup_stripe_settings'); ?></p></h4>
-          <form class="" action="<?php echo site_url('user/payment_settings/stripe_settings'); ?>" method="post" enctype="multipart/form-data">
+          <form class="" action="<?php echo site_url('institute/payment_settings/stripe_settings'); ?>" method="post" enctype="multipart/form-data">
             <div class="form-group">
               <label><?php echo get_phrase('live_secret_key'); ?></label>
               <input type="text" name="stripe_secret_key" class="form-control" value="<?php echo $stripe_keys[0]['secret_live_key']; ?>" required />
