@@ -1016,8 +1016,8 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `Bengali`) VALUES
 
 INSERT INTO `role` (`id`, `name`, `date_added`, `last_modified`) VALUES
 ('1', 'Admin', '1234567890', '1234567890'),
-('2', 'User', '1234567890', '1234567890');
-('3', 'Institute', '1234567890', '1234567890');
+('2', 'User', '1234567890', '1234567890'),
+('3', 'Institute', '1234567890', '1234567890'),
 ('4', 'Instructor', '1234567890', '1234567890');
 
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES
