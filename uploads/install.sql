@@ -281,6 +281,8 @@ CREATE TABLE `users` (
   `social_links` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `biography` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `role_id` int(11) DEFAULT NULL,
+  `institute_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
   `watch_history` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,

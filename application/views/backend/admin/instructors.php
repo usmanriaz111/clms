@@ -24,6 +24,8 @@
                       <th><?php echo get_phrase('photo'); ?></th>
                       <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('email'); ?></th>
+                      <th><?php echo get_phrase('type'); ?></th>
+                      <th><?php echo get_phrase('instructor_institute'); ?></th>
                       <th><?php echo get_phrase('number_of_active_courses'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
@@ -38,6 +40,11 @@
                             </td>
                             <td><?php echo $user['first_name'].' '.$user['last_name']; ?></td>
                             <td><?php echo $user['email']; ?></td>
+                            <td><?php echo $user['type']; ?></td>
+                            <?php $institute = $this->db->get_where('users', array('id' => $user['institute_id']))->row_array();?>
+                            <?php
+                            ?>
+                            <td><?php echo $institute['first_name'].' '.$institute['last_name']; ?></td>
                             <td>
                                 <?php echo $this->user_model->get_number_of_active_courses_of_instructor($user['id']).' '.strtolower(get_phrase('active_courses')); ?>
                             </td>
