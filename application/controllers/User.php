@@ -31,11 +31,11 @@ class User extends CI_Controller {
 
     public function index() {
          $role_id = $this->session->userdata('role_id');
-        if ($this->session->userdata('user_login') == true && $role_id == 4) {
+        if ($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'instructor') {
             $this->courses();
-        }elseif($this->session->userdata('user_login') == true && $role_id == 2){
+        }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'user'){
             redirect(site_url('home'), 'refresh');
-        }elseif($this->session->userdata('user_login') == true && $role_id == 3){
+        }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'institute'){
             $this->courses();
         }
         else {
