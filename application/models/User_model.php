@@ -139,13 +139,13 @@ class User_model extends CI_Model {
             $user_type = html_escape($this->input->post('type'));
             
             //Association multiple instructors to institute
-            $instructor_list = $this->input->post('instructors');
-            foreach ($instructor_list as $instructor_id) {
-                $data_user['institute_id'] = $instructor_id;
-                $this->db->where('id', $instructor_id);
-                $this->db->update('users', $data);
-            }
-            $this->session->set_flashdata('flash_message', get_phrase('instructor_add_successfully'));
+            // $instructor_list = $this->input->post('instructors');
+            // foreach ($instructor_list as $instructor_id) {
+            //     $data_user['institute_id'] = $instructor_id;
+            //     $this->db->where('id', $instructor_id);
+            //     $this->db->update('users', $data);
+            // }
+            // $this->session->set_flashdata('flash_message', get_phrase('instructor_add_successfully'));
             //end
 
             if ($user_type == "institute"){
@@ -287,15 +287,16 @@ class User_model extends CI_Model {
             return $this->db->get('users')->result_array();
     }
 
-    public function get_unassigned_instructors(){
-        $checker = array(
-            'role_id' => 4,
-            'institute_id'  => NULL
-          );
+    // public function get_unassigned_instructors(){
+    //     $checker = array(
+    //         'role_id' => 4,
+    //         'institute_id'  => NULL,
+    //         'type' => NULL
+    //       );
 
-          $result = $this->db->get_where('users', $checker)->result_array();
-          return $result;
-    }
+    //       $result = $this->db->get_where('users', $checker)->result_array();
+    //       return $result;
+    // }
 
     public function get_instructor($id = 0) {
         if ($id > 0) {
@@ -337,6 +338,15 @@ class User_model extends CI_Model {
           'status'  => 'active'
         );
         $result = $this->db->get_where('course', $checker)->num_rows();
+        return $result;
+    }
+
+    public function get_number_of_instructor($institute_id) {
+        $checker = array(
+          'institute_id' => $institute_id,
+          'status'  => '1'
+        );
+        $result = $this->db->get_where('users', $checker)->num_rows();
         return $result;
     }
 

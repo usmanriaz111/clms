@@ -146,6 +146,7 @@
                                             <option value="<?php echo $institute['id']; ?>"><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
                                             <?php endforeach; ?>
                                             </select>
+                                            <p class="text-success">Note: Institute create Before Instructor creation, if already created then processed next </p>
                                             </div>
                                         </div>
 

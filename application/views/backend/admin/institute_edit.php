@@ -27,12 +27,12 @@
                                     <span class="d-none d-sm-inline"><?php echo get_phrase('basic_info'); ?></span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="#instructor_type" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
                                     <span class="d-none d-sm-inline"><?php echo get_phrase('instructors'); ?></span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
                                 <a href="#login_credentials" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
