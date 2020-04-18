@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo get_phrase('courses'); ?>
-                    <a href="<?php echo site_url('user/course_form/add_course'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_new_course'); ?></a>
+                    <a href="<?php echo site_url('institute/course_form/add_course'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_new_course'); ?></a>
                 </h4>
             </div> <!-- end card body-->
         </div> <!-- end card -->
@@ -15,7 +15,7 @@
             <div class="card-body p-0">
                 <div class="row no-gutters">
                     <div class="col">
-                        <a href="<?php echo site_url('user/courses'); ?>" class="text-secondary">
+                        <a href="<?php echo site_url('institute/courses'); ?>" class="text-secondary">
                             <div class="card shadow-none m-0">
                                 <div class="card-body text-center">
                                     <i class="dripicons-link text-muted" style="font-size: 24px;"></i>
@@ -32,7 +32,7 @@
                     </div>
 
                     <div class="col">
-                        <a href="<?php echo site_url('user/courses'); ?>" class="text-secondary">
+                        <a href="<?php echo site_url('institute/courses'); ?>" class="text-secondary">
                             <div class="card shadow-none m-0 border-left">
                                 <div class="card-body text-center">
                                     <i class="dripicons-link-broken text-muted" style="font-size: 24px;"></i>
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="col">
-                        <a href="<?php echo site_url('user/courses'); ?>" class="text-secondary">
+                        <a href="<?php echo site_url('institute/courses'); ?>" class="text-secondary">
                             <div class="card shadow-none m-0 border-left">
                                 <div class="card-body text-center">
                                     <i class="dripicons-bookmark text-muted" style="font-size: 24px;"></i>
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="col">
-                        <a href="<?php echo site_url('user/courses'); ?>" class="text-secondary">
+                        <a href="<?php echo site_url('institute/courses'); ?>" class="text-secondary">
                             <div class="card shadow-none m-0 border-left">
                                 <div class="card-body text-center">
                                     <i class="dripicons-star text-muted" style="font-size: 24px;"></i>
@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="col">
-                        <a href="<?php echo site_url('user/courses'); ?>" class="text-secondary">
+                        <a href="<?php echo site_url('institute/courses'); ?>" class="text-secondary">
                             <div class="card shadow-none m-0 border-left">
                                 <div class="card-body text-center">
                                     <i class="dripicons-tags text-muted" style="font-size: 24px;"></i>
@@ -99,7 +99,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="mb-3 header-title"><?php echo get_phrase('course_list'); ?></h4>
-                <form class="row justify-content-center" action="<?php echo site_url('user/courses'); ?>" method="get">
+                <form class="row justify-content-center" action="<?php echo site_url('institute/courses'); ?>" method="get">
                     <!-- Course Categories -->
                     <div class="col-xl-3">
                         <div class="form-group">
@@ -174,7 +174,7 @@
                                 <tr>
                                     <td><?php echo ++$key; ?></td>
                                     <td>
-                                        <strong><a href="<?php echo site_url('user/course_form/course_edit/'.$course['id']); ?>"><?php echo ellipsis($course['title']); ?></a></strong><br>
+                                        <strong><a href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>"><?php echo ellipsis($course['title']); ?></a></strong><br>
                                         <small class="text-muted"><?php echo get_phrase('instructor').': <b>'.$instructor_details['first_name'].' '.$instructor_details['last_name'].'</b>'; ?></small>
                                     </td>
                                     <td>
@@ -214,14 +214,14 @@
                                           </button>
                                           <ul class="dropdown-menu">
                                               <li><a class="dropdown-item" href="<?php echo site_url('home/course/'.slugify($course['title']).'/'.$course['id']); ?>" target="_blank"><?php echo get_phrase('view_course_on_frontend');?></a></li>
-                                              <li><a class="dropdown-item" href="<?php echo site_url('user/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('edit_this_course');?></a></li>
-                                              <li><a class="dropdown-item" href="<?php echo site_url('user/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('section_and_lesson');?></a></li>
+                                              <li><a class="dropdown-item" href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('edit_this_course');?></a></li>
+                                              <li><a class="dropdown-item" href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('section_and_lesson');?></a></li>
                                               <?php if ($course['status'] == 'active' || $course['status'] == 'pending'): ?>
-                                                  <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('user/course_actions/draft/'.$course['id']); ?>');"><?php echo get_phrase('mark_as_drafted'); ?></a></li>
+                                                  <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('institute/course_actions/draft/'.$course['id']); ?>');"><?php echo get_phrase('mark_as_drafted'); ?></a></li>
                                               <?php else: ?>
-                                                  <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('user/course_actions/publish/'.$course['id']); ?>');"><?php echo get_phrase('publish_this_course'); ?></a></li>
+                                                  <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('institute/course_actions/publish/'.$course['id']); ?>');"><?php echo get_phrase('publish_this_course'); ?></a></li>
                                               <?php endif; ?>
-                                              <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('user/course_actions/delete/'.$course['id']); ?>');"><?php echo get_phrase('delete_this_course'); ?></a></li>
+                                              <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('institute/course_actions/delete/'.$course['id']); ?>');"><?php echo get_phrase('delete_this_course'); ?></a></li>
                                           </ul>
                                       </div>
                                     </td>

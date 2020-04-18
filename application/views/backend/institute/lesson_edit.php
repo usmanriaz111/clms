@@ -4,7 +4,7 @@ $lesson_details = $this->crud_model->get_lessons('lesson', $param2)->row_array()
 $sections = $this->crud_model->get_section('course', $param3)->result_array();
 ?>
 
-<form action="<?php echo site_url('user/lessons/'.$param3.'/edit'.'/'.$param2); ?>" method="post" enctype="multipart/form-data">
+<form action="<?php echo site_url('institute/lessons/'.$param3.'/edit'.'/'.$param2); ?>" method="post" enctype="multipart/form-data">
 
     <div class="form-group">
         <label><?php echo get_phrase('title'); ?></label>

@@ -230,6 +230,7 @@ class Admin extends CI_Controller {
     elseif ($param1 == 'edit_institute_form') {
       $page_data['page_name'] = 'institute_edit';
       $page_data['user_id'] = $param2;
+      // $page_data['instructors'] = $this->user_model->get_instructors();
       $page_data['page_title'] = get_phrase('institute_edit');
       $this->load->view('backend/index', $page_data);
     }

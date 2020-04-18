@@ -16,21 +16,15 @@
         <div class="card">
             <div class="card-body">
 
-                <h4 class="header-title mb-3"><?php echo get_phrase('instructor_edit_form'); ?></h4>
+                <h4 class="header-title mb-3"><?php echo get_phrase('instructor_add_form'); ?></h4>
 
-                <form class="required-form" action="<?php echo site_url('admin/instructors/edit/'.$user_id); ?>" enctype="multipart/form-data" method="post">
+                <form class="required-form" action="<?php echo site_url('institute/instructors/add/'); ?>" enctype="multipart/form-data" method="post">
                     <div id="progressbarwizard">
                         <ul class="nav nav-pills nav-justified form-wizard-header mb-3">
                             <li class="nav-item">
                                 <a href="#basic_info" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-face-profile mr-1"></i>
                                     <span class="d-none d-sm-inline"><?php echo get_phrase('basic_info'); ?></span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#instructor_type" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                    <i class="mdi mdi-lock mr-1"></i>
-                                    <span class="d-none d-sm-inline"><?php echo get_phrase('instructor_type'); ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -70,19 +64,19 @@
                                         <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="first_name"><?php echo get_phrase('first_name'); ?> <span class="required">*</span> </label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user_data['first_name']; ?>" required>
+                                                <input type="text" class="form-control" id="first_name" name="first_name"  required>
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="last_name"><?php echo get_phrase('last_name'); ?> <span class="required">*</span> </label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user_data['last_name']; ?>" required>
+                                                <input type="text" class="form-control" id="last_name" name="last_name" required>
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="linkedin_link"><?php echo get_phrase('biography'); ?></label>
                                             <div class="col-md-9">
-                                                <textarea name="biography" id = "summernote-basic" class="form-control"><?php echo $user_data['biography']; ?></textarea>
+                                                <textarea name="biography" id = "summernote-basic" class="form-control"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
@@ -107,33 +101,6 @@
                                 </div> <!-- end row -->
                             </div>
 
-                            <div class="tab-pane" id="instructor_type">
-                                <div class="row">
-                                    <div class="col-12">
-                                    <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
-                                            <div class="col-md-9">
-                                            <input type="radio" id="freelancer" name="type" value="freelancer" <?php echo $user_data['type'] == 'freelancer' ? 'checked' : ''; ?> class="js-instructor-type">
-                                            <label for="male">Freelancer</label>
-                                            <input type="radio" id="instructor_institute" name="type" value="institute" <?php echo $user_data['type'] == 'institute' ? 'checked' : ''; ?> class="js-instructor-type">
-                                            <label for="male">Instructor Institute</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3 js-instructor-institute">
-                                            <label class="col-md-3 col-form-label" for="institutes"><?php echo get_phrase('select_institute'); ?> <span class="required">*</span> </label>
-                                            <div class="col-md-9">
-                                            <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
-                                            <?php foreach ($institutes as $institute): ?>
-                                            <option value="<?php echo $institute['id']; ?>" <?php if ($user_data['institute_id'] == $institute['id'])echo 'selected';?>><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
-                                            <?php endforeach; ?>
-                                            </select>
-                                            </div>
-                                        </div>
-
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-                            </div>
-
                             <div class="tab-pane" id="login_credentials">
                                 <div class="row">
                                     <div class="col-12">
@@ -143,9 +110,22 @@
                                                 <input type="email" id="email" name="email" class="form-control" value="<?php echo $user_data['email']; ?>" required>
                                             </div>
                                         </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="password"><?php echo get_phrase('password'); ?><span class="required">*</span></label>
+                                            <div class="col-md-9">
+                                                <input type="password" id="password" name="password" class="form-control" required>
+                                            </div>
+                                        </div>
                                     </div> <!-- end col -->
                                 </div> <!-- end row -->
                             </div>
+
+                      
+                                       
+                            <input type="radio" id="instructor_institute" name="type" value="institute" checked class="js-instructor-type">
+                            <input type="radio" id="instructor_institute2" name="current_instructor" value="present" checked class="js-instructor-type">
+                                            
+                              
 
                             <div class="tab-pane" id="social_information">
                                 <div class="row">
@@ -244,20 +224,5 @@
     </div>
 </div>
 <script>
-$(function () {
-
-    if($('#instructor_institute').is(':checked')) 
-    { 
-        $(".js-instructor-institute").show();
-    }else{
-        $(".js-instructor-institute").hide();
-    }
-        $(".js-instructor-type").click(function () {
-            if ($(this).val() == "institute") {
-                $(".js-instructor-institute").show();
-            } else {
-                $(".js-instructor-institute").hide();
-            }
-        });
-    });
+$('.js-instructor-type').hide();
 </script>

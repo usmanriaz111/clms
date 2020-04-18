@@ -40,15 +40,23 @@ class User_model extends CI_Model {
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
             $user_type = html_escape($this->input->post('type'));
+            $instructor_logged_in = html_escape($this->input->post('current_instructor'));
             if ($user_type == "institute"){
                 $data['type'] = $user_type;
-                $data['institute_id'] = html_escape($this->input->post('institutes'));
+                if ($instructor_logged_in == "present"){
+                    $data['institute_id'] = $this->session->userdata('user_id');
+                }
+                else {
+                    $data['institute_id'] = html_escape($this->input->post('institutes'));      
+                }
+                
             }elseif($user_type == "freelancer"){
                 $data['type'] = $user_type;
                 $data['institute_id'] = NULL;
             }
             else{
                 $data['type'] = NULL;
+                $data['institute_id'] = NULL;
             }
             $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
             $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
@@ -90,6 +98,16 @@ class User_model extends CI_Model {
             $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
         }
     }
+    
+
+    public function check_institute($institute){
+        $duplicate_email_check = $this->db->get_where('users', array('institute_id' => $institute));
+        if ($duplicate_email_check->num_rows() > 0) {
+            return false;
+        }else {
+            return true;
+        }
+    }
 
     public function check_duplication($action = "", $email = "", $user_id = "") {
         $duplicate_email_check = $this->db->get_where('users', array('email' => $email));
@@ -119,6 +137,17 @@ class User_model extends CI_Model {
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
             $user_type = html_escape($this->input->post('type'));
+            
+            //Association multiple instructors to institute
+            // $instructor_list = $this->input->post('instructors');
+            // foreach ($instructor_list as $instructor_id) {
+            //     $data_user['institute_id'] = $instructor_id;
+            //     $this->db->where('id', $instructor_id);
+            //     $this->db->update('users', $data);
+            // }
+            // $this->session->set_flashdata('flash_message', get_phrase('instructor_add_successfully'));
+            //end
+
             if ($user_type == "institute"){
                 $data['type'] = $user_type;
                 $data['institute_id'] = html_escape($this->input->post('institutes'));
@@ -128,6 +157,7 @@ class User_model extends CI_Model {
             }
             else{
                 $data['type'] = NULL;
+                $data['institute_id'] = NULL;
             }
 
             if (isset($_POST['email'])) {
@@ -257,6 +287,17 @@ class User_model extends CI_Model {
             return $this->db->get('users')->result_array();
     }
 
+    // public function get_unassigned_instructors(){
+    //     $checker = array(
+    //         'role_id' => 4,
+    //         'institute_id'  => NULL,
+    //         'type' => NULL
+    //       );
+
+    //       $result = $this->db->get_where('users', $checker)->result_array();
+    //       return $result;
+    // }
+
     public function get_instructor($id = 0) {
         if ($id > 0) {
             return $this->db->get_all_user($id);
@@ -297,6 +338,15 @@ class User_model extends CI_Model {
           'status'  => 'active'
         );
         $result = $this->db->get_where('course', $checker)->num_rows();
+        return $result;
+    }
+
+    public function get_number_of_instructor($institute_id) {
+        $checker = array(
+          'institute_id' => $institute_id,
+          'status'  => '1'
+        );
+        $result = $this->db->get_where('users', $checker)->num_rows();
         return $result;
     }
 

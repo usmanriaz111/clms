@@ -1,4 +1,4 @@
-<form action="<?php echo site_url('user/quiz_questions/'.$param2.'/add'); ?>" method="post" id = 'mcq_form'>
+<form action="<?php echo site_url('institute/quiz_questions/'.$param2.'/add'); ?>" method="post" id = 'mcq_form'>
     <input type="hidden" name="question_type" value="mcq">
     <div class="form-group">
         <label for="title"><?php echo get_phrase('question_title'); ?></label>
