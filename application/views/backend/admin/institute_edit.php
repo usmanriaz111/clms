@@ -28,6 +28,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="#instructor_type" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-lock mr-1"></i>
+                                    <span class="d-none d-sm-inline"><?php echo get_phrase('instructors'); ?></span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="#login_credentials" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
                                     <span class="d-none d-sm-inline"><?php echo get_phrase('login_credentials'); ?></span>
@@ -97,6 +103,24 @@
                                               </div>
                                             </div>
                                         </div>
+                                    </div> <!-- end col -->
+                                </div> <!-- end row -->
+                            </div>
+
+                            <div class="tab-pane" id="instructor_type">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group row mb-3 js-instructors">
+                                            <label class="col-md-3 col-form-label" for="instructors"><?php echo get_phrase('select_instructor'); ?> <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                            <select class="form-control select2" multiple="multiple" data-toggle="select2" name="instructors[]" id="instructors">
+                                            <?php foreach ($instructors as $instructor): ?>
+                                            <option value="<?php echo $instructor['id']; ?>"><?php echo $instructor['first_name'].' '.$instructor['last_name'];?></option>
+                                            <?php endforeach; ?>
+                                            </select>
+                                            </div>
+                                        </div>
+
                                     </div> <!-- end col -->
                                 </div> <!-- end row -->
                             </div>

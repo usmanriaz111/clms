@@ -38,7 +38,7 @@
           <label><?php echo get_phrase('select_institute'); ?></label>
          <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
             <?php foreach ($institutes as $institute): ?>
-                <option value="<?php echo $institute['id']; ?>" <?php if ($plan_id['institute_id'] == $institute['id'])echo 'selected';?>><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+                <option value="<?php echo $institute['id']; ?>" <?php if ($plan_data['institute_id'] == $institute['id'])echo 'selected';?>><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
             <?php endforeach; ?>
             </select>
     </div>
