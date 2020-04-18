@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Institute extends CI_Controller {
+class Instructor extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
@@ -133,18 +133,18 @@ class Institute extends CI_Controller {
           }
 
           $view_course_on_frontend_url = site_url('home/course/'.slugify($row->title).'/'.$row->id);
-          $edit_this_course_url = site_url('institute/course_form/course_edit/'.$row->id);
-          $section_and_lesson_url = site_url('institute/course_form/course_edit/'.$row->id);
+          $edit_this_course_url = site_url('instuctor/course_form/course_edit/'.$row->id);
+          $section_and_lesson_url = site_url('instuctor/course_form/course_edit/'.$row->id);
 
           if ($row->status == 'active' || $row->status == 'pending') {
-            $course_status_changing_action = "confirm_modal('".site_url('institute/course_actions/draft/'.$row->id)."')";
+            $course_status_changing_action = "confirm_modal('".site_url('instuctor/course_actions/draft/'.$row->id)."')";
             $course_status_changing_message = get_phrase('mark_as_drafted');
           }else{
-            $course_status_changing_action = "confirm_modal('".site_url('institute/course_actions/publish/'.$row->id)."')";
+            $course_status_changing_action = "confirm_modal('".site_url('instuctor/course_actions/publish/'.$row->id)."')";
             $course_status_changing_message = get_phrase('publish_this_course');
           }
 
-          $delete_course_url = "confirm_modal('".site_url('institute/course_actions/delete/'.$row->id)."')";
+          $delete_course_url = "confirm_modal('".site_url('instuctor/course_actions/delete/'.$row->id)."')";
 
           $action = '
           <div class="dropright dropright">
@@ -163,7 +163,7 @@ class Institute extends CI_Controller {
 
           $nestedData['#'] = $key+1;
 
-          $nestedData['title'] = '<strong><a href="'.site_url('institute/course_form/course_edit/'.$row->id).'">'.$row->title.'</a></strong><br>
+          $nestedData['title'] = '<strong><a href="'.site_url('instuctor/course_form/course_edit/'.$row->id).'">'.$row->title.'</a></strong><br>
           <small class="text-muted">'.get_phrase('instructor').': <b>'.$instructor_details['first_name'].' '.$instructor_details['last_name'].'</b></small>';
 
           $nestedData['category'] = '<span class="badge badge-dark-lighten">'.$category_details['name'].'</span>';
@@ -203,29 +203,29 @@ class Institute extends CI_Controller {
 
         if ($param1 == "add") {
             $course_id = $this->crud_model->add_course();
-            redirect(site_url('institute/course_form/course_edit/'.$course_id), 'refresh');
+            redirect(site_url('instuctor/course_form/course_edit/'.$course_id), 'refresh');
 
         }
         elseif ($param1 == "edit") {
             $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->update_course($param2);
-            redirect(site_url('institute/courses'), 'refresh');
+            redirect(site_url('instuctor/courses'), 'refresh');
 
         }
         elseif ($param1 == 'delete') {
             $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->delete_course($param2);
-            redirect(site_url('institute/courses'), 'refresh');
+            redirect(site_url('instuctor/courses'), 'refresh');
         }
         elseif ($param1 == 'draft') {
             $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->change_course_status('draft', $param2);
-            redirect(site_url('institute/courses'), 'refresh');
+            redirect(site_url('instuctor/courses'), 'refresh');
         }
         elseif ($param1 == 'publish') {
             $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->change_course_status('pending', $param2);
-            redirect(site_url('institute/courses'), 'refresh');
+            redirect(site_url('instuctor/courses'), 'refresh');
         }
     }
 
@@ -260,11 +260,11 @@ class Institute extends CI_Controller {
 
         if ($param1 == 'paypal_settings') {
             $this->user_model->update_instructor_paypal_settings($this->session->userdata('user_id'));
-            redirect(site_url('institute/payment_settings'), 'refresh');
+            redirect(site_url('instuctor/payment_settings'), 'refresh');
         }
         if ($param1 == 'stripe_settings') {
             $this->user_model->update_instructor_stripe_settings($this->session->userdata('user_id'));
-            redirect(site_url('institute/payment_settings'), 'refresh');
+            redirect(site_url('instuctor/payment_settings'), 'refresh');
         }
 
         $page_data['page_name'] = 'payment_settings';
@@ -295,7 +295,7 @@ class Institute extends CI_Controller {
                 redirect(site_url('home/lesson/'.slugify($course_details['title']).'/'.$course_details['id']), 'refresh');
             }
         }
-        redirect(site_url('instituter/courses'), 'refresh');
+        redirect(site_url('instuctor/courses'), 'refresh');
     }
 
     public function sections($param1 = "", $param2 = "", $param3 = "") {
@@ -318,7 +318,7 @@ class Institute extends CI_Controller {
             $this->crud_model->delete_section($param1, $param3);
             $this->session->set_flashdata('flash_message', get_phrase('section_has_been_deleted_successfully'));
         }
-        redirect(site_url('institute/course_form/course_edit/'.$param1));
+        redirect(site_url('instuctor/course_form/course_edit/'.$param1));
     }
 
     public function lessons($course_id = "", $param1 = "", $param2 = "") {
@@ -329,22 +329,22 @@ class Institute extends CI_Controller {
             $this->is_the_course_belongs_to_current_instructor($course_id);
             $this->crud_model->add_lesson();
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
-            redirect('institute/course_form/course_edit/'.$course_id);
+            redirect('instuctor/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'edit') {
             $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
             $this->crud_model->edit_lesson($param2);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_updated_successfully'));
-            redirect('institute/course_form/course_edit/'.$course_id);
+            redirect('instuctor/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'delete') {
             $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
             $this->crud_model->delete_lesson($param2);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_deleted_successfully'));
-            redirect('institute/course_form/course_edit/'.$course_id);
+            redirect('instuctor/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'filter') {
-            redirect('institute/lessons/'.$this->input->post('course_id'));
+            redirect('instuctor/lessons/'.$this->input->post('course_id'));
         }
         $page_data['page_name'] = 'lessons';
         $page_data['lessons'] = $this->crud_model->get_lessons('course', $course_id);
@@ -374,7 +374,7 @@ class Institute extends CI_Controller {
             $this->crud_model->delete_lesson($quiz_id);
             $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_deleted_successfully'));
         }
-        redirect(site_url('institute/course_form/course_edit/'.$course_id));
+        redirect(site_url('instuctor/course_form/course_edit/'.$course_id));
     }
 
     // Manage Quize Questions
@@ -393,7 +393,7 @@ class Institute extends CI_Controller {
         elseif ($action == 'edit') {
             if($this->db->get_where('question', array('id' => $question_id, 'quiz_id' => $quiz_id))->num_rows() <= 0){
               $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quiz_question'));
-              redirect(site_url('institute/courses'), 'refresh');
+              redirect(site_url('instuctor/courses'), 'refresh');
             }
 
             $response = $this->crud_model->update_quiz_questions($question_id);
@@ -403,12 +403,12 @@ class Institute extends CI_Controller {
         elseif ($action == 'delete') {
             if($this->db->get_where('question', array('id' => $question_id, 'quiz_id' => $quiz_id))->num_rows() <= 0){
               $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quiz_question'));
-              redirect(site_url('institute/courses'), 'refresh');
+              redirect(site_url('instuctor/courses'), 'refresh');
             }
 
             $response = $this->crud_model->delete_quiz_question($question_id);
             $this->session->set_flashdata('flash_message', get_phrase('question_has_been_deleted'));
-            redirect(site_url('institute/course_form/course_edit/'.$quiz_details['course_id']));
+            redirect(site_url('instuctor/course_form/course_edit/'.$quiz_details['course_id']));
         }
     }
 
@@ -456,15 +456,15 @@ class Institute extends CI_Controller {
         }
         elseif ($param1 == "add") {
           $this->user_model->add_user(4);
-          redirect(site_url('institute/instructors'), 'refresh');
+          redirect(site_url('instuctor/instructors'), 'refresh');
         }
         elseif ($param1 == "edit") {
           $this->user_model->edit_user($param2);
-          redirect(site_url('institute/instructors'), 'refresh');
+          redirect(site_url('instuctor/instructors'), 'refresh');
         }
         elseif ($param1 == "delete") {
           $this->user_model->delete_user($param2);
-          redirect(site_url('institute/instructors'), 'refresh');
+          redirect(site_url('instuctor/instructors'), 'refresh');
         }
        
         $page_data['page_name'] = 'instructors';
@@ -480,7 +480,7 @@ class Institute extends CI_Controller {
         if ($param1 == 'update') {
           $this->crud_model->update_instructor_settings();
           $this->session->set_flashdata('flash_message', get_phrase('instructor_settings_updated'));
-          redirect(site_url('institute/instructor_settings'), 'refresh');
+          redirect(site_url('instuctor/instructor_settings'), 'refresh');
         }
     
         $page_data['page_name'] = 'instructor_settings';
@@ -511,15 +511,15 @@ class Institute extends CI_Controller {
         }
         if ($param1 == "add") {
           $this->user_model->add_user();
-          redirect(site_url('institute/users'), 'refresh');
+          redirect(site_url('instuctor/users'), 'refresh');
         }
         elseif ($param1 == "edit") {
           $this->user_model->edit_user($param2);
-          redirect(site_url('institute/users'), 'refresh');
+          redirect(site_url('instuctor/users'), 'refresh');
         }
         elseif ($param1 == "delete") {
           $this->user_model->delete_user($param2);
-          redirect(site_url('institute/users'), 'refresh');
+          redirect(site_url('instuctor/users'), 'refresh');
         }
     
         $page_data['page_name'] = 'users';
@@ -530,7 +530,7 @@ class Institute extends CI_Controller {
     // this function is responsible for managing multiple choice question
     function manage_multiple_choices_options() {
         $page_data['number_of_options'] = $this->input->post('number_of_options');
-        $this->load->view('backend/institute/manage_multiple_choices_options', $page_data);
+        $this->load->view('backend/instuctor/manage_multiple_choices_options', $page_data);
     }
 
     // This function checks if this course belongs to current logged in instructor
@@ -538,20 +538,20 @@ class Institute extends CI_Controller {
         $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         if ($course_details['user_id'] != $this->session->userdata('user_id')) {
             $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_course'));
-            redirect(site_url('institute/courses'), 'refresh');
+            redirect(site_url('instuctor/courses'), 'refresh');
         }
 
         if($type == 'section' && $this->db->get_where('section', array('id' => $id, 'course_id' => $course_id))->num_rows() <= 0){
           $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_section'));
-          redirect(site_url('institute/courses'), 'refresh');
+          redirect(site_url('instuctor/courses'), 'refresh');
         }
         if($type == 'lesson' && $this->db->get_where('lesson', array('id' => $id, 'course_id' => $course_id))->num_rows() <= 0){
           $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_lesson'));
-          redirect(site_url('institute/courses'), 'refresh');
+          redirect(site_url('instuctor/courses'), 'refresh');
         }
         if($type == 'quize' && $this->db->get_where('lesson', array('id' => $id, 'course_id' => $course_id))->num_rows() <= 0){
           $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quize'));
-          redirect(site_url('institute/courses'), 'refresh');
+          redirect(site_url('instructor/courses'), 'refresh');
         }
         
     }

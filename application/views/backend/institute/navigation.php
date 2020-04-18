@@ -33,6 +33,13 @@
 			</li>
 
 			<li class="side-nav-item">
+				<a href="<?php echo site_url('institute/users'); ?>" class="side-nav-link <?php if ($page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit')echo 'active';?>">
+					<i class="dripicons-user-group"></i>
+					<span><?php echo get_phrase('students'); ?></span>
+				</a>
+			</li>
+
+			<li class="side-nav-item">
 				<a href="<?php echo site_url('institute/instructor_revenue'); ?>" class="side-nav-link <?php if ($page_name == 'report' || $page_name == 'invoice')echo 'active';?>">
 					<i class="dripicons-media-shuffle"></i>
 					<span><?php echo get_phrase('instructor_revenue'); ?></span>
