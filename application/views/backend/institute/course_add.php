@@ -14,12 +14,12 @@
             <div class="card-body">
 
                 <h4 class="header-title mb-3"><?php echo get_phrase('course_adding_form'); ?>
-                    <a href="<?php echo site_url('user/courses'); ?>" class="alignToTitle btn btn-outline-secondary btn-rounded btn-sm"> <i class=" mdi mdi-keyboard-backspace"></i> <?php echo get_phrase('back_to_course_list'); ?></a>
+                    <a href="<?php echo site_url('institute/courses'); ?>" class="alignToTitle btn btn-outline-secondary btn-rounded btn-sm"> <i class=" mdi mdi-keyboard-backspace"></i> <?php echo get_phrase('back_to_course_list'); ?></a>
                 </h4>
 
                 <div class="row">
                     <div class="col-xl-12">
-                        <form class="required-form" action="<?php echo site_url('user/course_actions/add'); ?>" method="post" enctype="multipart/form-data">
+                        <form class="required-form" action="<?php echo site_url('institute/course_actions/add'); ?>" method="post" enctype="multipart/form-data">
                             <div id="basicwizard">
 
                                 <ul class="nav nav-pills nav-justified form-wizard-header mb-3">

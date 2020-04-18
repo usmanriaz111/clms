@@ -20,7 +20,7 @@
                             <div class="row justify-content-center alignToTitle float-right display-none" id = "widgets-of-section-<?php echo $section['id']; ?>">
                                 <button type="button" class="btn btn-outline-secondary btn-rounded btn-sm" name="button" onclick="showLargeModal('<?php echo site_url('modal/popup/sort_lesson/'.$section['id']); ?>', '<?php echo get_phrase('sort_lessons'); ?>')" ><i class="mdi mdi-sort-variant"></i> <?php echo get_phrase('sort_lesson'); ?></button>
                                 <button type="button" class="btn btn-outline-secondary btn-rounded btn-sm ml-1" name="button" onclick="showAjaxModal('<?php echo site_url('modal/popup/section_edit/'.$section['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_section'); ?>')" ><i class="mdi mdi-pencil-outline"></i> <?php echo get_phrase('edit_section'); ?></button>
-                                <button type="button" class="btn btn-outline-secondary btn-rounded btn-sm ml-1" name="button" onclick="confirm_modal('<?php echo site_url('user/sections/'.$course_id.'/delete'.'/'.$section['id']); ?>');"><i class="mdi mdi-window-close"></i> <?php echo get_phrase('delete_section'); ?></button>
+                                <button type="button" class="btn btn-outline-secondary btn-rounded btn-sm ml-1" name="button" onclick="confirm_modal('<?php echo site_url('institute/sections/'.$course_id.'/delete'.'/'.$section['id']); ?>');"><i class="mdi mdi-window-close"></i> <?php echo get_phrase('delete_section'); ?></button>
                             </div>
                         </h5>
                         <div class="clearfix"></div>
@@ -35,10 +35,10 @@
                                         <?php if ($lesson['lesson_type'] == 'quiz'): ?>
                                             <a href="javascript::" onclick="showLargeModal('<?php echo site_url('modal/popup/quiz_questions/'.$lesson['id']); ?>', '<?php echo get_phrase('manage_quiz_questions'); ?>')"><i class="mdi mdi-comment-question-outline"></i></a>
                                             <a href="javascript::" onclick="showAjaxModal('<?php echo site_url('modal/popup/quiz_edit/'.$lesson['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_quiz_information'); ?>')"><i class="mdi mdi-pencil-outline"></i></a>
-                                            <a href="javascript::" onclick="confirm_modal('<?php echo site_url('user/quizes/'.$course_id.'/delete'.'/'.$lesson['id']); ?>');"><i class="mdi mdi-window-close"></i></a>
+                                            <a href="javascript::" onclick="confirm_modal('<?php echo site_url('institute/quizes/'.$course_id.'/delete'.'/'.$lesson['id']); ?>');"><i class="mdi mdi-window-close"></i></a>
                                         <?php else: ?>
                                             <a href="javascript::" onclick="showAjaxModal('<?php echo site_url('modal/popup/lesson_edit/'.$lesson['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_lesson'); ?>')"><i class="mdi mdi-pencil-outline"></i></a>
-                                            <a href="javascript::" onclick="confirm_modal('<?php echo site_url('user/lessons/'.$course_id.'/delete'.'/'.$lesson['id']); ?>');"><i class="mdi mdi-window-close"></i></a>
+                                            <a href="javascript::" onclick="confirm_modal('<?php echo site_url('institute/lessons/'.$course_id.'/delete'.'/'.$lesson['id']); ?>');"><i class="mdi mdi-window-close"></i></a>
                                         <?php endif; ?>
                                     </div>
                                     <h5 class="card-title mb-0">

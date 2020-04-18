@@ -40,9 +40,16 @@ class User_model extends CI_Model {
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
             $user_type = html_escape($this->input->post('type'));
+            $instructor_logged_in = html_escape($this->input->post('current_instructor'));
             if ($user_type == "institute"){
                 $data['type'] = $user_type;
-                $data['institute_id'] = html_escape($this->input->post('institutes'));
+                if ($instructor_logged_in == "present"){
+                    $data['institute_id'] = $this->session->userdata('user_id');
+                }
+                else {
+                    $data['institute_id'] = html_escape($this->input->post('institutes'));      
+                }
+                
             }elseif($user_type == "freelancer"){
                 $data['type'] = $user_type;
                 $data['institute_id'] = NULL;
