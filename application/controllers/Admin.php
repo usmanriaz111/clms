@@ -40,6 +40,15 @@ class Admin extends CI_Controller {
     $this->load->view('backend/index.php', $page_data);
   }
 
+  public function ajax_get_instructor(){
+    if ($this->session->userdata('admin_login') != true) {
+      redirect(site_url('login'), 'refresh');
+    }
+    $institute_id = $this->input->post('institute_id');
+      $data = $this->user_model->get_all_instructor($institute_id);
+      echo json_encode($data);
+  }
+
   public function categories($param1 = "", $param2 = "") {
     if ($this->session->userdata('admin_login') != true) {
       redirect(site_url('login'), 'refresh');
@@ -757,6 +766,7 @@ class Admin extends CI_Controller {
       $page_data['categories'] = $this->crud_model->get_categories();
       $page_data['page_name'] = 'course_add';
       $page_data['page_title'] = get_phrase('add_course');
+      ;$page_data['institutes'] = $this->user_model->get_institute();
       $this->load->view('backend/index', $page_data);
 
     }elseif ($param1 == 'course_edit') {
@@ -766,6 +776,7 @@ class Admin extends CI_Controller {
       $page_data['page_title'] = get_phrase('edit_course');
       $page_data['languages']	= $this->crud_model->get_all_languages();
       $page_data['categories'] = $this->crud_model->get_categories();
+      $page_data['institutes'] = $this->user_model->get_institute();
       $this->load->view('backend/index', $page_data);
     }
   }

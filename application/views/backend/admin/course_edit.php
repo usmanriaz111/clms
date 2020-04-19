@@ -1,5 +1,7 @@
 <?php
 $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
+    // echo '<pre>',print_r($course_details),'</pre>';
+    // die;
 ?>
 <div class="row ">
     <div class="col-xl-12">
@@ -117,6 +119,35 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group row mb-3">
+                                                <label class="col-md-2 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                                <div class="col-md-10">
+                                                <input type="radio" id="public" name="type" value="public" checked class="js-course-type">
+                                                <label for="public">Public</label>
+                                                <input type="radio" id="private" name="type" value="private" class="js-course-type">
+                                                <label for="private">Private</label>
+                                                </div>
+                                            </div>
+                                        <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="institute"><?php echo get_phrase('institute'); ?><span class="required">*</span></label>
+                                                    <div class="col-md-10">
+                                                    <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
+                                                    <?php foreach ($institutes as $institute): ?>
+                                                    <option value="<?php echo $institute['id']; ?>" class="js-institute-id" <?php if ($institute['id'] == $course_details['institute_id'])echo 'selected';?> ><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+                                                    <?php endforeach; ?>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="instructor"><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
+                                                    <div class="col-md-10">
+                                                    <select class="form-control select2" data-toggle="select2" name="instructors" id="instructors">
+                                                    <?php foreach ($instructors as $instructor): ?>
+                                                    <option value="<?php echo $instructor['id']; ?>" <?php if ($instructor['id'] == $course_details['instructor_id'])echo 'selected';?>><?php echo $instructor['first_name'].' '.$instructor['last_name'];?></option>
+                                                    <?php endforeach; ?>
+                                                    </select>
+                                                    </div>
+                                                </div>
                                         <div class="form-group row mb-3">
                                             <label class="col-md-2 col-form-label" for="level"><?php echo get_phrase('level'); ?></label>
                                             <div class="col-md-10">
@@ -503,4 +534,34 @@ $('.on-hover-action').mouseleave(function() {
     var id = this.id;
     $('#widgets-of-'+id).hide();
 });
+</script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    sync_instructor();
+    $('#institutes').on('change', function(){
+        sync_instructor();
+});
+
+function sync_instructor(){
+    let id = $("#institutes option:selected").val();
+        $.ajax({
+        url : "<?php echo base_url();?>Admin/ajax_get_instructor",
+        type : "post",
+        dataType : "json",
+        data : {"institute_id" : id},
+        success : function(response) {
+
+            $.each( response, function( i, val ) {
+                var newState = new Option(val.first_name+' '+val.last_name, val.id,);
+                $("#instructors").append(newState);
+            });
+        },
+        error : function(response) {
+            consol.logs(response);
+        }
+    });
+
+}
+
+  });
 </script>

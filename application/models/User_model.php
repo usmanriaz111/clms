@@ -30,6 +30,13 @@ class User_model extends CI_Model {
         return $this->db->get('users');
     }
 
+    public function get_all_instructor($institute_id = 0) {
+        if ($institute_id > 0) {
+            $this->db->where('institute_id', $institute_id);
+        }
+        return $this->db->get('users')->result_array();
+    }
+
     public function add_user($role_id = 2) {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {

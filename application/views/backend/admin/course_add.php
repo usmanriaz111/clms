@@ -106,6 +106,35 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-3">
+                                                <label class="col-md-2 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                                <div class="col-md-10">
+                                                <input type="radio" id="public" name="type" value="public" checked class="js-course-type">
+                                                <label for="public">Public</label>
+                                                <input type="radio" id="private" name="type" value="private" class="js-course-type">
+                                                <label for="private">Private</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="institute"><?php echo get_phrase('institute'); ?><span class="required">*</span></label>
+                                                    <div class="col-md-10">
+                                                    <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
+                                                    <?php foreach ($institutes as $institute): ?>
+                                                    <option value="<?php echo $institute['id']; ?>" class="js-institute-id"><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+                                                    <?php endforeach; ?>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="instructor"><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
+                                                    <div class="col-md-10">
+                                                    <select class="form-control select2" data-toggle="select2" name="instructors" id="instructors">
+                                                    <?php foreach ($instructors as $instructor): ?>
+                                                    <option value="<?php echo $instructor['id']; ?>"><?php echo $instructor['first_name'].' '.$instructor['last_name'];?></option>
+                                                    <?php endforeach; ?>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                            <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="level"><?php echo get_phrase('level'); ?></label>
                                                 <div class="col-md-10">
                                                     <select class="form-control select2" data-toggle="select2" name="level" id="level">
@@ -407,6 +436,31 @@ function calculateDiscountPercentage(discounted_price) {
   }
 }
 
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#institutes').on('change', function(){
+        let id = $("#institutes option:selected").val();
+        $.ajax({
+        url : "<?php echo base_url();?>Admin/ajax_get_instructor",
+        type : "post",
+        dataType : "json",
+        data : {"institute_id" : 5},
+        success : function(response) {
+            $.each( response, function( i, val ) {
+                var newState = new Option(val.first_name+' '+val.last_name, val.id,);
+                $("#instructors").append(newState);
+            });
+        },
+        error : function(response) {
+            consol.logs(response);
+        }
+    });
+
+});
+
+  });
 </script>
 
 <style media="screen">

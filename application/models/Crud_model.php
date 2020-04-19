@@ -487,6 +487,8 @@ class Crud_model extends CI_Model
         $data['user_id'] = $this->session->userdata('user_id');
         $data['meta_description'] = $this->input->post('meta_description');
         $data['meta_keywords'] = $this->input->post('meta_keywords');
+        $data['instructor_id'] = $this->input->post('instructors');
+        $data['institute_id'] = $this->input->post('institutes');
         $admin_details = $this->user_model->get_admin_details()->row_array();
         if ($admin_details['id'] == $data['user_id']) {
             $data['is_admin'] = 1;
@@ -573,6 +575,8 @@ class Crud_model extends CI_Model
 
         $data['meta_description'] = $this->input->post('meta_description');
         $data['meta_keywords'] = $this->input->post('meta_keywords');
+        $data['instructor_id'] = $this->input->post('instructors');
+        $data['institute_id'] = $this->input->post('institutes');
         $data['last_modified'] = strtotime(date('D, d-M-Y'));
 
         if ($this->input->post('is_top_course') != 1) {
