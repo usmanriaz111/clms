@@ -134,16 +134,6 @@
                                                     </select>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="class"><?php echo get_phrase('class'); ?></label>
-                                                    <div class="col-md-10">
-                                                    <select class="form-control select2" data-toggle="select2" name="classes" id="classes">
-                                                    <?php foreach ($classes as $cls): ?>
-                                                    <option value="<?php echo $cls['id']; ?>"><?php echo $cls['first_name'].' '.$cls['last_name'];?></option>
-                                                    <?php endforeach; ?>
-                                                    </select>
-                                                    </div>
-                                                </div>
                                             <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="level"><?php echo get_phrase('level'); ?></label>
                                                 <div class="col-md-10">

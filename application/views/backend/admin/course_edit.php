@@ -1,5 +1,7 @@
 <?php
 $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
+    // echo '<pre>',print_r($course_details),'</pre>';
+    // die;
 ?>
 <div class="row ">
     <div class="col-xl-12">
@@ -131,7 +133,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                     <div class="col-md-10">
                                                     <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
                                                     <?php foreach ($institutes as $institute): ?>
-                                                    <option value="<?php echo $institute['id']; ?>" class="js-institute-id" <?php if ($institute['institute_id'] == $course_details['institute_id'])echo 'selected';?> ><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+                                                    <option value="<?php echo $institute['id']; ?>" class="js-institute-id" <?php if ($institute['id'] == $course_details['institute_id'])echo 'selected';?> ><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
                                                     <?php endforeach; ?>
                                                     </select>
                                                     </div>
@@ -141,17 +143,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                     <div class="col-md-10">
                                                     <select class="form-control select2" data-toggle="select2" name="instructors" id="instructors">
                                                     <?php foreach ($instructors as $instructor): ?>
-                                                    <option value="<?php echo $instructor['id']; ?>"><?php echo $instructor['first_name'].' '.$instructor['last_name'];?></option>
-                                                    <?php endforeach; ?>
-                                                    </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="class"><?php echo get_phrase('class'); ?></label>
-                                                    <div class="col-md-10">
-                                                    <select class="form-control select2" data-toggle="select2" name="classes" id="classes">
-                                                    <?php foreach ($classes as $cls): ?>
-                                                    <option value="<?php echo $cls['id']; ?>"><?php echo $cls['first_name'].' '.$cls['last_name'];?></option>
+                                                    <option value="<?php echo $instructor['id']; ?>" <?php if ($instructor['id'] == $course_details['instructor_id'])echo 'selected';?>><?php echo $instructor['first_name'].' '.$instructor['last_name'];?></option>
                                                     <?php endforeach; ?>
                                                     </select>
                                                     </div>
@@ -545,14 +537,20 @@ $('.on-hover-action').mouseleave(function() {
 </script>
 <script type="text/javascript">
   $(document).ready(function () {
+    sync_instructor();
     $('#institutes').on('change', function(){
-        let id = $("#institutes option:selected").val();
+        sync_instructor();
+});
+
+function sync_instructor(){
+    let id = $("#institutes option:selected").val();
         $.ajax({
         url : "<?php echo base_url();?>Admin/ajax_get_instructor",
         type : "post",
         dataType : "json",
-        data : {"institute_id" : 5},
+        data : {"institute_id" : id},
         success : function(response) {
+
             $.each( response, function( i, val ) {
                 var newState = new Option(val.first_name+' '+val.last_name, val.id,);
                 $("#instructors").append(newState);
@@ -563,7 +561,7 @@ $('.on-hover-action').mouseleave(function() {
         }
     });
 
-});
+}
 
   });
 </script>
