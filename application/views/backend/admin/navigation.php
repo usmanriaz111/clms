@@ -71,6 +71,13 @@
 			</li>
 
 			<li class="side-nav-item">
+				<a href="<?php echo site_url('admin/classes'); ?>" class="side-nav-link <?php if ($page_name == 'classes' || $page_name == 'class_add' || $page_name == 'class_edit')echo 'active';?>">
+					<i class="dripicons-archive"></i>
+					<span><?php echo get_phrase('classes'); ?></span>
+				</a>
+			</li>
+
+			<li class="side-nav-item">
 				<a href="<?php echo site_url('admin/users'); ?>" class="side-nav-link <?php if ($page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit')echo 'active';?>">
 					<i class="dripicons-user-group"></i>
 					<span><?php echo get_phrase('students'); ?></span>

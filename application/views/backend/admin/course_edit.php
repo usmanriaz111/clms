@@ -544,13 +544,13 @@ $('.on-hover-action').mouseleave(function() {
 
 function sync_instructor(){
     let id = $("#institutes option:selected").val();
+   
         $.ajax({
         url : "<?php echo base_url();?>Admin/ajax_get_instructor",
         type : "post",
         dataType : "json",
         data : {"institute_id" : id},
         success : function(response) {
-
             $.each( response, function( i, val ) {
                 var newState = new Option(val.first_name+' '+val.last_name, val.id,);
                 $("#instructors").append(newState);

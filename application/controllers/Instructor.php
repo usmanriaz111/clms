@@ -253,6 +253,50 @@ class Instructor extends CI_Controller {
         }
     }
 
+
+    public function classes($param1 = "", $param2 = "") {
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      elseif ($param1 == "add") {
+        $this->crud_model->add_class();
+        redirect(site_url('instructor/classes'), 'refresh');
+      }
+      elseif ($param1 == "edit") {
+        $this->crud_model->edit_class($param2);
+        redirect(site_url('instructor/classes'), 'refresh');
+      }
+      elseif ($param1 == "delete") {
+        $this->crud_model->delete_class($param2);
+        redirect(site_url('instructor/classes'), 'refresh');
+      }
+      $instructor_id = $this->session->userdata('user_id');
+      $page_data['page_name'] = 'classes';
+      $page_data['page_title'] = get_phrase('class');
+      $page_data['classes'] = $this->crud_model->curret_user_classes();
+      $this->load->view('backend/index', $page_data);
+    }
+    public function class_form($param1 = "", $param2 = "") {
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      elseif ($param1 == 'add_class_form') {
+        $instructor_id = $this->session->userdata('user_id');
+        $page_data['page_name'] = 'class_add';
+        $page_data['courses'] = $this->crud_model->sync_courses($instructor_id);
+        $page_data['page_title'] = get_phrase('class_add');
+        $this->load->view('backend/index', $page_data);
+      }
+      elseif ($param1 == 'edit_class_form') {
+        $instructor_id = $this->session->userdata('user_id');
+        $page_data['page_name'] = 'class_edit';
+        $page_data['class_id'] = $param2;
+        $page_data['courses'] = $this->crud_model->sync_courses($instructor_id);
+        $page_data['page_title'] = get_phrase('class_edit');
+        $this->load->view('backend/index', $page_data);
+      }
+    }
+
     public function payment_settings($param1 = "") {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
