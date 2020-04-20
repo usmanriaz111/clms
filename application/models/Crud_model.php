@@ -133,7 +133,8 @@ class Crud_model extends CI_Model
     }
 
     public function get_classes(){
-        return $this->db->get('classes')->result_array();
+        $query = $this->db->get('classes')->result_array();
+         return $query;
     }
 
     public function check_name_duplication($name){
@@ -591,7 +592,7 @@ class Crud_model extends CI_Model
         }
     }
 
-    public function add_course($param1 = "")
+    public function add_course($param1 = "", $user_param = 0)
     {
         $outcomes = $this->trim_and_return_json($this->input->post('outcomes'));
         $requirements = $this->trim_and_return_json($this->input->post('requirements'));
@@ -621,7 +622,13 @@ class Crud_model extends CI_Model
         $data['date_added'] = strtotime(date('D, d-M-Y'));
         $data['section'] = json_encode(array());
         $data['is_top_course'] = $this->input->post('is_top_course');
-        $data['user_id'] = $this->session->userdata('user_id');
+        if ($user_param > 0){
+            if($user_param !=''){
+                $data['user_id'] = $user_param;
+            }
+        }else{
+            $data['user_id'] = $this->session->userdata('user_id');
+        }
         $data['meta_description'] = $this->input->post('meta_description');
         $data['meta_keywords'] = $this->input->post('meta_keywords');
         $data['instructor_id'] = $this->input->post('instructors');

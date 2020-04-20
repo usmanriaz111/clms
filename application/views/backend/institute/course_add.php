@@ -106,6 +106,25 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-3">
+                                                <label class="col-md-2 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                                <div class="col-md-10">
+                                                <input type="radio" id="public" name="type" value="public" checked class="js-course-type">
+                                                <label for="public">Public</label>
+                                                <input type="radio" id="private" name="type" value="private" class="js-course-type">
+                                                <label for="private">Private</label>
+                                                </div>
+                                            </div>
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="instructor"><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
+                                                    <div class="col-md-10">
+                                                    <select class="form-control select2" data-toggle="select2" name="instructors" id="instructors">
+                                                    <?php foreach ($instructors as $instructor): ?>
+                                                    <option value="<?php echo $instructor['id']; ?>"><?php echo $instructor['first_name'].' '.$instructor['last_name'];?></option>
+                                                    <?php endforeach; ?>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                            <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="level"><?php echo get_phrase('level'); ?></label>
                                                 <div class="col-md-10">
                                                     <select class="form-control select2" data-toggle="select2" name="level" id="level">

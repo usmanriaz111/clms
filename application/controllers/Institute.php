@@ -202,7 +202,8 @@ class Institute extends CI_Controller {
         }
 
         if ($param1 == "add") {
-            $course_id = $this->crud_model->add_course();
+            $instructor_id = $this->input->post('instructors');
+            $course_id = $this->crud_model->add_course("", $instructor_id );
             redirect(site_url('institute/course_form/course_edit/'.$course_id), 'refresh');
 
         }
@@ -240,6 +241,8 @@ class Institute extends CI_Controller {
             $page_data['categories'] = $this->crud_model->get_categories();
             $page_data['page_name'] = 'course_add';
             $page_data['page_title'] = get_phrase('add_course');
+            $institute_id = $this->session->userdata('user_id');
+            $page_data['instructors'] = $this->crud_model->sync_instructors($institute_id);
             $this->load->view('backend/index', $page_data);
 
         }elseif ($param1 == 'course_edit') {
