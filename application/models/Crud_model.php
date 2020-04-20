@@ -49,7 +49,7 @@ class Crud_model extends CI_Model
             array_push($instructor_ids, $instructor['id']);
         }
         if (sizeof($instructor_ids)) {
-            $this->db->where_in('user_id', [6,7]);
+            $this->db->where_in('user_id', $instructor_ids);
         } else {
             return array();
         }
