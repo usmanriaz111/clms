@@ -39,8 +39,8 @@
                                         <i class="mdi mdi-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="<?php echo site_url('instructor/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
-                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('instructor/classes/delete/'.$cls['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
+                                        <li><a class="dropdown-item" href="<?php echo site_url('institute/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('institute/classes/delete/'.$cls['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
                                     </ul>
                                 </div>
                               </td>

@@ -94,7 +94,7 @@ class Institute extends CI_Controller {
 
       // This block of code is handling the search event of datatable
       if(empty($this->input->post('search')['value'])) {
-        $courses = $this->lazyload->courses($limit, $start, $order, $dir, $filter_data);
+        $courses = $this->lazyload->institute_courses($limit, $start, $order, $dir, $filter_data);
       }
       else {
         $search = $this->input->post('search')['value'];
@@ -272,7 +272,7 @@ class Institute extends CI_Controller {
       $instructor_id = $this->session->userdata('user_id');
       $page_data['page_name'] = 'classes';
       $page_data['page_title'] = get_phrase('class');
-      $page_data['classes'] = $this->crud_model->curret_user_classes();
+      $page_data['classes'] = $this->crud_model->get_institute_classes();
       $this->load->view('backend/index', $page_data);
     }
     public function class_form($param1 = "", $param2 = "") {

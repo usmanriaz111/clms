@@ -1,5 +1,7 @@
 <?php
- $plan_data = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+ $class_data = $this->db->get_where('classes', array('id' => $class_id))->row_array();
+ $instructor_id = $this->crud_model->sync_instructor_id($class_data['course_id']);
+ $institute_id = $this->user_model->sync_institute_id($instructor_id);
 ?>
 <div class="row ">
     <div class="col-xl-12">
@@ -15,30 +17,34 @@
         <div class="card">
             <div class="card-body">
 
-                <h4 class="header-title mb-3"><?php echo get_phrase('plan_edit_form'); ?></h4>
+<h4 class="header-title mb-3"><?php echo get_phrase('plan_edit_form'); ?></h4>
 
-<form action="<?php echo site_url('admin/plans/edit/'.$plan_id); ?>" method="post">
-    <div class="form-group">
-        <label for="title"><?php echo get_phrase('no_of_courses'); ?></label>
-        <input class="form-control" type="number" name="courses" value="<?php echo $plan_data['courses']; ?>" id="courses" required>
+<form action="<?php echo site_url('admin/classes/edit/'.$class_id); ?>" method="post">
+<div class="form-group">
+        <label for="title"><?php echo get_phrase('name'); ?><span class="required">*</span></label>
+        <input class="form-control" type="text" name="name" id="name" value="<?php echo $class_data['name']?>" required>
     </div>
     <div class="form-group">
-        <label for="title"><?php echo get_phrase('no_minutes_per_live_session_per_course'); ?></label>
-        <input class="form-control" type="text" name="course_minutes" value="<?php echo $plan_data['course_minutes']; ?>" id="course_minutes" required>
-    </div>
-    <div class="form-group">
-        <label for="title"><?php echo get_phrase('no_of_students'); ?></label>
-        <input class="form-control" type="number" name="students"  value="<?php echo $plan_data['students']; ?>" id="students" required>
-    </div>
-    <div class="form-group">
-        <label><?php echo get_phrase('cloud_space'); ?></label>
-        <input class="form-control" type="text" name="cloud_space"  value="<?php echo $plan_data['cloud_space']; ?>" id="cloud_space" required>
-    </div>
-    <div class="form-group">
-          <label><?php echo get_phrase('select_institute'); ?></label>
-         <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
+          <label><?php echo get_phrase('institute'); ?><span class="required">*</span></label>
+         <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes" required>
             <?php foreach ($institutes as $institute): ?>
-                <option value="<?php echo $institute['id']; ?>" <?php if ($plan_data['institute_id'] == $institute['id'])echo 'selected';?>><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+            <option value="<?php echo $institute['id']; ?>" <?php if ($institute['id'] == $institute_id[0]) echo 'selected' ?>><?php echo $institute['first_name'].' '.$institute['last_name'] ; ?></option>
+            <?php endforeach; ?>
+            </select>
+    </div>
+    <div class="form-group">
+          <label><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
+         <select class="form-control select2" data-toggle="select2" name="instructors" id="instructors" required>
+            <?php foreach ($instructors as $instructor): ?>
+            <option value="<?php echo $instructor['id']; ?>" <?php if ($instructor['id'] == $instructor_id[0]) echo 'selected'?>><?php echo $instructor['first_name'].' '.$instructor['last_name'] ; ?></option>
+            <?php endforeach; ?>
+            </select>
+    </div>
+    <div class="form-group">
+          <label><?php echo get_phrase('course'); ?><span class="required">*</span></label>
+         <select class="form-control select2" data-toggle="select2" name="courses" id="courses" required>
+            <?php foreach ($courses as $course): ?>
+            <option value="<?php echo $course['id']; ?>" <?php if ($course['id'] == $class_data['course_id']) echo 'selected' ?>><?php echo $course['title']; ?></option>
             <?php endforeach; ?>
             </select>
     </div>
@@ -50,3 +56,70 @@
 </div>
 </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    sync_instructor();
+    sync_courses();
+   
+    $('#institutes').on('change', function(){
+    sync_instructor();
+    });
+
+    $('#instructors').on('change', function(){
+    sync_courses();
+});
+}); 
+
+function sync_instructor(){
+        let id = $("#institutes option:selected").val();
+        $.ajax({
+        url : "<?php echo base_url();?>admin/ajax_get_instructor",
+        type : "post",
+        dataType : "json",
+        data : {"institute_id" : id},
+        success : function(response) {
+            var select = document.getElementById("instructors");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+            select.options[i] = null;
+            }
+            $.each( response, function( i, val ) {
+                var newState = new Option(val.first_name+' '+val.last_name, val.id);
+                $("#instructors").append(newState);
+            });
+        },
+        error : function(response) {
+            console.log(response);
+        }
+    });
+
+}
+
+function sync_courses(){
+    let id = $("#instructors option:selected").val();
+        $.ajax({
+        url : "<?php echo base_url();?>admin/ajax_sync_course",
+        type : "post",
+        dataType : "json",
+        data : {"instructor_id" : id},
+        success : function(response) {
+            var select = document.getElementById("courses");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+            select.options[i] = null;
+            }
+            debugger;
+            $.each( response, function( i, val ) {
+                var newState = new Option(val.title, val.id);
+                $("#courses").append(newState);
+            });
+        },
+        error : function(response) {
+            console.log(response);
+        }
+    });
+}
+
+
+</script>

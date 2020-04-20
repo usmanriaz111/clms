@@ -4,7 +4,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo $page_title; ?>
-                <a href = "<?php echo site_url('admin/class_form/add_class_form'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_plan'); ?></a>
+                <a href = "<?php echo site_url('admin/class_form/add_class_form'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_class'); ?></a>
             </h4>
             </div> <!-- end card body-->
         </div> <!-- end card -->
@@ -22,18 +22,21 @@
                     <tr>
                       <th>#</th>
                       <th><?php echo get_phrase('name'); ?></th>
+                      <th><?php echo get_phrase('institute'); ?></th>
+                      <th><?php echo get_phrase('instructor'); ?></th>
                       <th><?php echo get_phrase('no_of_student'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
                   <tbody>
                       <?php
-                       foreach ($claases as $key => $cls): ?>
-                       <?php $institute =  $this->user_model->get_institute($plan['institute_id']);?>
+                       foreach ($classes as $key => $cls): ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo $cls['name']; ?></td>
-                            <td><?php echo $plan['no_of_student']; ?></td>
+                            <td><?php echo $cls['institute']; ?></td>
+                            <td><?php echo $cls['instructor']; ?></td>
+                            <td><?php echo $cls['no_of_student']; ?></td>
                             <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

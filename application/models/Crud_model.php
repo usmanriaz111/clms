@@ -38,6 +38,39 @@ class Crud_model extends CI_Model
         return $this->db->get('classes')->result_array();
     }
 
+    public function get_institute_classes(){
+        $course_ids = array();
+        $courses    = array();
+        $instructor_ids = array();
+
+        $this->db->where('institute_id', $this->session->userdata('user_id'));
+        $instructors = $this->db->get('users')->result_array();
+        foreach ($instructors as $instructor){
+            array_push($instructor_ids, $instructor['id']);
+        }
+        if (sizeof($instructor_ids)) {
+            $this->db->where_in('user_id', [6,7]);
+        } else {
+            return array();
+        }
+
+        $courses = $this->db->get('course')->result_array();
+        
+        foreach ($courses as $course) {
+            if (!in_array($course['id'], $course_ids)) {
+                array_push($course_ids, $course['id']);
+            }
+        }
+        if (sizeof($course_ids)) {
+            $this->db->where_in('course_id', $course_ids);
+        } else {
+            return array();
+        }
+
+        $this->db->order_by('date_added', 'desc');
+        return $this->db->get('classes')->result_array();
+    }
+
     public function get_institute_instructors(){
         $course_ids = array();
         $courses    = array();
@@ -93,10 +126,14 @@ class Crud_model extends CI_Model
         // }
     }
 
-    public function delete_class($plan_id = "") {
-        $this->db->where('id', $plan_id);
-        $this->db->delete('plans');
-        $this->session->set_flashdata('flash_message', get_phrase('plan_deleted_successfully'));
+    public function delete_class($class_id = "") {
+        $this->db->where('id', $class_id);
+        $this->db->delete('classes');
+        $this->session->set_flashdata('flash_message', get_phrase('class_deleted_successfully'));
+    }
+
+    public function get_classes(){
+        return $this->db->get('classes')->result_array();
     }
 
     public function check_name_duplication($name){
@@ -1879,6 +1916,11 @@ class Crud_model extends CI_Model
                     }
                 }
 
+                public function sync_instructor_id($id = 0){
+                    $this->db->select('id');
+                    $this->db->where('user_id', $id);
+                    return $this->db->get('course')->row_array();
+                }
                 
                 public function sort_lesson($lesson_json)
                 {

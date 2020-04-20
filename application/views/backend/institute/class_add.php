@@ -53,6 +53,11 @@
         dataType : "json",
         data : {"instructor_id" : id},
         success : function(response) {
+            var select = document.getElementById("courses");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+            select.options[i] = null;
+            }
             $.each( response, function( i, val ) {
                 var newState = new Option(val.title, val.id);
                 $("#courses").append(newState);
