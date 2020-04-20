@@ -71,7 +71,7 @@ class Crud_model extends CI_Model
         return $this->db->get('classes')->result_array();
     }
 
-    public function get_institute_instructors(){
+    public function get_institute_courses($category_id, $price, $status){
         $course_ids = array();
         $courses    = array();
         $instructor_ids = array();
@@ -81,21 +81,28 @@ class Crud_model extends CI_Model
         foreach ($instructors as $instructor){
             array_push($instructor_ids, $instructor['id']);
         }
-        
-        
-        // $this->db->where('user_id', $this->session->userdata('user_id'));
-        // $this->db->select('id');
-        // $courses = $this->db->get('course')->result_array();
-        // foreach ($courses as $course) {
-        //     if (!in_array($course['id'], $instructor_ids)) {
-        //         array_push($course_ids, $course['id']);
-        //     }
-        // }
+
         if (sizeof($instructor_ids)) {
-            $this->db->where_in('user_id', [6,7]);
+            $this->db->where_in('user_id', $instructor_ids);
         } else {
             return array();
         }
+
+        if ($category_id != "all") {
+            $this->db->where('sub_category_id', $category_id);
+        }
+
+        if ($price != "all") {
+            if ($price == "paid") {
+                $this->db->where('is_free_course', null);
+            } elseif ($price == "free") {
+                $this->db->where('is_free_course', 1);
+            }
+        }
+        if ($status != "all") {
+            $this->db->where('status', $status);
+        }
+        
         return $this->db->get('course')->result_array();
     }
 

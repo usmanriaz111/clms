@@ -48,11 +48,11 @@ class Institute extends CI_Controller {
             redirect(site_url('login'), 'refresh');
         }
         $page_data['selected_category_id']   = isset($_GET['category_id']) ? $_GET['category_id'] : "all";
-        $page_data['selected_instructor_id'] = $this->session->userdata('user_id');
+        // $page_data['selected_instructor_id'] = $this->session->userdata('user_id');
         $page_data['selected_price']         = isset($_GET['price']) ? $_GET['price'] : "all";
         $page_data['selected_status']        = isset($_GET['status']) ? $_GET['status'] : "all";
-        $page_data['courses']                = $this->crud_model->get_institute_instructors();
-        $page_data['page_name']              = 'courses-server-side';
+        $page_data['courses']                = $this->crud_model->get_institute_courses($page_data['selected_category_id'], $page_data['selected_price'], $page_data['selected_status']);
+        $page_data['page_name']              = 'courses';
         $page_data['categories']             = $this->crud_model->get_categories();
         $page_data['page_title']             = get_phrase('active_courses');
         $this->load->view('backend/index', $page_data);
