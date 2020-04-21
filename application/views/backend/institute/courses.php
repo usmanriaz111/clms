@@ -174,8 +174,8 @@
                                 <tr>
                                     <td><?php echo ++$key; ?></td>
                                     <td>
-                                        <strong><a href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>"><?php echo ellipsis($course['title']); ?></a></strong><br>
-                                        <small class="text-muted"><?php echo get_phrase('instructor').': <b>'.$instructor_details['first_name'].' '.$instructor_details['last_name'].'</b>'; ?></small>
+                                        <strong><a href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>" title=<?php echo ($course['title'])?>><?php echo ellipsis(substr($course['title'],0,16)); ?></a></strong><br>
+                                        <small title=<?php echo ($instructor_details['first_name'].' '.$instructor_details['last_name'])?> class="text-muted"><?php echo get_phrase('instructor').': <b>'.$instructor_details['first_name'].'</b>'; ?></small>
                                     </td>
                                     <td>
                                         <span class="badge badge-dark-lighten"><?php echo $category_details['name']; ?></span>

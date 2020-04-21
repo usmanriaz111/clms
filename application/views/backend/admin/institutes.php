@@ -25,13 +25,19 @@
                       <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('email'); ?></th>
                       <th><?php echo get_phrase('no_of_active_courses'); ?></th>
+                      <th><?php echo get_phrase('no_of_classes'); ?></th>
+                      <th><?php echo get_phrase('no_of_students'); ?></th>
                       <th><?php echo get_phrase('no_of_instructor'); ?></th>
+                      <th><?php echo get_phrase('plan_name'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
                   <tbody>
                       <?php
                        foreach ($institutes as $key => $user): ?>
+                       <?php
+                       $plan = $this->crud_model->get_plan_by_id($user['id']);
+                       ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td>
@@ -42,9 +48,12 @@
                             <td>
                                 <?php echo $this->user_model->get_number_of_active_courses_of_instructor($user['id']).' '.strtolower(get_phrase('active_courses')); ?>
                             </td>
+                            <td>classes</td>
+                            <td>students</td>
                             <td>
                                 <?php echo $this->user_model->get_number_of_instructor($user['id']).' '.strtolower(get_phrase('instructors')); ?>
                             </td>
+                            <td><?php echo $plan['name']; ?></td>
                             <td>
                                 <div class="dropright dropright">
                                   <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -43,6 +43,25 @@ class Institute extends CI_Controller {
         }
     }
 
+    /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
+  function profile($param1 = '', $param2 = '', $param3 = '')
+  {
+    if ($this->session->userdata('user_login') != 1)
+    redirect(site_url('login'), 'refresh');
+    if ($param1 == 'update_profile_info') {
+      $this->user_model->edit_user($param2);
+    }
+    if ($param1 == 'change_password') {
+      $this->user_model->change_password($param2);
+    }
+    $page_data['page_name']  = 'manage_profile';
+    $page_data['page_title'] = get_phrase('manage_profile');
+    $page_data['edit_data']  = $this->db->get_where('users', array(
+      'id' => $this->session->userdata('user_id')
+    ))->result_array();
+    $this->load->view('backend/index', $page_data);
+  }
+
     public function courses() {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
@@ -163,7 +182,7 @@ class Institute extends CI_Controller {
 
           $nestedData['#'] = $key+1;
 
-          $nestedData['title'] = '<strong><a href="'.site_url('institute/course_form/course_edit/'.$row->id).'">'.$row->title.'</a></strong><br>
+          $nestedData['title'] = '<strong><a href="'.site_url('institute/course_form/course_edit/'.$row->id).'" title="'.$row->title.'">'.substr($row->title,0,25).'</a></strong><br>
           <small class="text-muted">'.get_phrase('instructor').': <b>'.$instructor_details['first_name'].' '.$instructor_details['last_name'].'</b></small>';
 
           $nestedData['category'] = '<span class="badge badge-dark-lighten">'.$category_details['name'].'</span>';

@@ -18,12 +18,20 @@
                 <h4 class="header-title mb-3"><?php echo get_phrase('plan_edit_form'); ?></h4>
 
 <form action="<?php echo site_url('admin/plans/edit/'.$plan_id); ?>" method="post">
+<div class="form-group">
+        <label for="name"><?php echo get_phrase('plane_name'); ?></label>
+        <input class="form-control" type="text" name="name" id="name" value="<?php echo $plan_data['name']; ?>" required>
+    </div>
     <div class="form-group">
         <label for="title"><?php echo get_phrase('no_of_courses'); ?></label>
         <input class="form-control" type="number" name="courses" value="<?php echo $plan_data['courses']; ?>" id="courses" required>
     </div>
     <div class="form-group">
-        <label for="title"><?php echo get_phrase('no_minutes_per_live_session_per_course'); ?></label>
+        <label for="classes"><?php echo get_phrase('no_of_classes_per_course'); ?></label>
+        <input class="form-control" type="number" name="classes" id="classes" value="<?php echo $plan_data['classes']; ?>" required>
+    </div>
+    <div class="form-group">
+        <label for="title"><?php echo get_phrase('no_of_minutes_per_live_session_per_class'); ?></label>
         <input class="form-control" type="text" name="course_minutes" value="<?php echo $plan_data['course_minutes']; ?>" id="course_minutes" required>
     </div>
     <div class="form-group">
@@ -33,14 +41,6 @@
     <div class="form-group">
         <label><?php echo get_phrase('cloud_space'); ?></label>
         <input class="form-control" type="text" name="cloud_space"  value="<?php echo $plan_data['cloud_space']; ?>" id="cloud_space" required>
-    </div>
-    <div class="form-group">
-          <label><?php echo get_phrase('select_institute'); ?></label>
-         <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
-            <?php foreach ($institutes as $institute): ?>
-                <option value="<?php echo $institute['id']; ?>" <?php if ($plan_data['institute_id'] == $institute['id'])echo 'selected';?>><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
-            <?php endforeach; ?>
-            </select>
     </div>
     <div class="text-center">
         <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>
