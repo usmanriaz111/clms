@@ -12,6 +12,16 @@
 
 <div class="row">
     <div class="col-xl-12">
+    <div class="card">
+            <div class="card-body">
+              <h4 class="mb-3 header-title"><?php echo get_phrase('Import Students'); ?></h4>
+              <form class="form-inline" action="<?php echo base_url();?>import/importFile" method="post" enctype="multipart/form-data">
+                    Upload Students Excel file : 
+                    <input type="file" name="uploadFile" value="" class="pull-left" /><br><br>
+                    <input type="submit" name="submit" class="btn btn-primary" value="Upload" />
+                </form>
+                </div>
+                </div>
         <div class="card">
             <div class="card-body">
               <h4 class="mb-3 header-title"><?php echo get_phrase('students'); ?></h4>

@@ -21,7 +21,9 @@
                   <thead>
                     <tr>
                       <th>#</th>
+                      <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('no_of_courses'); ?></th>
+                      <th><?php echo get_phrase('no_of_classes'); ?></th>
                       <th><?php echo get_phrase('no_minutes_per_live_session_per_course'); ?></th>
                       <th><?php echo get_phrase('no_of_students_per_course'); ?></th>
                       <th><?php echo get_phrase('cloud_space_per_course'); ?></th>
@@ -35,7 +37,9 @@
                        <?php $institute =  $this->user_model->get_institute($plan['institute_id']);?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
+                            <td><?php echo $plan['name']; ?></td>
                             <td><?php echo $plan['courses']; ?></td>
+                            <td><?php echo $plan['classes']; ?></td>
                             <td><?php echo $plan['course_minutes']; ?></td>
                             <td><?php echo $plan['students']; ?></td>
                             <td><?php echo $plan['cloud_space']; ?></td>

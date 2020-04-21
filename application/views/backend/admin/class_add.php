@@ -53,8 +53,17 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function () {
+    sync_instructors();
     $('#institutes').on('change', function(){
-        let id = $("#institutes option:selected").val();
+        sync_instructors();  
+});
+
+$('#instructors').on('change', function(){
+    sync_courses();
+});
+
+function sync_instructors(){
+    let id = $("#institutes option:selected").val();
         $.ajax({
         url : "<?php echo base_url();?>admin/ajax_get_instructor",
         type : "post",
@@ -70,16 +79,16 @@
                 var newState = new Option(val.first_name+' '+val.last_name, val.id);
                 $("#instructors").append(newState);
             });
+            sync_courses();
         },
         error : function(response) {
             console.log(response);
         }
     });
+}
 
-});
-
-$('#instructors').on('change', function(){
-        let id = $("#instructors option:selected").val();
+function sync_courses(){
+    let id = $("#instructors option:selected").val();
         $.ajax({
         url : "<?php echo base_url();?>admin/ajax_sync_course",
         type : "post",
@@ -102,8 +111,7 @@ $('#instructors').on('change', function(){
             console.log(response);
         }
     });
-
-});
+}
 
   });
 </script>

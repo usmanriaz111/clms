@@ -163,6 +163,8 @@ class Crud_model extends CI_Model
 
     // Adding plan functionalities
     public function add_plan(){
+        $data_plan['name'] = html_escape($this->input->post('name'));
+        $data_plan['classes'] = html_escape($this->input->post('classes'));
         $data_plan['courses'] = html_escape($this->input->post('courses'));
         $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
         $data_plan['students'] = html_escape($this->input->post('students'));
@@ -174,6 +176,8 @@ class Crud_model extends CI_Model
     }
 
     public function edit_plan($plan_id = "") {
+        $data_plan['name'] = html_escape($this->input->post('name'));
+        $data_plan['classes'] = html_escape($this->input->post('classes'));
         $data_plan['courses'] = html_escape($this->input->post('courses'));
         $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
         $data_plan['students'] = html_escape($this->input->post('students'));
@@ -619,7 +623,7 @@ class Crud_model extends CI_Model
         $data['level'] = $this->input->post('level');
         $data['is_free_course'] = $this->input->post('is_free_course');
         $data['video_url'] = html_escape($this->input->post('course_overview_url'));
-
+        $type = $this->input->post('type');
         if ($this->input->post('course_overview_url') != "") {
             $data['course_overview_provider'] = html_escape($this->input->post('course_overview_provider'));
         } else {
@@ -641,7 +645,7 @@ class Crud_model extends CI_Model
         $data['instructor_id'] = $this->input->post('instructors');
         $data['institute_id'] = $this->input->post('institutes');
         $admin_details = $this->user_model->get_admin_details()->row_array();
-        if ($admin_details['id'] == $data['user_id']) {
+        if ($admin_details['id'] == $this->session->userdata('user_id')) {
             $data['is_admin'] = 1;
         } else {
             $data['is_admin'] = 0;
@@ -652,7 +656,13 @@ class Crud_model extends CI_Model
             if ($this->session->userdata('admin_login')) {
                 $data['status'] = 'active';
             } else {
-                $data['status'] = 'pending';
+                if ($user_param > 0){
+                    if($type == 'public'){
+                        $data['status'] = 'pending';
+                    }else{
+                        $data['status'] = 'active';
+                    }
+                }
             }
         }
         $this->db->insert('course', $data);
@@ -682,6 +692,7 @@ class Crud_model extends CI_Model
         $this->session->set_flashdata('flash_message', get_phrase('course_has_been_added_successfully'));
         return $course_id;
     }
+
 
     function trim_and_return_json($untrimmed_array)
     {
@@ -847,6 +858,10 @@ class Crud_model extends CI_Model
     public function get_course_by_id($course_id = "")
     {
         return $this->db->get_where('course', array('id' => $course_id));
+    }
+    public function get_plan_by_id($user_id = "")
+    {
+        return $this->db->get_where('plans', array('institute_id' => $user_id))->row_array();
     }
 
     public function delete_course($course_id)

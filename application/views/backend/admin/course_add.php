@@ -440,25 +440,34 @@ function calculateDiscountPercentage(discounted_price) {
 
 <script type="text/javascript">
   $(document).ready(function () {
+    sync_instructors();
     $('#institutes').on('change', function(){
-        let id = $("#institutes option:selected").val();
+        sync_instructors();
+});
+
+function sync_instructors(){
+    let id = $("#institutes option:selected").val();
         $.ajax({
-        url : "<?php echo base_url();?>Admin/ajax_get_instructor",
+        url : "<?php echo base_url();?>admin/ajax_get_instructor",
         type : "post",
         dataType : "json",
-        data : {"institute_id" : 5},
+        data : {"institute_id" : id},
         success : function(response) {
+            var select = document.getElementById("instructors");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+            select.options[i] = null;
+            }
             $.each( response, function( i, val ) {
-                var newState = new Option(val.first_name+' '+val.last_name, val.id,);
+                var newState = new Option(val.first_name+' '+val.last_name, val.id);
                 $("#instructors").append(newState);
             });
         },
         error : function(response) {
-            consol.logs(response);
+            console.log(response);
         }
     });
-
-});
+}
 
   });
 </script>

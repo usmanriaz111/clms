@@ -16,12 +16,14 @@
         <div class="card">
             <div class="card-body">
               <h4 class="mb-3 header-title"><?php echo get_phrase('classes'); ?></h4>
+             
               <div class="table-responsive-sm mt-4">
                 <table id="basic-datatable" class="table table-striped table-centered mb-0">
                   <thead>
                     <tr>
                       <th>#</th>
                       <th><?php echo get_phrase('name'); ?></th>
+                      <th><?php echo get_phrase('course_name'); ?></th>
                       <th><?php echo get_phrase('institute'); ?></th>
                       <th><?php echo get_phrase('instructor'); ?></th>
                       <th><?php echo get_phrase('no_of_student'); ?></th>
@@ -32,10 +34,17 @@
                       <?php
                        foreach ($classes as $key => $cls): ?>
                         <tr>
+                        <?php
+                        $course = $this->crud_model->get_course_by_id($cls['course_id'])->row_array();
+                        $instructor = $this->user_model->get_user_by_id($course['user_id'])->row_array();
+                        $institute = $this->user_model->get_all_instructor($instructor['institute_id'])
+                        
+                        ?>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo $cls['name']; ?></td>
-                            <td><?php echo $cls['institute']; ?></td>
-                            <td><?php echo $cls['instructor']; ?></td>
+                            <td><?php echo $course['title']; ?></td>
+                            <td><?php echo $institute['first_name'].' '.$institute['last_name']; ?></td>
+                            <td><?php echo $instructor['first_name'].' '.$instructor['last_name']; ?></td>
                             <td><?php echo $cls['no_of_student']; ?></td>
                             <td>
                                   <div class="dropright dropright">

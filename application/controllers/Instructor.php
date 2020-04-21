@@ -43,6 +43,26 @@ class Instructor extends CI_Controller {
         }
     }
 
+ /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
+ function profile($param1 = '', $param2 = '', $param3 = '')
+ {
+ 
+   if ($this->session->userdata('user_login') != 1)
+   redirect(site_url('login'), 'refresh');
+   if ($param1 == 'update_profile_info') {
+     $this->user_model->edit_user($param2);
+   }
+   if ($param1 == 'change_password') {
+     $this->user_model->change_password($param2);
+   }
+   $page_data['page_name']  = 'manage_profile';
+   $page_data['page_title'] = get_phrase('manage_profile');
+   $page_data['edit_data']  = $this->db->get_where('users', array(
+     'id' => $this->session->userdata('user_id')
+   ))->result_array();
+   $this->load->view('backend/index', $page_data);
+ }
+
     public function courses() {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
@@ -146,24 +166,9 @@ class Instructor extends CI_Controller {
 
           $delete_course_url = "confirm_modal('".site_url('instuctor/course_actions/delete/'.$row->id)."')";
 
-          $action = '
-          <div class="dropright dropright">
-            <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="mdi mdi-dots-vertical"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="'.$view_course_on_frontend_url.'" target="_blank">'.get_phrase("view_course_on_frontend").'</a></li>
-                <li><a class="dropdown-item" href="'.$edit_this_course_url.'">'.get_phrase("edit_this_course").'</a></li>
-                <li><a class="dropdown-item" href="'.$section_and_lesson_url.'">'.get_phrase("section_and_lesson").'</a></li>
-                <li><a class="dropdown-item" href="javascript::" onclick="'.$course_status_changing_action.'">'.$course_status_changing_message.'</a></li>
-                <li><a class="dropdown-item" href="javascript::" onclick="'.$delete_course_url.'">'.get_phrase("delete").'</a></li>
-            </ul>
-        </div>
-        ';
-
           $nestedData['#'] = $key+1;
 
-          $nestedData['title'] = '<strong><a href="'.site_url('instuctor/course_form/course_edit/'.$row->id).'">'.$row->title.'</a></strong><br>
+          $nestedData['title'] = '<strong>'.$row->title.'</strong><br>
           <small class="text-muted">'.get_phrase('instructor').': <b>'.$instructor_details['first_name'].' '.$instructor_details['last_name'].'</b></small>';
 
           $nestedData['category'] = '<span class="badge badge-dark-lighten">'.$category_details['name'].'</span>';
@@ -195,64 +200,6 @@ class Instructor extends CI_Controller {
 
       echo json_encode($json_data);
     }
-
-    public function course_actions($param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-
-        if ($param1 == "add") {
-            $course_id = $this->crud_model->add_course();
-            redirect(site_url('instuctor/course_form/course_edit/'.$course_id), 'refresh');
-
-        }
-        elseif ($param1 == "edit") {
-            $this->is_the_course_belongs_to_current_instructor($param2);
-            $this->crud_model->update_course($param2);
-            redirect(site_url('instuctor/courses'), 'refresh');
-
-        }
-        elseif ($param1 == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
-            $this->crud_model->delete_course($param2);
-            redirect(site_url('instuctor/courses'), 'refresh');
-        }
-        elseif ($param1 == 'draft') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
-            $this->crud_model->change_course_status('draft', $param2);
-            redirect(site_url('instuctor/courses'), 'refresh');
-        }
-        elseif ($param1 == 'publish') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
-            $this->crud_model->change_course_status('pending', $param2);
-            redirect(site_url('instuctor/courses'), 'refresh');
-        }
-    }
-
-    public function course_form($param1 = "", $param2 = "") {
-
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-
-        if ($param1 == 'add_course') {
-            $page_data['languages'] = $this->crud_model->get_all_languages();
-            $page_data['categories'] = $this->crud_model->get_categories();
-            $page_data['page_name'] = 'course_add';
-            $page_data['page_title'] = get_phrase('add_course');
-            $this->load->view('backend/index', $page_data);
-
-        }elseif ($param1 == 'course_edit') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
-            $page_data['page_name'] = 'course_edit';
-            $page_data['course_id'] =  $param2;
-            $page_data['page_title'] = get_phrase('edit_course');
-            $page_data['languages'] = $this->crud_model->get_all_languages();
-            $page_data['categories'] = $this->crud_model->get_categories();
-            $this->load->view('backend/index', $page_data);
-        }
-    }
-
 
     public function classes($param1 = "", $param2 = "") {
       if ($this->session->userdata('user_login') != true) {
@@ -297,275 +244,13 @@ class Instructor extends CI_Controller {
       }
     }
 
-    public function payment_settings($param1 = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-
-        if ($param1 == 'paypal_settings') {
-            $this->user_model->update_instructor_paypal_settings($this->session->userdata('user_id'));
-            redirect(site_url('instuctor/payment_settings'), 'refresh');
-        }
-        if ($param1 == 'stripe_settings') {
-            $this->user_model->update_instructor_stripe_settings($this->session->userdata('user_id'));
-            redirect(site_url('instuctor/payment_settings'), 'refresh');
-        }
-
-        $page_data['page_name'] = 'payment_settings';
-        $page_data['page_title'] = get_phrase('payment_settings');
-        $this->load->view('backend/index', $page_data);
-    }
-
-    public function instructor_revenue($param1 = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-
-        $page_data['payment_history'] = $this->crud_model->get_instructor_revenue();
-        $page_data['page_name'] = 'instructor_revenue';
-        $page_data['page_title'] = get_phrase('instructor_revenue');
-        $this->load->view('backend/index', $page_data);
-    }
-
-    public function preview($course_id = '') {
-        if ($this->session->userdata('user_login') != 1)
-        redirect(site_url('login'), 'refresh');
-
-        $this->is_the_course_belongs_to_current_instructor($course_id);
-        if ($course_id > 0) {
-            $courses = $this->crud_model->get_course_by_id($course_id);
-            if ($courses->num_rows() > 0) {
-                $course_details = $courses->row_array();
-                redirect(site_url('home/lesson/'.slugify($course_details['title']).'/'.$course_details['id']), 'refresh');
-            }
-        }
-        redirect(site_url('instuctor/courses'), 'refresh');
-    }
-
-    public function sections($param1 = "", $param2 = "", $param3 = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-
-        if ($param2 == 'add') {
-          $this->is_the_course_belongs_to_current_instructor($param1);
-            $this->crud_model->add_section($param1);
-            $this->session->set_flashdata('flash_message', get_phrase('section_has_been_added_successfully'));
-        }
-        elseif ($param2 == 'edit') {
-            $this->is_the_course_belongs_to_current_instructor($param1, $param3, 'section');
-            $this->crud_model->edit_section($param3);
-            $this->session->set_flashdata('flash_message', get_phrase('section_has_been_updated_successfully'));
-        }
-        elseif ($param2 == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($param1, $param3, 'section');
-            $this->crud_model->delete_section($param1, $param3);
-            $this->session->set_flashdata('flash_message', get_phrase('section_has_been_deleted_successfully'));
-        }
-        redirect(site_url('instuctor/course_form/course_edit/'.$param1));
-    }
-
-    public function lessons($course_id = "", $param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-        if ($param1 == 'add') {
-            $this->is_the_course_belongs_to_current_instructor($course_id);
-            $this->crud_model->add_lesson();
-            $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
-            redirect('instuctor/course_form/course_edit/'.$course_id);
-        }
-        elseif ($param1 == 'edit') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
-            $this->crud_model->edit_lesson($param2);
-            $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_updated_successfully'));
-            redirect('instuctor/course_form/course_edit/'.$course_id);
-        }
-        elseif ($param1 == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
-            $this->crud_model->delete_lesson($param2);
-            $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_deleted_successfully'));
-            redirect('instuctor/course_form/course_edit/'.$course_id);
-        }
-        elseif ($param1 == 'filter') {
-            redirect('instuctor/lessons/'.$this->input->post('course_id'));
-        }
-        $page_data['page_name'] = 'lessons';
-        $page_data['lessons'] = $this->crud_model->get_lessons('course', $course_id);
-        $page_data['course_id'] = $course_id;
-        $page_data['page_title'] = get_phrase('lessons');
-        $this->load->view('backend/index', $page_data);
-    }
-
-    // Manage Quizes
-    public function quizes($course_id = "", $action = "", $quiz_id = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-
-        if ($action == 'add') {
-            $this->is_the_course_belongs_to_current_instructor($course_id);
-            $this->crud_model->add_quiz($course_id);
-            $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_added_successfully'));
-        }
-        elseif ($action == 'edit') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $quiz_id, 'quize');
-            $this->crud_model->edit_quiz($quiz_id);
-            $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_updated_successfully'));
-        }
-        elseif ($action == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $quiz_id, 'quize');
-            $this->crud_model->delete_lesson($quiz_id);
-            $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_deleted_successfully'));
-        }
-        redirect(site_url('instuctor/course_form/course_edit/'.$course_id));
-    }
-
-    // Manage Quize Questions
-    public function quiz_questions($quiz_id = "", $action = "", $question_id = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-        $quiz_details = $this->crud_model->get_lessons('lesson', $quiz_id)->row_array();
-
-        if ($action == 'add') {
-            $this->is_the_course_belongs_to_current_instructor($quiz_details['course_id'], $quiz_id, 'quize');
-            $response = $this->crud_model->add_quiz_questions($quiz_id);
-            echo $response;
-        }
-
-        elseif ($action == 'edit') {
-            if($this->db->get_where('question', array('id' => $question_id, 'quiz_id' => $quiz_id))->num_rows() <= 0){
-              $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quiz_question'));
-              redirect(site_url('instuctor/courses'), 'refresh');
-            }
-
-            $response = $this->crud_model->update_quiz_questions($question_id);
-            echo $response;
-        }
-
-        elseif ($action == 'delete') {
-            if($this->db->get_where('question', array('id' => $question_id, 'quiz_id' => $quiz_id))->num_rows() <= 0){
-              $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quiz_question'));
-              redirect(site_url('instuctor/courses'), 'refresh');
-            }
-
-            $response = $this->crud_model->delete_quiz_question($question_id);
-            $this->session->set_flashdata('flash_message', get_phrase('question_has_been_deleted'));
-            redirect(site_url('instuctor/course_form/course_edit/'.$quiz_details['course_id']));
-        }
-    }
-
-    function manage_profile() {
-        redirect(site_url('home/profile/user_profile'), 'refresh');
-    }
-
-    function invoice($payment_id = "") {
-        if ($this->session->userdata('user_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-        $page_data['page_name'] = 'invoice';
-        $page_data['payment_details'] = $this->crud_model->get_payment_details_by_id($payment_id);
-        $page_data['page_title'] = get_phrase('invoice');
-        $this->load->view('backend/index', $page_data);
-    }
     // Ajax Portion
     public function ajax_get_video_details() {
         $video_details = $this->video_model->getVideoDetails($_POST['video_url']);
         echo $video_details['duration'];
     }
 
-    public function instructor_form($param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
-        }
-        elseif ($param1 == 'add_instructor_form') {
-          $page_data['page_name'] = 'instructor_add';
-          $page_data['page_title'] = get_phrase('instructor_add');
-          $page_data['institutes'] = $this->user_model->get_institute();
-          $this->load->view('backend/index', $page_data);
-        }
-        elseif ($param1 == 'edit_instructor_form') {
-          $page_data['page_name'] = 'instructor_edit';
-          $page_data['user_id'] = $param2;
-          $page_data['institutes'] = $this->user_model->get_institute();
-          $page_data['page_title'] = get_phrase('instructor_edit');
-          $this->load->view('backend/index', $page_data);
-        }
-    }
-
-    public function instructors($param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
-        }
-        elseif ($param1 == "add") {
-          $this->user_model->add_user(4);
-          redirect(site_url('instuctor/instructors'), 'refresh');
-        }
-        elseif ($param1 == "edit") {
-          $this->user_model->edit_user($param2);
-          redirect(site_url('instuctor/instructors'), 'refresh');
-        }
-        elseif ($param1 == "delete") {
-          $this->user_model->delete_user($param2);
-          redirect(site_url('instuctor/instructors'), 'refresh');
-        }
-       
-        $page_data['page_name'] = 'instructors';
-        $page_data['page_title'] = get_phrase('instructor');
-        $page_data['instructors'] = $this->user_model->get_instructors();
-        $this->load->view('backend/index', $page_data);
-    }
-
-    public function instructor_settings($param1 = "") {
-        if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
-        }
-        if ($param1 == 'update') {
-          $this->crud_model->update_instructor_settings();
-          $this->session->set_flashdata('flash_message', get_phrase('instructor_settings_updated'));
-          redirect(site_url('instuctor/instructor_settings'), 'refresh');
-        }
-    
-        $page_data['page_name'] = 'instructor_settings';
-        $page_data['page_title'] = get_phrase('instructor_settings');
-        $this->load->view('backend/index', $page_data);
-    }
-    
-    public function user_form($param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
-        }
-    
-        if ($param1 == 'add_user_form') {
-          $page_data['page_name'] = 'user_add';
-          $page_data['page_title'] = get_phrase('student_add');
-          $this->load->view('backend/index', $page_data);
-        }
-        elseif ($param1 == 'edit_user_form') {
-          $page_data['page_name'] = 'user_edit';
-          $page_data['user_id'] = $param2;
-          $page_data['page_title'] = get_phrase('student_edit');
-          $this->load->view('backend/index', $page_data);
-        }
-    }
     public function users($param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
-        }
-        if ($param1 == "add") {
-          $this->user_model->add_user();
-          redirect(site_url('instuctor/users'), 'refresh');
-        }
-        elseif ($param1 == "edit") {
-          $this->user_model->edit_user($param2);
-          redirect(site_url('instuctor/users'), 'refresh');
-        }
-        elseif ($param1 == "delete") {
-          $this->user_model->delete_user($param2);
-          redirect(site_url('instuctor/users'), 'refresh');
-        }
-    
         $page_data['page_name'] = 'users';
         $page_data['page_title'] = get_phrase('student');
         $page_data['users'] = $this->user_model->get_user($param2);

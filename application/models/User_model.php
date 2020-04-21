@@ -37,6 +37,11 @@ class User_model extends CI_Model {
         return $this->db->get('users')->result_array();
     }
 
+    public function get_plan_by_id($user_id = ''){
+        return $this->db->get_where('plans', array('institute_id' => $user_id));
+    }
+    
+
     public function add_user($role_id = 2) {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {
@@ -228,7 +233,7 @@ class User_model extends CI_Model {
 
     public function upload_user_image($user_id) {
         if (isset($_FILES['user_image']) && $_FILES['user_image']['name'] != "") {
-            move_uploaded_file($_FILES['user_image']['tmp_name'], 'uploads/user_image/'.$user_id.'.jpg');
+            move_uploaded_file($_FILES['user_image']['tmp_name'], 'uploads/user_image/'.$user_id.'.png');
             $this->session->set_flashdata('flash_message', get_phrase('user_update_successfully'));
         }
     }
