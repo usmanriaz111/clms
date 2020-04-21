@@ -82,6 +82,8 @@ CREATE TABLE `course` (
   `discounted_price` int(11) DEFAULT NULL,
   `level` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `instructor_id` int(11) DEFAULT NULL,
+  `institute_id` int(11) DEFAULT NULL,
   `thumbnail` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `video_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
@@ -237,6 +239,16 @@ CREATE TABLE `plans` (
   `students` int(255) NULL,
   `cloud_space` decimal(65) NULL,
   `institute_id` int(65) DEFAULT NULL,
+  `date_added` int(11) DEFAULT NULL,
+  `last_modified` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `classes`;
+CREATE TABLE `classes` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `course_id` int(11) DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)

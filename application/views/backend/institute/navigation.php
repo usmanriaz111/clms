@@ -26,6 +26,13 @@
 			</li>
 
 			<li class="side-nav-item">
+				<a href="<?php echo site_url('institute/classes'); ?>" class="side-nav-link <?php if ($page_name == 'classes' || $page_name == 'class_add' || $page_name == 'class_edit')echo 'active';?>">
+					<i class="mdi mdi-incognito"></i>
+					<span><?php echo get_phrase('classes'); ?></span>
+				</a>
+			</li>
+
+			<li class="side-nav-item">
 				<a href="<?php echo site_url('institute/instructors'); ?>" class="side-nav-link <?php if ($page_name == 'instructors' || $page_name == 'instructor_add' || $page_name == 'instructor_edit')echo 'active';?>">
 					<i class="mdi mdi-incognito"></i>
 					<span><?php echo get_phrase('instructors'); ?></span>

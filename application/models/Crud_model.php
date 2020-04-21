@@ -16,9 +16,145 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+    public function curret_user_classes(){
+        $course_ids = array();
+        $courses    = array();
+
+        $this->db->where('user_id', $this->session->userdata('user_id'));
+        $this->db->select('id');
+        $courses = $this->db->get('course')->result_array();
+        foreach ($courses as $course) {
+            if (!in_array($course['id'], $course_ids)) {
+                array_push($course_ids, $course['id']);
+            }
+        }
+        if (sizeof($course_ids)) {
+            $this->db->where_in('course_id', $course_ids);
+        } else {
+            return array();
+        }
+
+        $this->db->order_by('date_added', 'desc');
+        return $this->db->get('classes')->result_array();
+    }
+
+    public function get_institute_classes(){
+        $course_ids = array();
+        $courses    = array();
+        $instructor_ids = array();
+
+        $this->db->where('institute_id', $this->session->userdata('user_id'));
+        $instructors = $this->db->get('users')->result_array();
+        foreach ($instructors as $instructor){
+            array_push($instructor_ids, $instructor['id']);
+        }
+        if (sizeof($instructor_ids)) {
+            $this->db->where_in('user_id', $instructor_ids);
+        } else {
+            return array();
+        }
+
+        $courses = $this->db->get('course')->result_array();
+        
+        foreach ($courses as $course) {
+            if (!in_array($course['id'], $course_ids)) {
+                array_push($course_ids, $course['id']);
+            }
+        }
+        if (sizeof($course_ids)) {
+            $this->db->where_in('course_id', $course_ids);
+        } else {
+            return array();
+        }
+
+        $this->db->order_by('date_added', 'desc');
+        return $this->db->get('classes')->result_array();
+    }
+
+    public function get_institute_courses($category_id, $price, $status){
+        $course_ids = array();
+        $courses    = array();
+        $instructor_ids = array();
+
+        $this->db->where('institute_id', $this->session->userdata('user_id'));
+        $instructors = $this->db->get('users')->result_array();
+        foreach ($instructors as $instructor){
+            array_push($instructor_ids, $instructor['id']);
+        }
+
+        if (sizeof($instructor_ids)) {
+            $this->db->where_in('user_id', $instructor_ids);
+        } else {
+            return array();
+        }
+
+        if ($category_id != "all") {
+            $this->db->where('sub_category_id', $category_id);
+        }
+
+        if ($price != "all") {
+            if ($price == "paid") {
+                $this->db->where('is_free_course', null);
+            } elseif ($price == "free") {
+                $this->db->where('is_free_course', 1);
+            }
+        }
+        if ($status != "all") {
+            $this->db->where('status', $status);
+        }
+        
+        return $this->db->get('course')->result_array();
+    }
+
+    public function add_class(){
+        $validity_name = $this->check_name_duplication($this->input->post('name'));
+        if ($validity_name == false){
+            $this->session->set_flashdata('error_message', get_phrase('class_name_duplication'));
+        }else{
+            $data_class['name'] = html_escape($this->input->post('name'));
+            $data_class['course_id'] = html_escape($this->input->post('courses'));
+            $data_class['date_added'] = strtotime(date('D, d-M-Y'));
+            $this->db->insert('classes', $data_class);
+            $this->session->set_flashdata('flash_message', get_phrase('class_added_successfully'));
+        }
+    }
+
+    public function edit_class($class_id = "") {
+        // $validity_name = $this->check_name_duplication($this->input->post('name'));
+        // if ($validity_name){
+            $data_class['name'] = html_escape($this->input->post('name'));
+            $data_class['course_id'] = html_escape($this->input->post('courses'));
+            $data_class['last_modified'] = strtotime(date('D, d-M-Y'));
+            $this->db->where('id', $class_id);
+            $this->db->update('classes', $data_class);
+            $this->session->set_flashdata('flash_message', get_phrase('class_update_successfully'));
+        // }else{
+            // $this->session->set_flashdata('error_message', get_phrase('class_name_duplication'));
+        // }
+    }
+
+    public function delete_class($class_id = "") {
+        $this->db->where('id', $class_id);
+        $this->db->delete('classes');
+        $this->session->set_flashdata('flash_message', get_phrase('class_deleted_successfully'));
+    }
+
+    public function get_classes(){
+        $query = $this->db->get('classes')->result_array();
+         return $query;
+    }
+
+    public function check_name_duplication($name){
+        $duplicate_name_check = $this->db->get_where('classes', array('name' => $name));
+            if ($duplicate_name_check->num_rows() > 0) {
+                return false;
+            }else {
+                return true;
+            }
+    }
+
 
      //Get plans
-
      public function get_plans()
      {
          $query = $this->db->get('plans')->result_array();
@@ -74,6 +210,15 @@ class Crud_model extends CI_Model
                 return true;
             }
         }
+    }
+
+    public function check_class_duplication($name = "") {
+        $duplicate_name_check = $this->db->get_where('classes', array('name' => $name));
+            if ($duplicate_name_check->num_rows() > 0) {
+                return false;
+            }else {
+                return true;
+            }
     }
 
 
@@ -454,7 +599,7 @@ class Crud_model extends CI_Model
         }
     }
 
-    public function add_course($param1 = "")
+    public function add_course($param1 = "", $user_param = 0)
     {
         $outcomes = $this->trim_and_return_json($this->input->post('outcomes'));
         $requirements = $this->trim_and_return_json($this->input->post('requirements'));
@@ -484,7 +629,13 @@ class Crud_model extends CI_Model
         $data['date_added'] = strtotime(date('D, d-M-Y'));
         $data['section'] = json_encode(array());
         $data['is_top_course'] = $this->input->post('is_top_course');
-        $data['user_id'] = $this->session->userdata('user_id');
+        if ($user_param > 0){
+            if($user_param !=''){
+                $data['user_id'] = $user_param;
+            }
+        }else{
+            $data['user_id'] = $this->session->userdata('user_id');
+        }
         $data['meta_description'] = $this->input->post('meta_description');
         $data['meta_keywords'] = $this->input->post('meta_keywords');
         $data['instructor_id'] = $this->input->post('instructors');
@@ -1761,6 +1912,30 @@ class Crud_model extends CI_Model
                     }
                 }
 
+                public function sync_courses($id = 0)
+                {
+                
+                    if ($id > 0)
+                    {
+                        $this->db->where('user_id', $id);
+                        return $this->db->get('course')->result_array();
+                    }
+                }
+                
+                public function sync_instructors($id = 0){
+                    
+                    if ($id > 0){
+                        $this->db->where('institute_id', $id);
+                        return $this->db->get('users')->result_array();
+                    }
+                }
+
+                public function sync_instructor_id($id = 0){
+                    $this->db->select('id');
+                    $this->db->where('user_id', $id);
+                    return $this->db->get('course')->row_array();
+                }
+                
                 public function sort_lesson($lesson_json)
                 {
                     $lessons = json_decode($lesson_json);

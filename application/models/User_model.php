@@ -329,6 +329,12 @@ class User_model extends CI_Model {
         }
     }
 
+    public function sync_institute_id($id = 0){
+        $this->db->select('id');
+        $this->db->where('institute_id', $id[0]);
+        return $this->db->get('users')->row_array();
+    }
+
     public function check_if_instructor_exists() {
         $this->db->where('user_id >', 0);
         $result = $this->db->get('course')->num_rows();

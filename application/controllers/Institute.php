@@ -48,11 +48,11 @@ class Institute extends CI_Controller {
             redirect(site_url('login'), 'refresh');
         }
         $page_data['selected_category_id']   = isset($_GET['category_id']) ? $_GET['category_id'] : "all";
-        $page_data['selected_instructor_id'] = $this->session->userdata('user_id');
+        // $page_data['selected_instructor_id'] = $this->session->userdata('user_id');
         $page_data['selected_price']         = isset($_GET['price']) ? $_GET['price'] : "all";
         $page_data['selected_status']        = isset($_GET['status']) ? $_GET['status'] : "all";
-        $page_data['courses']                = $this->crud_model->filter_course_for_backend($page_data['selected_category_id'], $page_data['selected_instructor_id'], $page_data['selected_price'], $page_data['selected_status']);
-        $page_data['page_name']              = 'courses-server-side';
+        $page_data['courses']                = $this->crud_model->get_institute_courses($page_data['selected_category_id'], $page_data['selected_price'], $page_data['selected_status']);
+        $page_data['page_name']              = 'courses';
         $page_data['categories']             = $this->crud_model->get_categories();
         $page_data['page_title']             = get_phrase('active_courses');
         $this->load->view('backend/index', $page_data);
@@ -94,7 +94,7 @@ class Institute extends CI_Controller {
 
       // This block of code is handling the search event of datatable
       if(empty($this->input->post('search')['value'])) {
-        $courses = $this->lazyload->courses($limit, $start, $order, $dir, $filter_data);
+        $courses = $this->lazyload->institute_courses($limit, $start, $order, $dir, $filter_data);
       }
       else {
         $search = $this->input->post('search')['value'];
@@ -202,7 +202,8 @@ class Institute extends CI_Controller {
         }
 
         if ($param1 == "add") {
-            $course_id = $this->crud_model->add_course();
+            $instructor_id = $this->input->post('instructors');
+            $course_id = $this->crud_model->add_course("", $instructor_id );
             redirect(site_url('institute/course_form/course_edit/'.$course_id), 'refresh');
 
         }
@@ -240,6 +241,8 @@ class Institute extends CI_Controller {
             $page_data['categories'] = $this->crud_model->get_categories();
             $page_data['page_name'] = 'course_add';
             $page_data['page_title'] = get_phrase('add_course');
+            $institute_id = $this->session->userdata('user_id');
+            $page_data['instructors'] = $this->crud_model->sync_instructors($institute_id);
             $this->load->view('backend/index', $page_data);
 
         }elseif ($param1 == 'course_edit') {
@@ -251,6 +254,58 @@ class Institute extends CI_Controller {
             $page_data['categories'] = $this->crud_model->get_categories();
             $this->load->view('backend/index', $page_data);
         }
+    }
+
+    public function classes($param1 = "", $param2 = "") {
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      elseif ($param1 == "add") {
+        $this->crud_model->add_class();
+        redirect(site_url('institute/classes'), 'refresh');
+      }
+      elseif ($param1 == "edit") {
+        $this->crud_model->edit_class($param2);
+        redirect(site_url('institute/classes'), 'refresh');
+      }
+      elseif ($param1 == "delete") {
+        $this->crud_model->delete_class($param2);
+        redirect(site_url('institute/classes'), 'refresh');
+      }
+      $instructor_id = $this->session->userdata('user_id');
+      $page_data['page_name'] = 'classes';
+      $page_data['page_title'] = get_phrase('class');
+      $page_data['classes'] = $this->crud_model->get_institute_classes();
+      $this->load->view('backend/index', $page_data);
+    }
+    public function class_form($param1 = "", $param2 = "") {
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      elseif ($param1 == 'add_class_form') {
+        $institute_id = $this->session->userdata('user_id');
+        $page_data['page_name'] = 'class_add';
+        $page_data['instructors'] = $this->crud_model->sync_instructors($institute_id);
+        $page_data['page_title'] = get_phrase('class_add');
+        $this->load->view('backend/index', $page_data);
+      }
+      elseif ($param1 == 'edit_class_form') {
+        $institute_id = $this->session->userdata('user_id');
+        $page_data['page_name'] = 'class_edit';
+        $page_data['class_id'] = $param2;
+        $page_data['instructors'] = $this->crud_model->sync_instructors($institute_id);
+        $page_data['page_title'] = get_phrase('class_edit');
+        $this->load->view('backend/index', $page_data);
+      }
+    }
+
+    public function ajax_sync_course(){
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      $instructor_id = $this->input->post('instructor_id');
+        $data = $this->crud_model->sync_courses($instructor_id);
+        echo json_encode($data);
     }
 
     public function payment_settings($param1 = "") {
@@ -469,7 +524,9 @@ class Institute extends CI_Controller {
        
         $page_data['page_name'] = 'instructors';
         $page_data['page_title'] = get_phrase('instructor');
-        $page_data['instructors'] = $this->user_model->get_instructors();
+        $institute_id = $this->session->userdata('user_id');
+        $page_data['instructors'] = $this->crud_model->sync_instructors($institute_id);
+        // $page_data['instructors'] = $this->user_model->get_instructors();
         $this->load->view('backend/index', $page_data);
     }
 
