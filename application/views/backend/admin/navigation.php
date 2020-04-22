@@ -78,12 +78,6 @@
 			</li>
 
 			<li class="side-nav-item">
-				<a href="<?php echo site_url('admin/import_students'); ?>" class="side-nav-link <?php if ($page_name == 'import_students')echo 'active';?>">
-					<i class="dripicons-user-group"></i>
-					<span><?php echo get_phrase('Import students'); ?></span>
-				</a>
-			</li>
-			<li class="side-nav-item">
 				<a href="https://mconf.github.io/api-mate/#server=https://dynamiclogicltd.info/bigbluebutton/&sharedSecret=i9YHVrkRZWwxlRQ1tuzVQdFmqR74JqJXqWQI9ChrpI" class="side-nav-link" target="blank">
 					<i class="dripicons-user-group"></i>
 					<span><?php echo get_phrase('BigBlueButton Api'); ?></span>

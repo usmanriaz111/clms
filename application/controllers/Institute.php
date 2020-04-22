@@ -20,7 +20,7 @@ class Institute extends CI_Controller {
 
     public function get_protected_routes($method) {
       // IF ANY FUNCTION DOES NOT REQUIRE PUBLIC INSTRUCTOR, PUT THE NAME HERE.
-      $unprotected_routes = ['save_course_progress']; 
+      $unprotected_routes = ['save_course_progress'];
 
       if (!in_array($method, $unprotected_routes)) {
         if (get_settings('allow_instructor') != 1){
@@ -41,6 +41,15 @@ class Institute extends CI_Controller {
         else {
             redirect(site_url('login'), 'refresh');
         }
+    }
+
+    public function import_students(){
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $page_data['page_name'] = 'import_students';
+        $page_data['page_title'] = get_phrase('import_students');
+        $this->load->view('backend/index', $page_data);
     }
 
     /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
@@ -540,7 +549,7 @@ class Institute extends CI_Controller {
           $this->user_model->delete_user($param2);
           redirect(site_url('institute/instructors'), 'refresh');
         }
-       
+
         $page_data['page_name'] = 'instructors';
         $page_data['page_title'] = get_phrase('instructor');
         $institute_id = $this->session->userdata('user_id');
@@ -558,17 +567,17 @@ class Institute extends CI_Controller {
           $this->session->set_flashdata('flash_message', get_phrase('instructor_settings_updated'));
           redirect(site_url('institute/instructor_settings'), 'refresh');
         }
-    
+
         $page_data['page_name'] = 'instructor_settings';
         $page_data['page_title'] = get_phrase('instructor_settings');
         $this->load->view('backend/index', $page_data);
     }
-    
+
     public function user_form($param1 = "", $param2 = "") {
         if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
         }
-    
+
         if ($param1 == 'add_user_form') {
           $page_data['page_name'] = 'user_add';
           $page_data['page_title'] = get_phrase('student_add');
@@ -597,7 +606,7 @@ class Institute extends CI_Controller {
           $this->user_model->delete_user($param2);
           redirect(site_url('institute/users'), 'refresh');
         }
-    
+
         $page_data['page_name'] = 'users';
         $page_data['page_title'] = get_phrase('student');
         $page_data['users'] = $this->user_model->get_user($param2);
@@ -629,7 +638,7 @@ class Institute extends CI_Controller {
           $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quize'));
           redirect(site_url('institute/courses'), 'refresh');
         }
-        
+
     }
 
     public function ajax_sort_section() {

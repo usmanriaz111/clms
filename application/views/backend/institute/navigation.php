@@ -46,6 +46,13 @@
 				</a>
 			</li>
 
+				<li class="side-nav-item">
+					<a href="<?php echo site_url('Institute/import_students'); ?>" class="side-nav-link <?php if ($page_name == 'import_students')echo 'active';?>">
+						<i class="dripicons-user-group"></i>
+						<span><?php echo get_phrase('Import students'); ?></span>
+					</a>
+				</li>
+
 			<li class="side-nav-item">
 				<a href="<?php echo site_url('institute/instructor_revenue'); ?>" class="side-nav-link <?php if ($page_name == 'report' || $page_name == 'invoice')echo 'active';?>">
 					<i class="dripicons-media-shuffle"></i>

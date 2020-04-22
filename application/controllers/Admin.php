@@ -308,7 +308,7 @@ class Admin extends CI_Controller
         if ($param1 == "add") {
             $this->user_model->add_user(2, $param2);
             redirect(site_url('admin/classes'), 'refresh');
-        } 
+        }
         if ($param1 == "edit") {
             $this->user_model->edit_user($param2);
             redirect(site_url('admin/classes'), 'refresh');
@@ -320,15 +320,6 @@ class Admin extends CI_Controller
         $page_data['page_name'] = 'users';
         $page_data['page_title'] = get_phrase('student');
         $page_data['users'] = $this->user_model->get_user($param2);
-        $this->load->view('backend/index', $page_data);
-    }
-
-    public function import_students(){
-        if ($this->session->userdata('admin_login') != true) {
-            redirect(site_url('login'), 'refresh');
-        }
-        $page_data['page_name'] = 'import_students';
-        $page_data['page_title'] = get_phrase('import_students');
         $this->load->view('backend/index', $page_data);
     }
 
@@ -662,7 +653,7 @@ class Admin extends CI_Controller
         $page_data['courses'] = $this->crud_model->filter_course_for_backend($page_data['selected_category_id'], $page_data['selected_instructor_id'], $page_data['selected_price'], $page_data['selected_status']);
         $page_data['status_wise_courses'] = $this->crud_model->get_status_wise_courses();
         $page_data['instructors'] = $this->user_model->get_instructor();
-        $page_data['page_name'] = 'courses-server-side';
+        $page_data['page_name'] = 'courses';
         $page_data['categories'] = $this->crud_model->get_categories();
         $page_data['page_title'] = get_phrase('active_courses');
         $this->load->view('backend/index', $page_data);
