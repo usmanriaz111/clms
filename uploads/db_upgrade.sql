@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `class_id` INT(11) NULL DEFAULT NULL AFTER `status`;
