@@ -36,16 +36,21 @@
                         <tr>
                         <?php
                         $course = $this->crud_model->get_course_by_id($cls['course_id'])->row_array();
-                        $instructor = $this->user_model->get_user_by_id($course['user_id'])->row_array();
-                        $institute = $this->user_model->get_all_instructor($instructor['institute_id'])
+                        // echo '<pre>', print_r($course), '</pre>';
+                        // die;
+                        $instructor = $this->user_model->get_all_user($course['user_id'])->row_array();
+                        $institute = $this->user_model->get_all_user($course['institute_id'])->row_array();
+                        $enrolled_students = $this->user_model->get_class_enrolled_students($cls['id'])->num_rows();
                         
                         ?>
                             <td><?php echo $key+1; ?></td>
-                            <td><?php echo $cls['name']; ?></td>
+                            <td><strong><a href="<?php echo site_url('admin/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase($cls['name']); ?></a></strong></td>
                             <td><?php echo $course['title']; ?></td>
                             <td><?php echo $institute['first_name'].' '.$institute['last_name']; ?></td>
                             <td><?php echo $instructor['first_name'].' '.$instructor['last_name']; ?></td>
-                            <td><?php echo $cls['no_of_student']; ?></td>
+                            <td><?php echo $enrolled_students.' '.'<a href="'.site_url('admin/class_id/'.$cls['id'].'/users').'"/><span class="mdi mdi-24px mdi-eye"></span></a>'; ?>
+                            <a href = "<?php echo site_url('admin/class_id/'.$cls['id'].'/add_student'); ?>" class=""><span class="mdi mdi-24px mdi-account-plus"></span></a>
+                        </td>
                             <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

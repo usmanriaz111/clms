@@ -45,10 +45,15 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function () {
+    sync_courses();
     $('#instructors').on('change', function(){
-        let id = $("#instructors option:selected").val();
+        sync_courses();
+});
+
+function sync_courses(){
+    let id = $("#instructors option:selected").val();
         $.ajax({
-        url : "<?php echo base_url();?>Institute/ajax_sync_course",
+        url : "<?php echo base_url();?>institute/ajax_sync_course",
         type : "post",
         dataType : "json",
         data : {"instructor_id" : id},
@@ -58,17 +63,18 @@
             for (i = length-1; i >= 0; i--) {
             select.options[i] = null;
             }
+            debugger;
             $.each( response, function( i, val ) {
                 var newState = new Option(val.title, val.id);
                 $("#courses").append(newState);
             });
         },
         error : function(response) {
+            debugger;
             console.log(response);
         }
     });
-
-});
+}
 
   });
 </script>

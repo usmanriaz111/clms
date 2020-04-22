@@ -14,7 +14,7 @@
 
                 <h4 class="header-title mb-3"><?php echo get_phrase('class_add_form'); ?></h4>
 
-<form action="<?php echo site_url('instructor/classes/'.$param1.'add'); ?>" method="post">
+<form action="<?php echo site_url('instructor/classes/' . $param1 . 'add'); ?>" method="post">
     <div class="form-group">
         <label for="title"><?php echo get_phrase('name'); ?><span class="required">*</span></label>
         <input class="form-control" type="text" name="name" id="name" required>
@@ -24,7 +24,7 @@
          <select class="form-control select2" data-toggle="select2" name="courses" id="courses" required>
             <?php foreach ($courses as $course): ?>
             <option value="<?php echo $course['id']; ?>"><?php echo $course['title']; ?></option>
-            <?php endforeach; ?>
+            <?php endforeach;?>
             </select>
     </div>
     <div class="text-center">

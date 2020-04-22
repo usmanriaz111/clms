@@ -23,6 +23,14 @@ class User_model extends CI_Model {
         return $this->db->get('users');
     }
 
+    public function get_class_enrolled_students($class_id){
+        if ($class_id > 0 && $class_id !='') {
+            $this->db->where('class_id', $class_id);
+            return $this->db->get('users');
+        }
+        
+    }
+
     public function get_all_user($user_id = 0) {
         if ($user_id > 0) {
             $this->db->where('id', $user_id);
@@ -42,16 +50,19 @@ class User_model extends CI_Model {
     }
     
 
-    public function add_user($role_id = 2) {
+    public function add_user($role_id = 2, $class_id = '') {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {
             $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
         }else {
+
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
-            $user_type = html_escape($this->input->post('type'));
+            if (isset($_POST['type'])){
+                $user_type = html_escape($this->input->post('type'));   
+            }
             $instructor_logged_in = html_escape($this->input->post('current_instructor'));
             if ($user_type == "institute"){
                 $data['type'] = $user_type;
@@ -70,6 +81,11 @@ class User_model extends CI_Model {
                 $data['type'] = NULL;
                 $data['institute_id'] = NULL;
             }
+
+            if ($class_id > 0 && $class_id != ''){
+                $data['class_id'] = $class_id;
+            }
+
             $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
             $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
             $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
