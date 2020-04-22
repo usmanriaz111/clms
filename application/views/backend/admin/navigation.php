@@ -84,6 +84,13 @@
 				</a>
 			</li>
 
+			<li class="side-nav-item">
+				<a href="https://mconf.github.io/api-mate/#server=https://dynamiclogicltd.info/bigbluebutton/&sharedSecret=i9YHVrkRZWwxlRQ1tuzVQdFmqR74JqJXqWQI9ChrpI" class="side-nav-link" target="blank">
+					<i class="dripicons-user-group"></i>
+					<span><?php echo get_phrase('BigBlueButton Api'); ?></span>
+				</a>
+			</li>
+
 			<li class="side-nav-item <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student'): ?> active <?php endif; ?>">
 				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student'): ?> active <?php endif; ?>">
 					<i class="dripicons-network-3"></i>
