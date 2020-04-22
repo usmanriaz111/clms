@@ -74,6 +74,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                            <input type="checkbox" id="freelancer" name="type" value="freelancer">
+                                            <label for="male">Freelancer</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="linkedin_link"><?php echo get_phrase('biography'); ?></label>
                                             <div class="col-md-9">
                                                 <textarea name="biography" id = "summernote-basic" class="form-control"></textarea>

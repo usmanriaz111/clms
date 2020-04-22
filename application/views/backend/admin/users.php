@@ -12,16 +12,6 @@
 
 <div class="row">
     <div class="col-xl-12">
-    <div class="card">
-            <div class="card-body">
-              <h4 class="mb-3 header-title"><?php echo get_phrase('Import Students'); ?></h4>
-              <form class="form-inline" action="<?php echo base_url();?>import/importFile" method="post" enctype="multipart/form-data">
-                    Upload Students Excel file : 
-                    <input type="file" name="uploadFile" value="" class="pull-left" /><br><br>
-                    <input type="submit" name="submit" class="btn btn-primary" value="Upload" />
-                </form>
-                </div>
-                </div>
         <div class="card">
             <div class="card-body">
               <h4 class="mb-3 header-title"><?php echo get_phrase('students'); ?></h4>
@@ -33,33 +23,34 @@
                       <th><?php echo get_phrase('photo'); ?></th>
                       <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('email'); ?></th>
-                      <th><?php echo get_phrase('enrolled_courses'); ?></th>
+                      <th><?php echo get_phrase('enrolled_course'); ?></th>
+                      <th><?php echo get_phrase('enrolled_class'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
                   <tbody>
                       <?php
-                       foreach ($users->result_array() as $key => $user): ?>
+foreach ($users->result_array() as $key => $user): ?>
+                       <?php
+$class_name = $this->crud_model->get_class_by_id($user['class_id']);
+$course = $this->crud_model->get_course_by_id($class_name['course_id'])->row_array();
+?>
                           <tr>
-                              <td><?php echo $key+1; ?></td>
+                              <td><?php echo $key + 1; ?></td>
                               <td>
-                                  <img src="<?php echo $this->user_model->get_user_image_url($user['id']);?>" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">
+                                  <img src="<?php echo $this->user_model->get_user_image_url($user['id']); ?>" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">
                               </td>
-                              <td><?php echo $user['first_name'].' '.$user['last_name']; ?>
-                                <?php if($user['status'] != 1): ?>
+                              <td><?php echo $user['first_name'] . ' ' . $user['last_name']; ?>
+                                <?php if ($user['status'] != 1): ?>
                                   <small><p><?php echo get_phrase('status'); ?>: <span class="badge badge-danger-lighten"><?php echo get_phrase('unverified'); ?></span></p></small>
-                                <?php endif; ?>
+                                <?php endif;?>
                               </td>
                               <td><?php echo $user['email']; ?></td>
                               <td>
-                                 <?php
-                                    $enrolled_courses = $this->crud_model->enrol_history_by_user_id($user['id']);?>
-                                    <ul>
-                                        <?php foreach ($enrolled_courses->result_array() as $enrolled_course):
-                                            $course_details = $this->crud_model->get_course_by_id($enrolled_course['course_id'])->row_array();?>
-                                            <li><?php echo $course_details['title']; ?></li>
-                                        <?php endforeach; ?>
-                                    </ul>
+                                 <?php echo $course['title']; ?>
+                              </td>
+                              <td>
+                                  <?php echo $class_name['name']; ?>
                               </td>
                               <td>
                                   <div class="dropright dropright">
@@ -67,13 +58,13 @@
                                         <i class="mdi mdi-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="<?php echo site_url('admin/user_form/edit_user_form/'.$user['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
-                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/users/delete/'.$user['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
+                                        <li><a class="dropdown-item" href="<?php echo site_url('admin/user_form/edit_user_form/' . $user['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/users/delete/' . $user['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
                                     </ul>
                                 </div>
                               </td>
                           </tr>
-                      <?php endforeach; ?>
+                      <?php endforeach;?>
                   </tbody>
               </table>
               </div>
