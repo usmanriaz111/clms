@@ -73,6 +73,7 @@ CREATE TABLE `course` (
   `description` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `outcomes` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `language` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `sub_category_id` int(11) DEFAULT NULL,
   `section` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
@@ -234,9 +235,11 @@ CREATE TABLE `role` (
 DROP TABLE IF EXISTS `plans`;
 CREATE TABLE `plans` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `courses` int(255) NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `courses` int(11) NULL,
+  `classes` int(11) NULL,
   `course_minutes` decimal(65) NULL,
-  `students` int(255) NULL,
+  `students` int(11) NULL,
   `cloud_space` decimal(65) NULL,
   `institute_id` int(65) DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,

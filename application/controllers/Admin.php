@@ -747,8 +747,8 @@ class Admin extends CI_Controller {
 
         $nestedData['#'] = $key+1;
 
-        $nestedData['title'] = '<strong><a href="'.site_url('admin/course_form/course_edit/'.$row->id).'">'.$row->title.'</a></strong><br>
-        <small class="text-muted">'.get_phrase('instructor').': <b>'.$instructor_details['first_name'].' '.$instructor_details['last_name'].'</b></small>';
+        $nestedData['title'] = '<strong><a href="'.site_url('admin/course_form/course_edit/'.$row->id).'" title="'.$row->title.'">'.substr($row->title,0,25).'</a></strong><br>
+        <small title="'.$instructor_details['first_name'].$instructor_details['last_name'].'" class="text-muted">'.get_phrase('instructor').': <b>'.substr($instructor_details['first_name'],0,10).'</b></small>';
 
         $nestedData['category'] = '<span class="badge badge-dark-lighten">'.$category_details['name'].'</span>';
 
@@ -797,7 +797,8 @@ class Admin extends CI_Controller {
     }
 
     if ($param1 == "add") {
-      $course_id = $this->crud_model->add_course();
+      $instructor_id = $this->input->post('instructors');
+      $course_id = $this->crud_model->add_course('', $instructor_id);
       redirect(site_url('admin/course_form/course_edit/'.$course_id), 'refresh');
 
     }
@@ -1012,7 +1013,7 @@ class Admin extends CI_Controller {
   }
 
   /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
-  function manage_profile($param1 = '', $param2 = '', $param3 = '')
+  function profile($param1 = '', $param2 = '', $param3 = '')
   {
     if ($this->session->userdata('admin_login') != 1)
     redirect(site_url('login'), 'refresh');

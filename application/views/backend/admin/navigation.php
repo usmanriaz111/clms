@@ -83,7 +83,6 @@
 					<span><?php echo get_phrase('students'); ?></span>
 				</a>
 			</li>
-
 			<li class="side-nav-item">
 				<a href="https://mconf.github.io/api-mate/#server=https://dynamiclogicltd.info/bigbluebutton/&sharedSecret=i9YHVrkRZWwxlRQ1tuzVQdFmqR74JqJXqWQI9ChrpI" class="side-nav-link" target="blank">
 					<i class="dripicons-user-group"></i>
@@ -107,7 +106,6 @@
 					</li>
 				</ul>
 			</li>
-
 			<li class="side-nav-item">
 				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'admin_revenue' || $page_name == 'instructor_revenue' || $page_name == 'invoice'): ?> active <?php endif; ?>">
 					<i class="dripicons-box"></i>

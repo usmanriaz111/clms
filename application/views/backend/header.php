@@ -25,7 +25,7 @@
                     $logged_in_user_details = $this->user_model->get_all_user($this->session->userdata('user_id'))->row_array();;
                     ?>
                     <span class="account-user-name"><?php echo $logged_in_user_details['first_name'].' '.$logged_in_user_details['last_name'];?></span>
-                    <span class="account-position"><?php echo strtolower($this->session->userdata('role')) == 'user' ? get_phrase('instructor') : get_phrase('admin'); ?></span>
+                    <span class="account-position"><?php echo get_phrase($this->session->userdata('role')) ?></span>
                 </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated topbar-dropdown-menu profile-dropdown"
@@ -36,7 +36,7 @@
             </div>
 
             <!-- Account -->
-            <a href="<?php echo site_url(strtolower($this->session->userdata('role')).'/manage_profile'); ?>" class="dropdown-item notify-item">
+            <a href="<?php echo site_url(strtolower($this->session->userdata('role')).'/profile'); ?>" class="dropdown-item notify-item">
                 <i class="mdi mdi-account-circle mr-1"></i>
                 <span><?php echo get_phrase('my_account'); ?></span>
             </a>
