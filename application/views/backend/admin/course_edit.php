@@ -27,12 +27,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                         <form class="required-form" action="<?php echo site_url('admin/course_actions/edit/'.$course_id); ?>" method="post" enctype="multipart/form-data">
                             <div id="basicwizard">
                                 <ul class="nav nav-pills nav-justified form-wizard-header mb-3">
-                                    <li class="nav-item">
-                                       <a href="#curriculum" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                           <i class="mdi mdi-account-circle mr-1"></i>
-                                           <span class="d-none d-sm-inline"><?php echo get_phrase('curriculum'); ?></span>
-                                       </a>
-                                   </li>
+
                                     <li class="nav-item">
                                         <a href="#basic" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                             <i class="mdi mdi-fountain-pen-tip mr-1"></i>
@@ -70,11 +65,17 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#finish" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#finish" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
                                             <i class="mdi mdi-checkbox-marked-circle-outline mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('finish'); ?></span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                       <a href="#curriculum" data-toggle="tab"  class="nav-link rounded-0 pt-2 pb-2">
+                                           <i class="mdi mdi-account-circle mr-1"></i>
+                                           <span class="d-none d-sm-inline"><?php echo get_phrase('curriculum'); ?></span>
+                                       </a>
+                                   </li>
                                 </ul>
 
                                 <div class="tab-content b-0 mb-0">
@@ -544,7 +545,7 @@ $('.on-hover-action').mouseleave(function() {
 
 function sync_instructor(){
     let id = $("#institutes option:selected").val();
-   
+
         $.ajax({
         url : "<?php echo base_url();?>Admin/ajax_get_instructor",
         type : "post",
