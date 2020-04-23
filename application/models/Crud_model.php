@@ -39,13 +39,16 @@ class Crud_model extends CI_Model
         return $this->db->get('classes')->result_array();
     }
 
-    public function get_institute_classes()
+    public function get_institute_classes($institute_id = '')
     {
+      if($institute_id ==''){
+          $institute_id = $this->session->userdata('user_id');
+      }
         $course_ids = array();
         $courses = array();
         $instructor_ids = array();
 
-        $this->db->where('institute_id', $this->session->userdata('user_id'));
+        $this->db->where('institute_id', $institute_id);
         $instructors = $this->db->get('users')->result_array();
         foreach ($instructors as $instructor) {
             array_push($instructor_ids, $instructor['id']);
@@ -134,9 +137,9 @@ class Crud_model extends CI_Model
         if ($validity_name == false) {
             $this->session->set_flashdata('error_message', get_phrase('class_name_duplication'));
         } else {
-            
+
             $institute_id = $this->input->post('institutes');
-            
+
             if ($institute_id == ''){
                 $institute_id = $this->session->userdata('user_id');
             }
@@ -157,7 +160,7 @@ class Crud_model extends CI_Model
                 } else {
                     return array();
                 }
-        
+
                  $course_classes = $this->db->get('classes')->result_array();
                  if (count($course_classes) >= $plan['classes']){
                     $this->session->set_flashdata('error_message', get_phrase('you_inscrease_class_limit'));
@@ -171,7 +174,7 @@ class Crud_model extends CI_Model
             }else{
                 $this->session->set_flashdata('error_message', get_phrase('class_not_created'));
             }
-            
+
         }
     }
 
@@ -679,7 +682,7 @@ class Crud_model extends CI_Model
         }else{
             $outcomes = $this->trim_and_return_json($this->input->post('outcomes'));
             $requirements = $this->trim_and_return_json($this->input->post('requirements'));
-    
+
             $data['title'] = html_escape($this->input->post('title'));
             $data['short_description'] = $this->input->post('short_description');
             $data['description'] = $this->input->post('description');
@@ -701,7 +704,7 @@ class Crud_model extends CI_Model
             } else {
                 $data['course_overview_provider'] = "";
             }
-    
+
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $data['section'] = json_encode(array());
             $data['is_top_course'] = $this->input->post('is_top_course');
@@ -738,13 +741,13 @@ class Crud_model extends CI_Model
                 }
             }
             $this->db->insert('course', $data);
-    
+
             $course_id = $this->db->insert_id();
             // Create folder if does not exist
             if (!file_exists('uploads/thumbnails/course_thumbnails')) {
                 mkdir('uploads/thumbnails/course_thumbnails', 0777, true);
             }
-    
+
             // Upload different number of images according to activated theme. Data is taking from the config.json file
             $course_media_files = themeConfiguration(get_frontend_settings('theme'), 'course_media_files');
             foreach ($course_media_files as $course_media => $size) {
@@ -752,7 +755,7 @@ class Crud_model extends CI_Model
                     move_uploaded_file($_FILES[$course_media]['tmp_name'], 'uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg');
                 }
             }
-    
+
             if ($data['status'] == 'approved') {
                 $this->session->set_flashdata('flash_message', get_phrase('course_added_successfully'));
             } elseif ($data['status'] == 'pending') {
@@ -760,7 +763,7 @@ class Crud_model extends CI_Model
             } elseif ($data['status'] == 'draft') {
                 $this->session->set_flashdata('flash_message', get_phrase('your_course_has_been_added_to_draft'));
             }
-    
+
             $this->session->set_flashdata('flash_message', get_phrase('course_has_been_added_successfully'));
             return $course_id;
         }
@@ -783,7 +786,7 @@ class Crud_model extends CI_Model
                 return true;
             }
         }
-        
+
     }
 
     public function trim_and_return_json($untrimmed_array)

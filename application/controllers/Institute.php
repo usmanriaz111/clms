@@ -577,28 +577,15 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
         }
-
-        if ($param1 == 'add_user_form') {
-          $page_data['page_name'] = 'user_add';
-          $page_data['page_title'] = get_phrase('student_add');
-          $this->load->view('backend/index', $page_data);
-        }
-        elseif ($param1 == 'edit_user_form') {
-          $page_data['page_name'] = 'user_edit';
-          $page_data['user_id'] = $param2;
-          $page_data['page_title'] = get_phrase('student_edit');
-          $this->load->view('backend/index', $page_data);
-        }
     }
     public function users($param1 = "", $param2 = "") {
         if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
         }
         if ($param1 == "add") {
-          $this->user_model->add_user();
-          redirect(site_url('institute/users'), 'refresh');
-        }
-        elseif ($param1 == "edit") {
+            $this->user_model->add_user(2, $param2, true);
+            redirect(site_url('institute/classes'), 'refresh');
+        }elseif ($param1 == "edit") {
           $this->user_model->edit_user($param2);
           redirect(site_url('institute/users'), 'refresh');
         }
@@ -611,6 +598,25 @@ class Institute extends CI_Controller {
         $page_data['page_title'] = get_phrase('student');
         $page_data['users'] = $this->user_model->get_user($param2);
         $this->load->view('backend/index', $page_data);
+    }
+
+    public function class_id($param1 = '', $param2 = ''){
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        } else {
+            if ($param2 == 'add_student'){
+            $page_data['class_id'] = $param1;
+            $page_data['page_name'] = 'user_add';
+            $page_data['page_title'] = get_phrase('student_add');
+            $this->load->view('backend/index', $page_data);
+            }elseif($param2 == 'users'){
+                $page_data['page_name'] = 'users';
+                $page_data['class_id'] = $param1;
+                $page_data['page_title'] = get_phrase('students');
+                $page_data['users'] = $this->user_model->get_class_enrolled_students($param1);
+                $this->load->view('backend/index', $page_data);
+            }
+        }
     }
     // this function is responsible for managing multiple choice question
     function manage_multiple_choices_options() {

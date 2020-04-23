@@ -28,7 +28,7 @@ class User_model extends CI_Model {
             $this->db->where('class_id', $class_id);
             return $this->db->get('users');
         }
-        
+
     }
 
     public function get_all_user($user_id = 0) {
@@ -48,85 +48,130 @@ class User_model extends CI_Model {
     public function get_plan_by_id($user_id = ''){
         return $this->db->get_where('plans', array('institute_id' => $user_id));
     }
-    
 
-    public function add_user($role_id = 2, $class_id = '') {
+
+    public function add_user($role_id = 2, $class_id = '', $check_validity = false) {
+      // echo 'here';
+      // die;
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {
             $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
         }else {
-
-            $data['first_name'] = html_escape($this->input->post('first_name'));
-            $data['last_name'] = html_escape($this->input->post('last_name'));
-            $data['email'] = html_escape($this->input->post('email'));
-            $data['password'] = sha1(html_escape($this->input->post('password')));
-            if (isset($_POST['type'])){
-                $user_type = html_escape($this->input->post('type'));   
+          if($role_id != 2){
+            $this->user_attributes($role_id, '');
+          }
+          if($check_validity == true){
+            $validity_students = $this->check_students_limit();
+            if($validity_students == false){
+              $this->session->set_flashdata('error_message', get_phrase('you_increse_students_limit'));
+            }else{
+              $this->user_attributes($role_id, $class_id);
             }
-            $instructor_logged_in = html_escape($this->input->post('current_instructor'));
-            if ($user_type == "institute"){
-                $data['type'] = $user_type;
-                if ($instructor_logged_in == "present"){
-                    $data['institute_id'] = $this->session->userdata('user_id');
-                }
-                else {
-                    $data['institute_id'] = html_escape($this->input->post('institutes'));      
-                }
-                
-            }elseif($user_type == "freelancer"){
-                $data['type'] = $user_type;
-                $data['institute_id'] = NULL;
-            }
-            else{
-                $data['type'] = NULL;
-                $data['institute_id'] = NULL;
-            }
+        }
 
-            if ($class_id > 0 && $class_id != ''){
-                $data['class_id'] = $class_id;
-            }
-
-            $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
-            $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
-            $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
-            $data['social_links'] = json_encode($social_link);
-            $data['biography'] = $this->input->post('biography');
-            if($role_id == 4){
-                $data['role_id'] = 4;
-            }elseif($role_id == 3){
-                $data['role_id'] = 3;
-            }
-            else{
-                $data['role_id'] = 2;
-            }
-            $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
-            $data['wishlist'] = json_encode(array());
-            $data['watch_history'] = json_encode(array());
-            $data['status'] = 1;
-
-            // Add paypal keys
-            $paypal_info = array();
-            $paypal['production_client_id']  = html_escape($this->input->post('paypal_client_id'));
-            $paypal['production_secret_key'] = html_escape($this->input->post('paypal_secret_key'));
-            array_push($paypal_info, $paypal);
-            $data['paypal_keys'] = json_encode($paypal_info);
-
-            // Add Stripe keys
-            $stripe_info = array();
-            $stripe_keys = array(
-                'public_live_key' => html_escape($this->input->post('stripe_public_key')),
-                'secret_live_key' => html_escape($this->input->post('stripe_secret_key'))
-            );
-            array_push($stripe_info, $stripe_keys);
-            $data['stripe_keys'] = json_encode($stripe_info);
-
-            $this->db->insert('users', $data);
-            $user_id = $this->db->insert_id();
-            $this->upload_user_image($user_id);
-            $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
         }
     }
-    
+
+    public function user_attributes($role_id, $class_id='')
+    {
+      $data['first_name'] = html_escape($this->input->post('first_name'));
+      $data['last_name'] = html_escape($this->input->post('last_name'));
+      $data['email'] = html_escape($this->input->post('email'));
+      $data['password'] = sha1(html_escape($this->input->post('password')));
+      if (isset($_POST['type'])){
+          $user_type = html_escape($this->input->post('type'));
+      }
+      $instructor_logged_in = html_escape($this->input->post('current_instructor'));
+      if ($user_type == "institute"){
+          $data['type'] = $user_type;
+          if ($instructor_logged_in == "present"){
+              $data['institute_id'] = $this->session->userdata('user_id');
+          }
+          else {
+              $data['institute_id'] = html_escape($this->input->post('institutes'));
+          }
+
+      }elseif($user_type == "freelancer"){
+          $data['type'] = $user_type;
+          $data['institute_id'] = NULL;
+      }
+      else{
+          $data['type'] = NULL;
+          $data['institute_id'] = NULL;
+      }
+
+      if ($class_id > 0 && $class_id != ''){
+          $data['class_id'] = $class_id;
+      }
+
+      $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
+      $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
+      $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
+      $data['social_links'] = json_encode($social_link);
+      $data['biography'] = $this->input->post('biography');
+      if($role_id == 4){
+          $data['role_id'] = 4;
+      }elseif($role_id == 3){
+          $data['role_id'] = 3;
+      }
+      else{
+          $data['role_id'] = 2;
+      }
+      $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
+      $data['wishlist'] = json_encode(array());
+      $data['watch_history'] = json_encode(array());
+      $data['status'] = 1;
+
+      // Add paypal keys
+      $paypal_info = array();
+      $paypal['production_client_id']  = html_escape($this->input->post('paypal_client_id'));
+      $paypal['production_secret_key'] = html_escape($this->input->post('paypal_secret_key'));
+      array_push($paypal_info, $paypal);
+      $data['paypal_keys'] = json_encode($paypal_info);
+
+      // Add Stripe keys
+      $stripe_info = array();
+      $stripe_keys = array(
+          'public_live_key' => html_escape($this->input->post('stripe_public_key')),
+          'secret_live_key' => html_escape($this->input->post('stripe_secret_key'))
+      );
+      array_push($stripe_info, $stripe_keys);
+      $data['stripe_keys'] = json_encode($stripe_info);
+
+      $this->db->insert('users', $data);
+      $user_id = $this->db->insert_id();
+      $this->upload_user_image($user_id);
+      $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
+    }
+
+    public function check_students_limit($institute_id ='')
+    {
+      if($institute_id ==''){
+          $institute_id = $this->session->userdata('user_id');
+      }
+      if($institute_id > 0){
+        $institute_classes = $this->crud_model->get_institute_classes($institute_id);
+        $plan = $this->get_plan_by_id($institute_id)->row_array();
+        $class_ids = array();
+
+        foreach ($institute_classes as $cls) {
+            array_push($class_ids, $cls['id']);
+        }
+        if (sizeof($class_ids)) {
+            $this->db->where_in('class_id', $class_ids);
+        } else {
+            return array();
+        }
+        $students = $this->db->get('users')->result_array();
+
+        if(count($students) >= $plan['students']){
+          return false;
+        }
+        else{
+          return true;
+        }
+      }
+    }
 
     public function check_institute($institute){
         $duplicate_email_check = $this->db->get_where('users', array('institute_id' => $institute));
@@ -165,7 +210,7 @@ class User_model extends CI_Model {
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
             $user_type = html_escape($this->input->post('type'));
-            
+
             //Association multiple instructors to institute
             // $instructor_list = $this->input->post('instructors');
             // foreach ($instructor_list as $instructor_id) {

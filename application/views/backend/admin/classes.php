@@ -3,8 +3,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo $page_title; ?>
-                <a href = "<?php echo site_url('admin/class_form/add_class_form'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_class'); ?></a>
+                <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo $page_title ?>;
             </h4>
             </div> <!-- end card body-->
         </div> <!-- end card -->
@@ -16,7 +15,7 @@
         <div class="card">
             <div class="card-body">
               <h4 class="mb-3 header-title"><?php echo get_phrase('classes'); ?></h4>
-             
+
               <div class="table-responsive-sm mt-4">
                 <table id="basic-datatable" class="table table-striped table-centered mb-0">
                   <thead>
@@ -41,7 +40,7 @@
                         $instructor = $this->user_model->get_all_user($course['user_id'])->row_array();
                         $institute = $this->user_model->get_all_user($course['institute_id'])->row_array();
                         $enrolled_students = $this->user_model->get_class_enrolled_students($cls['id'])->num_rows();
-                        
+
                         ?>
                             <td><?php echo $key+1; ?></td>
                             <td><strong><a href="<?php echo site_url('admin/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase($cls['name']); ?></a></strong></td>
