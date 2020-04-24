@@ -22,11 +22,8 @@ class S3_model {
 // Upload a publicly accessible file. The file size and type are determined by the SDK.
     public function upload_data($s3, $key,$video_path){
         $bucketName = 'clms-storage';
-        $file_Path = __DIR__ . '/bhai.jpg';
-        
-        
-        $key = basename($video_path) . '.mp4';
-        echo $key;
+        // $file_Path = __DIR__ . '/bhai.jpg';     
+        $key = basename($video_path) . '.mp4';    
         try {
             $result = $s3->putObject([
                 'Bucket' => $bucketName,
@@ -34,7 +31,7 @@ class S3_model {
                 'Body'   => fopen($video_path, 'r'),
                 'ACL'    => 'public-read',
             ]);
-            echo $result->get('ObjectURL');
+            // echo $result->get('ObjectURL');
         } catch (Aws\S3\Exception\S3Exception $e) {
             echo "There was an error uploading the file.\n";
             echo $e->getMessage();
