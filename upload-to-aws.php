@@ -20,15 +20,18 @@ class S3_model {
     }
 
 // Upload a publicly accessible file. The file size and type are determined by the SDK.
-    public function upload_data($s3){
+    public function upload_data($s3, $key,$video_path){
         $bucketName = 'clms-storage';
         $file_Path = __DIR__ . '/bhai.jpg';
-        $key = basename($file_Path);
+        
+        
+        $key = basename($video_path) . '.mp4';
+        echo $key;
         try {
             $result = $s3->putObject([
                 'Bucket' => $bucketName,
                 'Key'    => $key,
-                'Body'   => fopen($file_Path, 'r'),
+                'Body'   => fopen($video_path, 'r'),
                 'ACL'    => 'public-read',
             ]);
             echo $result->get('ObjectURL');

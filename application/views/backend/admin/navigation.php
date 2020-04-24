@@ -64,13 +64,6 @@
 			</li>
 
 			<li class="side-nav-item">
-				<a href="<?php echo site_url('admin/videos'); ?>" class="side-nav-link <?php if ($page_name == 'videos' || $page_name == 'video_add' || $page_name == 'video_edit')echo 'active';?>">
-					<i class="mdi mdi-incognito"></i>
-					<span><?php echo get_phrase('upload resources'); ?></span>
-				</a>
-			</li>
-
-			<li class="side-nav-item">
 				<a href="<?php echo site_url('admin/courses'); ?>" class="side-nav-link <?php if ($page_name == 'courses' || $page_name == 'course_add' || $page_name == 'course_edit')echo 'active';?>">
 					<i class="dripicons-archive"></i>
 					<span><?php echo get_phrase('courses'); ?></span>

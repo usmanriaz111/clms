@@ -167,29 +167,6 @@ class Admin extends CI_Controller
         }
     }
     
-    public function videos($param1 = "", $param2 = "") {
-        if ($this->session->userdata('admin_login') != true) {
-          redirect(site_url('login'), 'refresh');
-        }
-        elseif ($param1 == "add") {
-          $this->user_model->add_video();
-          redirect(site_url('admin/videos'), 'refresh');
-        }
-        elseif ($param1 == "edit") {
-          $this->user_model->edit_video($param2);
-          redirect(site_url('admin/videos'), 'refresh');
-        }
-        elseif ($param1 == "delete") {
-          $this->user_model->delete_video($param2);
-          redirect(site_url('admin/videos'), 'refresh');
-        }
-    
-        $page_data['page_name'] = 'videos';
-        $page_data['page_title'] = get_phrase('video');
-        $page_data['videos'] = $this->user_model->get_videos();
-        $this->load->view('backend/index', $page_data);
-    }
-
     public function instructor_form($param1 = "", $param2 = "")
     {
         if ($this->session->userdata('admin_login') != true) {

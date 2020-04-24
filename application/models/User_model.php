@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-    //  require 'upload-to-aws.php';
 class User_model extends CI_Model {
 
     function __construct()
@@ -49,15 +48,6 @@ class User_model extends CI_Model {
         return $this->db->get_where('plans', array('institute_id' => $user_id));
     }
     
-
-    public function add_video() {
-        $data['name'] = html_escape($this->input->post('name'));
-        $data['user_id'] = html_escape($this->input->post('user_id'));
-        $this->db->insert('users', $data);
-        $this->session->set_flashdata('flash_message', get_phrase('video_added_successfully'));
-        $user_id = $this->db->insert_id();
-        $this->upload_resource($user_id);
-    }
     public function add_user($role_id = 2) {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {
@@ -262,19 +252,6 @@ class User_model extends CI_Model {
         }
     }
 
-    public function upload_resource($user_id) {
-        $s3_model = new S3_model();
-        $s3= $s3_model->create_s3_object();
-        $file_name = $_FILES['user_image']['name'];   
-        $temp_file_location = $_FILES['user_image']['name'];
-        $result = $s3_model->upload_data($s3, $file_name, $temp_file_location);  
-        die;   
-        if (isset($_FILES['user_image']) && $_FILES['user_image']['name'] != "") {
-            move_uploaded_file($_FILES['user_image']['tmp_name'], 'uploads/user_image/'.$user_id.'.png');
-            $this->session->set_flashdata('flash_message', get_phrase('user_update_successfully'));
-        }
-    }
-
     public function update_account_settings($user_id) {
         $validity = $this->check_duplication('on_update', $this->input->post('email'), $user_id);
         if ($validity) {
@@ -335,13 +312,7 @@ class User_model extends CI_Model {
         $this->db->where('role_id', 4);
             return $this->db->get('users')->result_array();
     }
-    public function get_videos($user_id = 0 ) {
-        if ($institute_id > 0) {
-            $this->db->where('user_id', $user_id);
-        }
-        return $this->db->get('videos');
-    }
-
+   
     // public function get_unassigned_instructors(){
     //     $checker = array(
     //         'role_id' => 4,
