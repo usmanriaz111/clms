@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require 'upload-to-aws.php';
+    //  require 'upload-to-aws.php';
 class User_model extends CI_Model {
 
     function __construct()
@@ -263,13 +263,11 @@ class User_model extends CI_Model {
     }
 
     public function upload_resource($user_id) {
-        echo 'saving image';
         $s3_model = new S3_model();
         $s3= $s3_model->create_s3_object();
-        echo 'object created';
-        $result = $s3_model->upload_data($s3);
-        echo 'data is upload successfully';
-        echo $result->get('ObjectURL');
+        $file_name = $_FILES['user_image']['name'];   
+        $temp_file_location = $_FILES['user_image']['name'];
+        $result = $s3_model->upload_data($s3, $file_name, $temp_file_location);  
         die;   
         if (isset($_FILES['user_image']) && $_FILES['user_image']['name'] != "") {
             move_uploaded_file($_FILES['user_image']['tmp_name'], 'uploads/user_image/'.$user_id.'.png');

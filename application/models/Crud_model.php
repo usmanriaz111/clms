@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (file_exists("application/aws-module/aws-autoloader.php")) {
     include APPPATH . 'aws-module/aws-autoloader.php';
 }
-
+require 'upload-to-aws.php';
 class Crud_model extends CI_Model
 {
 
@@ -775,8 +775,7 @@ class Crud_model extends CI_Model
         $institute_id = $institute[0]['id'];
         if($institute_id > 0){
             $institute_courses_count = $this->count_institute_courses($institute_id);
-            echo '<pre>',print_r($institute_courses_count),'</pre>';
-            die;
+           
             if (count($institute_courses_count) >= $plan['courses']){
                 return false;
             }else{
@@ -1204,33 +1203,34 @@ class Crud_model extends CI_Model
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
 
-            $upload_loaction = get_settings('video_upload_location');
-            $access_key = get_settings('amazon_s3_access_key');
-            $secret_key = get_settings('amazon_s3_secret_key');
-            $bucket = get_settings('amazon_s3_bucket_name');
-            $region = get_settings('amazon_s3_region_name');
+            // $upload_loaction = get_settings('video_upload_location');
+            // $access_key = get_settings('amazon_s3_access_key');
+            // $secret_key = get_settings('amazon_s3_secret_key');
+            // $bucket = get_settings('amazon_s3_bucket_name');
+            // $region = get_settings('amazon_s3_region_name');
 
-            $s3config = array(
-                'region' => $region,
-                'version' => 'latest',
-                'credentials' => [
-                    'key' => $access_key, //Put key here
-                    'secret' => $secret_key, // Put Secret here
-                ],
-            );
-
-            $tmpfile = $_FILES['video_file_for_amazon_s3'];
-
-            $s3 = new Aws\S3\S3Client($s3config);
-            $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-
-            $result = $s3->putObject([
-                'Bucket' => $bucket,
-                'Key' => $key,
-                'SourceFile' => $tmpfile['tmp_name'],
-                'ACL' => 'public-read',
-            ]);
-
+            // $s3config = array(
+            //     'region' => $region,
+            //     'version' => 'latest',
+            //     'credentials' => [
+            //         'key' => $access_key, //Put key here
+            //         'secret' => $secret_key, // Put Secret here
+            //     ],
+            // );
+            $tmpfile = $_FILES['video_file_for_amazon_s3'];    
+            $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
+            $s3_model = new S3_model();
+            $s3= $s3_model->create_s3_object();
+            // $s3 = new Aws\S3\S3Client($s3config);
+             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
+            
+             $result = $s3_model->upload_data($s3,$key ,$tmppath);     
+            // $result = $s3->putObject([
+            //     'Bucket' => $bucket,
+            //     'Key' => $key,
+            //     'SourceFile' => $tmpfile['tmp_name'],
+            //     'ACL' => 'public-read',
+            // ]);    
             $data['video_url'] = $result['ObjectURL'];
             $data['video_type'] = 'amazon';
             $data['lesson_type'] = 'video';
