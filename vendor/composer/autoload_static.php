@@ -40,6 +40,7 @@ class ComposerStaticInit07c896adcb94e46c5ea6272212508562
         array (
             'Psr\\Http\\Message\\' => 17,
             'Prophecy\\' => 9,
+            'PhpOption\\' => 10,
         ),
         'J' => 
         array (
@@ -53,6 +54,7 @@ class ComposerStaticInit07c896adcb94e46c5ea6272212508562
         ),
         'D' => 
         array (
+            'Dotenv\\' => 7,
             'Doctrine\\Instantiator\\' => 22,
         ),
         'A' => 
@@ -100,6 +102,10 @@ class ComposerStaticInit07c896adcb94e46c5ea6272212508562
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
+        'PhpOption\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
         'JmesPath\\' => 
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
@@ -115,6 +121,10 @@ class ComposerStaticInit07c896adcb94e46c5ea6272212508562
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (

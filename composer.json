@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"aws/aws-sdk-php": "^3.135"
+		"aws/aws-sdk-php": "^3.135",
+		"vlucas/phpdotenv": "^4.1"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
