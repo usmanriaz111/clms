@@ -224,6 +224,20 @@ class User_model extends CI_Model {
 
         $this->upload_user_image($user_id);
     }
+    public function check_plan(){
+      if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+      }
+      $plan_id = $this->session->userdata('plan_id');
+      if ($plan_id > 0) {
+          $user_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+          if ($plan_id == $user_plan['id']){
+            return true;
+          }
+      }else{
+        redirect(site_url('institute/purchase_plan'), 'refresh');
+      }
+    }
 
 
 public function update_user_plan($user_id, $plan_id){

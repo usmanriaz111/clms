@@ -14,7 +14,7 @@ class Institute extends CI_Controller {
 
 
         // THIS FUNCTION DECIDES WHTHER THE ROUTE IS REQUIRES PUBLIC INSTRUCTOR.
-        $this->check_plan();
+
         $this->get_protected_routes($this->router->method);
 
     }
@@ -31,21 +31,6 @@ class Institute extends CI_Controller {
       }
     }
 
-    public function check_plan(){
-      if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
-      }
-      $user_id = $this->session->userdata('user_id');
-      $current_user = $this->db->get_where('users', array('id' => $user_id))->row_array();
-
-      $user_plan = $this->db->get_where('plans', array('institute_id' => $user_id))->num_rows();
-      if ($user_plan > 0){
-        return true;
-        // redirect(site_url('institute/courses'), 'refresh');
-      }else{
-
-      }
-    }
 
     public function purchase_plan(){
       if ($this->session->userdata('user_login') != true) {
@@ -70,20 +55,19 @@ class Institute extends CI_Controller {
 
     }
 
-
         // SHOW PAYPAL CHECKOUT PAGE
         public function paypal_checkout($payment_request = "only_for_mobile") {
             if ($this->session->userdata('user_login') != 1 && $payment_request != 'true')
-            redirect('home', 'refresh');
+            redirect(site_url('institute/purchase_plan'), 'refresh');
 
             //checking price
-            if($this->session->userdata('total_price_of_checking_out') == $this->input->post('total_price_of_checking_out')):
-                $total_price_of_checking_out = $this->input->post('total_price_of_checking_out');
+            if($this->session->userdata('plan_price') == $this->input->post('total_price_of_checking_out')):
+                $total_price_of_checking_out = $this->input->post('plan_price');
             else:
-                $total_price_of_checking_out = $this->session->userdata('total_price_of_checking_out');
+                $total_price_of_checking_out = $this->session->userdata('plan_price');
             endif;
             $page_data['payment_request'] = $payment_request;
-            $page_data['user_details']    = $this->user_model->get_user($this->session->userdata('user_id'))->row_array();
+            $page_data['user_details']    = $this->user_model->get_institute($this->session->userdata('user_id'));
             $page_data['amount_to_pay']   = $total_price_of_checking_out;
             $this->load->view('frontend/'.get_frontend_settings('theme').'/paypal_checkout', $page_data);
         }
@@ -114,8 +98,8 @@ class Institute extends CI_Controller {
                 $course_id = $this->session->userdata('cart_items');
                 redirect('home/payment_success_mobile/'.$course_id[0].'/'.$user_id.'/paid', 'refresh');
             else:
-                $this->session->set_userdata('cart_items', array());
-                redirect('home', 'refresh');
+              $this->session->set_userdata('plan_id', '');
+              redirect('institute/courses', 'refresh');
             endif;
 
         }
@@ -168,8 +152,8 @@ class Institute extends CI_Controller {
                 $course_id = $this->session->userdata('cart_items');
                 redirect('home/payment_success_mobile/'.$course_id[0].'/'.$user_id.'/paid', 'refresh');
             else:
-                $this->session->set_userdata('cart_items', array());
-                redirect('home', 'refresh');
+                $this->session->set_userdata('plan_id', '');
+                redirect('institute/courses', 'refresh');
             endif;
         }
 
@@ -180,6 +164,7 @@ class Institute extends CI_Controller {
         }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'user'){
             redirect(site_url('home'), 'refresh');
         }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'institute'){
+          $this->user_model->check_plan();
             $this->courses();
         }
         else {
@@ -188,6 +173,7 @@ class Institute extends CI_Controller {
     }
 
     public function import_students(){
+      $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
@@ -219,6 +205,7 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $this->user_model->check_plan();
         $page_data['selected_category_id']   = isset($_GET['category_id']) ? $_GET['category_id'] : "all";
         // $page_data['selected_instructor_id'] = $this->session->userdata('user_id');
         $page_data['selected_price']         = isset($_GET['price']) ? $_GET['price'] : "all";
@@ -235,6 +222,7 @@ class Institute extends CI_Controller {
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');
       }
+      $this->user_model->check_plan();
       $courses = array();
       // Filter portion
       $filter_data['selected_category_id']   = $this->input->post('selected_category_id');
@@ -372,6 +360,7 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $this->user_model->check_plan();
 
         if ($param1 == "add") {
             $instructor_id = $this->input->post('instructors');
@@ -407,6 +396,7 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $this->user_model->check_plan();
 
         if ($param1 == 'add_course') {
             $page_data['languages'] = $this->crud_model->get_all_languages();
@@ -429,6 +419,7 @@ class Institute extends CI_Controller {
     }
 
     public function classes($param1 = "", $param2 = "") {
+      $this->user_model->check_plan();
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');
       }
@@ -451,6 +442,7 @@ class Institute extends CI_Controller {
       $this->load->view('backend/index', $page_data);
     }
     public function class_form($param1 = "", $param2 = "") {
+      $this->user_model->check_plan();
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');
       }
@@ -475,12 +467,14 @@ class Institute extends CI_Controller {
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');
       }
+      $this->user_model->check_plan();
       $instructor_id = $this->input->post('instructor_id');
         $data = $this->crud_model->sync_courses($instructor_id);
         echo json_encode($data);
     }
 
     public function payment_settings($param1 = "") {
+      $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
@@ -503,7 +497,7 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-
+        $this->user_model->check_plan();
         $page_data['payment_history'] = $this->crud_model->get_instructor_revenue();
         $page_data['page_name'] = 'instructor_revenue';
         $page_data['page_title'] = get_phrase('instructor_revenue');
@@ -513,6 +507,7 @@ class Institute extends CI_Controller {
     public function preview($course_id = '') {
         if ($this->session->userdata('user_login') != 1)
         redirect(site_url('login'), 'refresh');
+        $this->user_model->check_plan();
 
         $this->is_the_course_belongs_to_current_instructor($course_id);
         if ($course_id > 0) {
@@ -529,6 +524,7 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $this->user_model->check_plan();
 
         if ($param2 == 'add') {
           $this->is_the_course_belongs_to_current_instructor($param1);
@@ -552,6 +548,7 @@ class Institute extends CI_Controller {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $this->user_model->check_plan();
         if ($param1 == 'add') {
             $this->is_the_course_belongs_to_current_instructor($course_id);
             $this->crud_model->add_lesson();
@@ -582,6 +579,7 @@ class Institute extends CI_Controller {
 
     // Manage Quizes
     public function quizes($course_id = "", $action = "", $quiz_id = "") {
+        $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
@@ -606,6 +604,7 @@ class Institute extends CI_Controller {
 
     // Manage Quize Questions
     public function quiz_questions($quiz_id = "", $action = "", $question_id = "") {
+        $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
@@ -644,6 +643,7 @@ class Institute extends CI_Controller {
     }
 
     function invoice($payment_id = "") {
+      $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
@@ -659,6 +659,7 @@ class Institute extends CI_Controller {
     }
 
     public function instructor_form($param1 = "", $param2 = "") {
+      $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
         }
@@ -678,6 +679,7 @@ class Institute extends CI_Controller {
     }
 
     public function instructors($param1 = "", $param2 = "") {
+      $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
         }
@@ -703,6 +705,7 @@ class Institute extends CI_Controller {
     }
 
     public function instructor_settings($param1 = "") {
+      $this->user_model->check_plan();
         if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
         }
