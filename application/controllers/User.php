@@ -14,13 +14,28 @@ class User extends CI_Controller {
 
 
         // THIS FUNCTION DECIDES WHTHER THE ROUTE IS REQUIRES PUBLIC INSTRUCTOR.
+        $this->check_plan();
         $this->get_protected_routes($this->router->method);
+    }
+
+    public function check_plan(){
+      if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+      }
+      if ($this->session->userdata('plan_id') > 0) {
+          $user_plan = $this->db->get_where('plans', array('id' => $this->session->userdata('plan_id')));
+          if ($this->session->userdata('plan_id') == $user_plan['id']){
+            redirect(site_url('courses'), 'refresh');
+          }
+      }else{
+        redirect(site_url('institute/purchase_plan'), 'refresh');
+      }
     }
 
 
     public function get_protected_routes($method) {
       // IF ANY FUNCTION DOES NOT REQUIRE PUBLIC INSTRUCTOR, PUT THE NAME HERE.
-      $unprotected_routes = ['save_course_progress']; 
+      $unprotected_routes = ['save_course_progress'];
 
       if (!in_array($method, $unprotected_routes)) {
         if (get_settings('allow_instructor') != 1){
@@ -457,7 +472,7 @@ class User extends CI_Controller {
           $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quize'));
           redirect(site_url('user/courses'), 'refresh');
         }
-        
+
     }
 
     public function ajax_sort_section() {

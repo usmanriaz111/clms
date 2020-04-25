@@ -188,6 +188,7 @@ CREATE TABLE `payment` (
   `user_id` int(11) DEFAULT NULL,
   `payment_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `course_id` int(11) DEFAULT NULL,
+  `plan_id` int(11) DEFAULT NULL,
   `amount` double DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
@@ -238,6 +239,7 @@ CREATE TABLE `plans` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `courses` int(11) NULL,
   `classes` int(11) NULL,
+  `price` decimal(65) NULL,
   `course_minutes` decimal(65) NULL,
   `students` int(11) NULL,
   `cloud_space` decimal(65) NULL,
@@ -307,6 +309,8 @@ CREATE TABLE `users` (
   `stripe_keys` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `verification_code` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `status` int(11) DEFAULT NULL,
+  `class_id` int(11)DEFAULT NULL,
+  `plan_id` int(11)DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

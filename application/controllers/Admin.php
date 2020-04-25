@@ -824,6 +824,10 @@ class Admin extends CI_Controller
 
         if ($param1 == "add") {
             $instructor_id = $this->input->post('instructors');
+            if($instructor_id == ''){
+              $this->session->set_flashdata('error_message', get_phrase('please_select_a_instructor'));
+              redirect(site_url('admin/course_form/add_course/'), 'refresh');
+            }
             $course_id = $this->crud_model->add_course('', $instructor_id);
             if ($course_id > 0){
             redirect(site_url('admin/course_form/course_edit/' . $course_id), 'refresh');

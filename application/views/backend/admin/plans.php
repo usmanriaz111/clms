@@ -22,6 +22,7 @@
                     <tr>
                       <th>#</th>
                       <th><?php echo get_phrase('name'); ?></th>
+                      <th><?php echo get_phrase('price'); ?></th>
                       <th><?php echo get_phrase('no_of_courses'); ?></th>
                       <th><?php echo get_phrase('no_of_classes'); ?></th>
                       <th><?php echo get_phrase('no_minutes_per_live_session_per_course'); ?></th>
@@ -33,22 +34,31 @@
                   </thead>
                   <tbody>
                       <?php
+                      // echo '<pre>',print_r($plans),'</pre>';
+                      // die;
                        foreach ($plans as $key => $plan): ?>
-                       <?php 
+                       <?php
                        if ($plan['institute_id'] != ''){
                         $institute =  $this->user_model->get_institute($plan['institute_id']);
-                       }
+                      }
                        ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo $plan['name']; ?></td>
+                            <td><?php echo $plan['price']; ?></td>
                             <td><?php echo $plan['courses']; ?></td>
                             <td><?php echo $plan['classes']; ?></td>
                             <td><?php echo $plan['course_minutes']; ?></td>
                             <td><?php echo $plan['students']; ?></td>
                             <td><?php echo $plan['cloud_space']; ?></td>
-                           
-                            <td><?php echo $institute[0]['first_name'].' '.$institute[0]['last_name']; ?></td>
+                            <td><?php
+                            if($institute[0] == ''){
+                              echo '-';
+                            }else{
+                              echo $institute[0]['first_name'].' '.$institute[0]['last_name'];
+                            }
+
+                            ?></td>
                             <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -23,6 +23,10 @@
         <input class="form-control" type="text" name="name" id="name" value="<?php echo $plan_data['name']; ?>" required>
     </div>
     <div class="form-group">
+        <label for="price"><?php echo get_phrase('plane_price'); ?></label>
+        <input class="form-control" type="text" name="price" id="price" value="<?php echo $plan_data['price']; ?>" required>
+    </div>
+    <div class="form-group">
         <label for="title"><?php echo get_phrase('no_of_courses'); ?></label>
         <input class="form-control" type="number" name="courses" value="<?php echo $plan_data['courses']; ?>" id="courses" required>
     </div>
