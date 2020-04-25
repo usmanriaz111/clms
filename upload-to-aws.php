@@ -9,11 +9,11 @@ class S3_model {
 
    public function create_s3_object(){
         $s3 = new S3Client([
-            'version' => env('version'),
-            'region'  => env('region'),
+            'version' => $_ENV["version"],
+            'region'  => $_ENV["region"],
             'credentials' => [
-            'key'    => env('key_admin'),
-            'secret' => env('secret_admin')
+            'key'    => $_ENV["key_admin"],
+            'secret' => $_ENV["secret_admin"]
         ]
         ]);
         return $s3;
