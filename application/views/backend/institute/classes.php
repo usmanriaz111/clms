@@ -32,7 +32,9 @@
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo $cls['name']; ?></td>
-                            <td><?php echo $plan['no_of_student']; ?></td>
+                            <td><?php
+                              $user_classes = $this->db->get_where('users', array('class_id' => $cls['id']))->num_rows();
+                            echo $user_classes; ?></td>
                             <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
