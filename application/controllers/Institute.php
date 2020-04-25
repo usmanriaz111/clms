@@ -369,23 +369,23 @@ class Institute extends CI_Controller {
 
         }
         elseif ($param1 == "edit") {
-            $this->is_the_course_belongs_to_current_instructor($param2);
+            // $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->update_course($param2);
             redirect(site_url('institute/courses'), 'refresh');
 
         }
         elseif ($param1 == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
+            // $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->delete_course($param2);
             redirect(site_url('institute/courses'), 'refresh');
         }
         elseif ($param1 == 'draft') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
+            // $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->change_course_status('draft', $param2);
             redirect(site_url('institute/courses'), 'refresh');
         }
         elseif ($param1 == 'publish') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
+            // $this->is_the_course_belongs_to_current_instructor($param2);
             $this->crud_model->change_course_status('pending', $param2);
             redirect(site_url('institute/courses'), 'refresh');
         }
@@ -408,7 +408,7 @@ class Institute extends CI_Controller {
             $this->load->view('backend/index', $page_data);
 
         }elseif ($param1 == 'course_edit') {
-            $this->is_the_course_belongs_to_current_instructor($param2);
+            // $this->is_the_course_belongs_to_current_instructor($param2);
             $page_data['page_name'] = 'course_edit';
             $page_data['course_id'] =  $param2;
             $page_data['page_title'] = get_phrase('edit_course');
@@ -509,7 +509,7 @@ class Institute extends CI_Controller {
         redirect(site_url('login'), 'refresh');
         $this->user_model->check_plan();
 
-        $this->is_the_course_belongs_to_current_instructor($course_id);
+        // $this->is_the_course_belongs_to_current_instructor($course_id);
         if ($course_id > 0) {
             $courses = $this->crud_model->get_course_by_id($course_id);
             if ($courses->num_rows() > 0) {
@@ -527,17 +527,17 @@ class Institute extends CI_Controller {
         $this->user_model->check_plan();
 
         if ($param2 == 'add') {
-          $this->is_the_course_belongs_to_current_instructor($param1);
+          // $this->is_the_course_belongs_to_current_instructor($param1);
             $this->crud_model->add_section($param1);
             $this->session->set_flashdata('flash_message', get_phrase('section_has_been_added_successfully'));
         }
         elseif ($param2 == 'edit') {
-            $this->is_the_course_belongs_to_current_instructor($param1, $param3, 'section');
+            // $this->is_the_course_belongs_to_current_instructor($param1, $param3, 'section');
             $this->crud_model->edit_section($param3);
             $this->session->set_flashdata('flash_message', get_phrase('section_has_been_updated_successfully'));
         }
         elseif ($param2 == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($param1, $param3, 'section');
+            // $this->is_the_course_belongs_to_current_instructor($param1, $param3, 'section');
             $this->crud_model->delete_section($param1, $param3);
             $this->session->set_flashdata('flash_message', get_phrase('section_has_been_deleted_successfully'));
         }
@@ -550,19 +550,19 @@ class Institute extends CI_Controller {
         }
         $this->user_model->check_plan();
         if ($param1 == 'add') {
-            $this->is_the_course_belongs_to_current_instructor($course_id);
+            // $this->is_the_course_belongs_to_current_instructor($course_id);
             $this->crud_model->add_lesson();
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
             redirect('institute/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'edit') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
+            // $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
             $this->crud_model->edit_lesson($param2);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_updated_successfully'));
             redirect('institute/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
+            // $this->is_the_course_belongs_to_current_instructor($course_id, $param2, 'lesson');
             $this->crud_model->delete_lesson($param2);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_deleted_successfully'));
             redirect('institute/course_form/course_edit/'.$course_id);
@@ -585,17 +585,17 @@ class Institute extends CI_Controller {
         }
 
         if ($action == 'add') {
-            $this->is_the_course_belongs_to_current_instructor($course_id);
+            // $this->is_the_course_belongs_to_current_instructor($course_id);
             $this->crud_model->add_quiz($course_id);
             $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_added_successfully'));
         }
         elseif ($action == 'edit') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $quiz_id, 'quize');
+            // $this->is_the_course_belongs_to_current_instructor($course_id, $quiz_id, 'quize');
             $this->crud_model->edit_quiz($quiz_id);
             $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_updated_successfully'));
         }
         elseif ($action == 'delete') {
-            $this->is_the_course_belongs_to_current_instructor($course_id, $quiz_id, 'quize');
+            // $this->is_the_course_belongs_to_current_instructor($course_id, $quiz_id, 'quize');
             $this->crud_model->delete_lesson($quiz_id);
             $this->session->set_flashdata('flash_message', get_phrase('quiz_has_been_deleted_successfully'));
         }
@@ -611,7 +611,7 @@ class Institute extends CI_Controller {
         $quiz_details = $this->crud_model->get_lessons('lesson', $quiz_id)->row_array();
 
         if ($action == 'add') {
-            $this->is_the_course_belongs_to_current_instructor($quiz_details['course_id'], $quiz_id, 'quize');
+            // $this->is_the_course_belongs_to_current_instructor($quiz_details['course_id'], $quiz_id, 'quize');
             $response = $this->crud_model->add_quiz_questions($quiz_id);
             echo $response;
         }

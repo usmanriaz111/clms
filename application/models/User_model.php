@@ -246,6 +246,7 @@ public function update_user_plan($user_id, $plan_id){
       $data['plan_id'] = $plan_id;
       $this->db->where('id', $user_id);
       $this->db->update('users', $data);
+      $this->session->set_userdata('plan_id', $plan_id);
     }
 
   }
