@@ -777,9 +777,9 @@ class Crud_model extends CI_Model
                $institute_id = $this->session->userdata('user_id');
            }
            $institute = $this->user_model->get_single_institute($institute_id);
-           $plan = $this->user_model->get_plan_by_id($institute[0]['id'])->row_array();
-           if(count($plan) > 0){
-             $institute_id = $institute[0]['id'];
+           $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
+           if($institute['plan_id'] == $plan['id']){
+             $institute_id = $institute['id'];
              if($institute_id > 0){
                  $institute_courses_count = $this->count_institute_courses($institute_id);
                  if ($plan['courses'] > 0){
@@ -792,6 +792,8 @@ class Crud_model extends CI_Model
                    $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
                    redirect(site_url('admin/course_form/add_course'), 'refresh');
                  }
+             }else{
+               $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
              }
          }else{
            $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));

@@ -45,7 +45,7 @@ class User_model extends CI_Model {
     }
 
     public function get_plan_by_id($user_id = ''){
-        return $this->db->get_where('plans', array('institute_id' => $user_id));
+        return $this->db->get_where('plans', array('id' => $user_id));
     }
 
 
@@ -341,7 +341,7 @@ public function update_user_plan($user_id, $plan_id){
     public function get_single_institute($id = 0){
         if ($id > 0){
             $this->db->where('id', $id);
-            return $this->db->get('users')->result_array();
+            return $this->db->get('users')->row_array();
         }else{
           $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
         }
