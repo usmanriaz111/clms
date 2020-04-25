@@ -36,7 +36,7 @@
                       <?php
                        foreach ($institutes as $key => $user): ?>
                        <?php
-                       $plan = $this->crud_model->get_plan_by_id($user['id']);
+                       $plan = $this->crud_model->get_plan_by_id($user['plan_id']);
                        ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>

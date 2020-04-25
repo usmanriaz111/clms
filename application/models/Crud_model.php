@@ -141,8 +141,8 @@ class Crud_model extends CI_Model
                 $institute_id = $this->session->userdata('user_id');
             }
             if ($institute_id > 0){
-                $institute = $this->user_model->get_institute($institute_id);
-                $plan = $this->user_model->get_plan_by_id($institute[0]['id'])->row_array();
+                $institute = $this->user_model->get_single_institute($institute_id);
+                $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
 
                 $institute_courses_count = $this->count_institute_courses($institute_id);
                 $course_ids = array();
@@ -967,9 +967,9 @@ class Crud_model extends CI_Model
     {
         return $this->db->get_where('course', array('id' => $course_id));
     }
-    public function get_plan_by_id($user_id = "")
+    public function get_plan_by_id($plan_id = "")
     {
-        return $this->db->get_where('plans', array('institute_id' => $user_id))->row_array();
+        return $this->db->get_where('plans', array('id' => $plan_id))->row_array();
     }
 
     public function delete_course($course_id)

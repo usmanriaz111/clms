@@ -44,8 +44,8 @@ class User_model extends CI_Model {
         }
     }
 
-    public function get_plan_by_id($user_id = ''){
-        return $this->db->get_where('plans', array('id' => $user_id));
+    public function get_plan_by_id($plan_id = ''){
+        return $this->db->get_where('plans', array('id' => $plan_id));
     }
 
 
