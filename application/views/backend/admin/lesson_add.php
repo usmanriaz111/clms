@@ -26,6 +26,7 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         <select class="form-control select2" data-toggle="select2" name="lesson_type" id="lesson_type" required onchange="show_lesson_type_form(this.value)">
             <option value=""><?php echo get_phrase('select_type_of_lesson'); ?></option>
             <option value="video-url"><?php echo get_phrase('video'); ?></option>
+            <option value="s3"><?php echo get_phrase('s3'); ?></option>
             <?php if (addon_status('amazon-s3')): ?>
                 <option value="s3-video"><?php echo get_phrase('video_file'); ?></option>
             <?php endif;?>
@@ -121,7 +122,7 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
             <label> <?php echo get_phrase('upload_video_to').' Amazon S3'; ?>( <?php echo get_phrase('for_web_and_mobile_application'); ?> )</label>
             <div class="input-group">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="video_file_for_amazon_s3" name="video_file_for_amazon_s3" onchange="changeTitleOfImageUploader(this)">
+                    <input type="file" class="custom-file-input" id="video_file_for_amazon_s3" name="video_file_for_amazon_s3" onchange="changeTitleOfImageUploader(this)" accept="video/mp4,video/flv,video/wmv,video/avi,video/mov">
                     <label class="custom-file-label" for="video_file_for_amazon_s3"><?php echo get_phrase('select_video_file'); ?></label>
                 </div>
             </div>

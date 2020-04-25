@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (file_exists("application/aws-module/aws-autoloader.php")) {
     include APPPATH . 'aws-module/aws-autoloader.php';
 }
-
+require 'upload-to-aws.php';
 class Crud_model extends CI_Model
 {
 
@@ -769,38 +769,36 @@ class Crud_model extends CI_Model
     }
 
     public function check_institute_course_limit($institute_id=''){
-      if ($this->session->userdata('role_name') == 'admin' && $institute_id ==''){
-        $this->session->set_flashdata('error_message', get_phrase('please_choose_the_institute'));
-        redirect(site_url('admin/course_form/add_course'), 'refresh');
-      }
-        if ($institute_id == ''){
-            $institute_id = $this->session->userdata('user_id');
-        }
-        $institute = $this->user_model->get_single_institute($institute_id);
-        $plan = $this->user_model->get_plan_by_id($institute[0]['id'])->row_array();
-        // echo '<pre>',print_r($plan),'</pre>';
-        // die;
-        if(count($plan) > 0){
-          $institute_id = $institute[0]['id'];
-          if($institute_id > 0){
-              $institute_courses_count = $this->count_institute_courses($institute_id);
-              if ($plan['courses'] > 0){
-                if (count($institute_courses_count) >= $plan['courses']){
-                return false;
-                }else{
-                    return true;
-                }
-              }else {
-                $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
-                redirect(site_url('admin/course_form/add_course'), 'refresh');
-              }
-          }
-      }else{
-        $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
-        redirect(site_url('admin/course_form/add_course'), 'refresh');
-      }
+         if ($this->session->userdata('role_name') == 'admin' && $institute_id ==''){
+           $this->session->set_flashdata('error_message', get_phrase('please_choose_the_institute'));
+           redirect(site_url('admin/course_form/add_course'), 'refresh');
+         }
+           if ($institute_id == ''){
+               $institute_id = $this->session->userdata('user_id');
+           }
+           $institute = $this->user_model->get_single_institute($institute_id);
+           $plan = $this->user_model->get_plan_by_id($institute[0]['id'])->row_array();
+           if(count($plan) > 0){
+             $institute_id = $institute[0]['id'];
+             if($institute_id > 0){
+                 $institute_courses_count = $this->count_institute_courses($institute_id);
+                 if ($plan['courses'] > 0){
+                   if (count($institute_courses_count) >= $plan['courses']){
+                   return false;
+                   }else{
+                       return true;
+                   }
+                 }else {
+                   $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+                   redirect(site_url('admin/course_form/add_course'), 'refresh');
+                 }
+             }
+         }else{
+           $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+           redirect(site_url('admin/course_form/add_course'), 'refresh');
+         }
 
-    }
+       }
 
     public function trim_and_return_json($untrimmed_array)
     {
@@ -1208,8 +1206,7 @@ class Crud_model extends CI_Model
             $fileName = $_FILES['video_file_for_amazon_s3']['name'];
             $tmp = explode('.', $fileName);
             $fileExtension = strtoupper(end($tmp));
-
-            $video_extensions = ['WEBM', 'MP4'];
+            $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
             if (!in_array($fileExtension, $video_extensions)) {
                 $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
@@ -1220,33 +1217,12 @@ class Crud_model extends CI_Model
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
 
-            $upload_loaction = get_settings('video_upload_location');
-            $access_key = get_settings('amazon_s3_access_key');
-            $secret_key = get_settings('amazon_s3_secret_key');
-            $bucket = get_settings('amazon_s3_bucket_name');
-            $region = get_settings('amazon_s3_region_name');
-
-            $s3config = array(
-                'region' => $region,
-                'version' => 'latest',
-                'credentials' => [
-                    'key' => $access_key, //Put key here
-                    'secret' => $secret_key, // Put Secret here
-                ],
-            );
-
             $tmpfile = $_FILES['video_file_for_amazon_s3'];
-
-            $s3 = new Aws\S3\S3Client($s3config);
+            $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
+            $s3_model = new S3_model();
+            $s3= $s3_model->create_s3_object();
             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-
-            $result = $s3->putObject([
-                'Bucket' => $bucket,
-                'Key' => $key,
-                'SourceFile' => $tmpfile['tmp_name'],
-                'ACL' => 'public-read',
-            ]);
-
+            $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
             $data['video_url'] = $result['ObjectURL'];
             $data['video_type'] = 'amazon';
             $data['lesson_type'] = 'video';
