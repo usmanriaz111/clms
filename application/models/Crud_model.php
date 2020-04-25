@@ -1191,8 +1191,7 @@ class Crud_model extends CI_Model
             $fileName = $_FILES['video_file_for_amazon_s3']['name'];
             $tmp = explode('.', $fileName);
             $fileExtension = strtoupper(end($tmp));
-
-            $video_extensions = ['WEBM', 'MP4'];
+            $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
             if (!in_array($fileExtension, $video_extensions)) {
                 $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
@@ -1208,7 +1207,7 @@ class Crud_model extends CI_Model
             $s3_model = new S3_model();
             $s3= $s3_model->create_s3_object();
             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-            $result = $s3_model->upload_data($s3,$key ,$tmppath);     
+            $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);     
             $data['video_url'] = $result['ObjectURL'];
             $data['video_type'] = 'amazon';
             $data['lesson_type'] = 'video';
