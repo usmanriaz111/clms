@@ -5,6 +5,70 @@
 .card-header {
     border-bottom: 1px solid #4e5bf2;
 }
+section.pricing {
+  background: #007bff;
+  background: linear-gradient(to right, #f7f7f7, #f3f5f7);
+}
+
+.pricing .card {
+  border: none;
+  border-radius: 1rem;
+  transition: all 0.2s;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.pricing hr {
+  margin: 1.5rem 0;
+}
+
+.pricing .card-title {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+
+}
+
+.pricing .card-price {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.pricing .card-price .period {
+  font-size: 0.8rem;
+}
+
+.pricing ul li {
+  margin-bottom: 1rem;
+}
+
+.pricing .text-muted {
+  opacity: 0.7;
+}
+
+.pricing .btn {
+  font-size: 80%;
+  border-radius: 5rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+  padding: 1rem;
+  opacity: 1;
+  transition: all 0.2s;
+}
+
+/* Hover Effects on Card */
+
+@media (min-width: 992px) {
+  .pricing .card:hover {
+    margin-top: -.25rem;
+    margin-bottom: .25rem;
+    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.3);
+  }
+  .pricing .card:hover .btn {
+    opacity: 1;
+  }
+}
+
 </style>
 <div class="row ">
   <div class="col-xl-12">
@@ -21,143 +85,36 @@
       <div class="card-body">
         <h4 class="header-title mb-3"><?php echo get_phrase('choose_a_plan'); ?></h4>
         <div class="container">
-        <section>
-  <div class="container py-5">
-
-    <!-- FOR DEMO PURPOSE -->
-    <header class="text-center mb-5 text-white">
-      <div class="row">
-        <div class="col-lg-7 mx-auto">
-          <h1>Bootstrap pricing table</h1>
-          <p>Easily create a classy pricing table in Bootstrap&nbsp;4.<br> <a href="https://bootstrapious.com/snippets" class="text-reset">Bootstrap snippet by Bootstrapious</a></p>
-        </div>
-      </div>
-    </header>
-    <!-- END -->
-
-
-
-    <div class="row text-center align-items-end">
-      <!-- Pricing Table-->
-      <div class="col-lg-4 mb-5 mb-lg-0">
-        <div class="bg-white p-5 rounded-lg shadow">
-          <h1 class="h6 text-uppercase font-weight-bold mb-4">Basic</h1>
-          <h2 class="h1 font-weight-bold">$199<span class="text-small font-weight-normal ml-2">/ month</span></h2>
-
-          <div class="custom-separator my-4 mx-auto bg-primary"></div>
-
-          <ul class="list-unstyled my-5 text-small text-left">
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Lorem ipsum dolor sit amet</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Sed ut perspiciatis</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> At vero eos et accusamus</li>
-            <li class="mb-3 text-muted">
-              <i class="fa fa-times mr-2"></i>
-              <del>Nam libero tempore</del>
-            </li>
-            <li class="mb-3 text-muted">
-              <i class="fa fa-times mr-2"></i>
-              <del>Sed ut perspiciatis</del>
-            </li>
-            <li class="mb-3 text-muted">
-              <i class="fa fa-times mr-2"></i>
-              <del>Sed ut perspiciatis</del>
-            </li>
-          </ul>
-          <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Subscribe</a>
-        </div>
-      </div>
-      <!-- END -->
-
-
-      <!-- Pricing Table-->
-      <div class="col-lg-4 mb-5 mb-lg-0">
-        <div class="bg-white p-5 rounded-lg shadow">
-          <h1 class="h6 text-uppercase font-weight-bold mb-4">Pro</h1>
-          <h2 class="h1 font-weight-bold">$399<span class="text-small font-weight-normal ml-2">/ month</span></h2>
-
-          <div class="custom-separator my-4 mx-auto bg-primary"></div>
-
-          <ul class="list-unstyled my-5 text-small text-left font-weight-normal">
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Lorem ipsum dolor sit amet</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Sed ut perspiciatis</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> At vero eos et accusamus</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Nam libero tempore</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Sed ut perspiciatis</li>
-            <li class="mb-3 text-muted">
-              <i class="fa fa-times mr-2"></i>
-              <del>Sed ut perspiciatis</del>
-            </li>
-          </ul>
-          <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Subscribe</a>
-        </div>
-      </div>
-      <!-- END -->
-
-
-      <!-- Pricing Table-->
+        <section class="pricing py-5">
+  <div class="container">
+    <div class="row">
+    <?php foreach ($plans as $key => $plan) { ?>
       <div class="col-lg-4">
-        <div class="bg-white p-5 rounded-lg shadow">
-          <h1 class="h6 text-uppercase font-weight-bold mb-4">Enterprise</h1>
-          <h2 class="h1 font-weight-bold">$899<span class="text-small font-weight-normal ml-2">/ month</span></h2>
-
-          <div class="custom-separator my-4 mx-auto bg-primary"></div>
-
-          <ul class="list-unstyled my-5 text-small text-left font-weight-normal">
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Lorem ipsum dolor sit amet</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Sed ut perspiciatis</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> At vero eos et accusamus</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Nam libero tempore</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Sed ut perspiciatis</li>
-            <li class="mb-3">
-              <i class="fa fa-check mr-2 text-primary"></i> Sed ut perspiciatis</li>
-          </ul>
-          <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Subscribe</a>
+        <div class="card mb-5 mb-lg-0">
+          <div class="card-body">
+            <h5 class="card-title text-uppercase text-center"><?php echo strtoupper($plan['name'])?></h5>
+            <h6 class="card-price text-center">$ <?php echo $plan['price']?></h6>
+            <h5 class="period text-center">Per Month</h5>
+            <hr>
+            <ul class="fa-ul">
+              <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['courses']?> No of Courses</li>
+              <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['classes']?> No of Classes</li>
+              <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['course_minutes']?> Live session per course(minutes)</li>
+              <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['students'] ?> No of students per course</li>
+              <li class=""><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['cloud_space'] ?>GB Cloud space</li>
+            </ul>
+            <form action="<?php echo site_url('institute/plan_price'); ?>" method="post">
+                <input type="hidden" name="plan_id" value="<?php echo $plan['id']; ?>" />
+                <button class = "btn btn-block btn-primary text-uppercase" type="submit" name="button"><?php echo get_phrase('GET STARRED'); ?></button>
+            </form>
+          </div>
         </div>
       </div>
-      <!-- END -->
-
+      <?php } ?>
     </div>
   </div>
 </section>
-
-              <div class="card-deck mb-3 text-center">
-                <?php foreach ($plans as $key => $plan) { ?>
-                  <div class="card mb-4 box-shadow box-shadow1">
-                    <div class="card-header">
-                      <h4 class="my-0 font-weight-normal"><?php echo strtoupper($plan['name'])?></h4>
-                    </div>
-                    <div class="card-body">
-                      <h1 class="card-title pricing-card-title"><?php echo $plan['price']?> <small class="text-muted">/ reg</small></h1>
-                      <ul class="list-unstyled mt-3 mb-4">
-                        <li><strong><?php echo $plan['courses']?></strong> No of Courses</li>
-                        <li><strong><?php echo $plan['classes']?></strong> No of Classes</li>
-                        <li><strong><?php echo $plan['course_minutes']?></strong> Live session per course(minutes)</li>
-                        <li><strong><?php echo $plan['students'] ?></strong> No of students per course</li>
-                        <li><strong><?php echo $plan['cloud_space'] ?></strong> Cloud space per course</li>
-                      </ul>
-                      <form action="<?php echo site_url('institute/plan_price'); ?>" method="post">
-                        <input type="hidden" name="plan_id" value="<?php echo $plan['id']; ?>" />
-                        <button class = "btn btn-primary" type="submit" name="button"><?php echo get_phrase('buy_now'); ?></button>
-                      </form>
-                      <!-- <a href = "javascript::" class="btn btn-lg btn-block btn-primary" id = "plan_<?php echo $plan['id']; ?>" onclick="handlePlanNow(this)"><?php echo get_phrase('buy_now'); ?></a> -->
-                    </div>
-                  </div>
-                <?php } ?>
-              </div>
-            </div>
+      </div>
       </div>
     </div>
   </div>
