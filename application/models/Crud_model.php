@@ -815,6 +815,46 @@ class Crud_model extends CI_Model
 
        }
 
+       public function check_institute_membory_limit($institute_id=''){
+        if ($this->session->userdata('role_name') == 'admin' && $institute_id ==''){
+          $this->session->set_flashdata('error_message', get_phrase('please_choose_the_institute'));
+          redirect(site_url('admin/course_form/add_course'), 'refresh');
+        }
+          if ($institute_id == ''){
+              $institute_id = $this->session->userdata('user_id');
+          }
+          $institute = $this->user_model->get_single_institute($institute_id);
+          $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
+          if($institute['plan_id'] == $plan['id']){
+            $institute_id = $institute['id'];
+            if($institute_id > 0){
+                $count_sizes = 0.0;
+                $institute_courses_count = $this->count_institute_courses($institute_id);
+                foreach ($institute_courses_count as $row) {
+                    $count_sizes += $row['video_size'];
+                }
+                if ($plan['courses'] > 0){
+                    $plan_space = $plan['cloud_space'] ** 1024;
+                  if ($count_sizes >= $plan_space){
+                  return false;
+                  }else{
+                      return true;
+                  }
+                }else {
+                  $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+                  redirect(site_url('admin/course_form/add_course'), 'refresh');
+                }
+            }else{
+              $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
+            }
+        }else{
+          $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+          redirect(site_url('admin/course_form/add_course'), 'refresh');
+        }
+
+      }
+
+
     public function trim_and_return_json($untrimmed_array)
     {
         $trimmed_array = array();
@@ -1154,7 +1194,9 @@ class Crud_model extends CI_Model
 
     public function add_lesson()
     {
-        $data['course_id'] = html_escape($this->input->post('course_id'));
+        $course_id = html_escape($this->input->post('course_id'));
+        $data['course_id'] = $course_id;
+        $course = $this->db->get_where('course', array('id' => $course_id))->row_array();
         $data['title'] = html_escape($this->input->post('title'));
         $data['section_id'] = html_escape($this->input->post('section_id'));
 
@@ -1215,6 +1257,16 @@ class Crud_model extends CI_Model
             $data['video_type_for_mobile_application'] = 'html5';
             $data['video_url_for_mobile_application'] = $mobile_app_lesson_url;
         } elseif ($lesson_type == "s3") {
+            $space_validity = $this->check_institute_membory_limit($course['institute_id']);
+            if ($space_validity == false){
+                $this->session->set_flashdata('error_message', get_phrase('You do not have more storage'));
+            }else{
+                $video_size = $_FILES['video_file_for_amazon_s3']['size'];
+                
+                if ($video_size > 1024){
+                $video_kb_size = round($video_size / 1024, 4);
+                }
+            
             // SET MAXIMUM EXECUTION TIME 600
             ini_set('max_execution_time', '600');
 
@@ -1239,7 +1291,10 @@ class Crud_model extends CI_Model
             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
             $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
             $data['video_url'] = $result['ObjectURL'];
+            // echo $video_kb_size;
+            // die;
             $data['video_type'] = 'amazon';
+            $data['video_size'] = $video_kb_size;
             $data['lesson_type'] = 'video';
             $data['attachment_type'] = 'file';
 
@@ -1252,6 +1307,8 @@ class Crud_model extends CI_Model
             $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
             $data['video_type_for_mobile_application'] = "html5";
             $data['video_url_for_mobile_application'] = $result['ObjectURL'];
+
+            }
 
         } else {
             if ($_FILES['attachment']['name'] == "") {
