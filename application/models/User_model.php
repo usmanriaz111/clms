@@ -44,6 +44,28 @@ class User_model extends CI_Model {
         }
     }
 
+    public function get_classes_institute(){
+
+        $courses = $this->crud_model->get_classes_course();
+        $institute_ids = array();
+        foreach ($courses as $key => $course) {
+            array_push($institute_ids, $course['institute_id']);
+          }
+        $this->db->where_in('id', $institute_ids);
+        return $this->db->get('users')->result_array();
+
+    }
+
+    public function get_classes_instructor(){
+        $courses = $this->crud_model->get_classes_course();
+        $instructor_ids = array();
+        foreach ($courses as $key => $course) {
+            array_push($instructor_ids, $course['instructor_id']);
+          }
+        $this->db->where_in('id', $instructor_ids);
+        return $this->db->get('users')->result_array();
+    }
+
     public function get_plan_by_id($plan_id = ''){
         return $this->db->get_where('plans', array('id' => $plan_id));
     }

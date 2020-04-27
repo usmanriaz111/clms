@@ -237,10 +237,17 @@ class Admin extends CI_Controller
             $this->crud_model->delete_class($param2);
             redirect(site_url('admin/classes'), 'refresh');
         }
+        $page_data['selected_course_id'] = isset($_GET['course_id']) ? $_GET['course_id'] : "all";
+        $page_data['selected_institute_id'] = isset($_GET['institute_id']) ? $_GET['institute_id'] : "all";
+        $page_data['selected_instructor_id'] = isset($_GET['instructor_id']) ? $_GET['instructor_id'] : "all";
 
         $page_data['page_name'] = 'classes';
         $page_data['page_title'] = get_phrase('class');
-        $page_data['classes'] = $this->crud_model->get_classes();
+        $page_data['courses'] = $this->crud_model->get_classes_course();
+        $page_data['instructors'] = $this->user_model->get_classes_instructor();
+        $page_data['institutes'] = $this->user_model->get_classes_institute();
+        $page_data['classes'] = $this->crud_model->get_classes($page_data['selected_course_id'],$page_data['selected_institute_id'],$page_data['selected_instructor_id']);
+        
         $this->load->view('backend/index', $page_data);
     }
     public function class_form($param1 = "", $param2 = "")

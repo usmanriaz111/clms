@@ -39,6 +39,19 @@ class Crud_model extends CI_Model
         return $this->db->get('classes')->result_array();
     }
 
+    public function get_classes_course()
+    {
+      $courses = $this->get_classes('all','all','all');
+      $course_ids = array();
+
+      foreach ($courses as $key => $course) {
+        array_push($course_ids, $course['course_id']);
+      }
+
+      $this->db->where_in('id', $course_ids);
+      return $this->db->get('course')->result_array();
+    }
+
     public function get_institute_classes()
     {
         $course_ids = array();

@@ -34,8 +34,6 @@
                   </thead>
                   <tbody>
                       <?php
-                      // echo '<pre>',print_r($plans),'</pre>';
-                      // die;
                        foreach ($plans as $key => $plan): ?>
                        <?php
                        if ($plan['institute_id'] != ''){
