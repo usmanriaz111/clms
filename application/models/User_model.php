@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class User_model extends CI_Model {
 
     function __construct()
@@ -28,7 +27,7 @@ class User_model extends CI_Model {
             $this->db->where('class_id', $class_id);
             return $this->db->get('users');
         }
-        
+
     }
 
     public function get_all_user($user_id = 0) {
@@ -41,14 +40,36 @@ class User_model extends CI_Model {
     public function get_all_instructor($institute_id = 0) {
         if ($institute_id > 0) {
             $this->db->where('institute_id', $institute_id);
+            return $this->db->get('users')->result_array();
         }
+    }
+
+    public function get_classes_institute(){
+
+        $courses = $this->crud_model->get_classes_course();
+        $institute_ids = array();
+        foreach ($courses as $key => $course) {
+            array_push($institute_ids, $course['institute_id']);
+          }
+        $this->db->where_in('id', $institute_ids);
+        return $this->db->get('users')->result_array();
+
+    }
+
+    public function get_classes_instructor(){
+        $courses = $this->crud_model->get_classes_course();
+        $instructor_ids = array();
+        foreach ($courses as $key => $course) {
+            array_push($instructor_ids, $course['instructor_id']);
+          }
+        $this->db->where_in('id', $instructor_ids);
         return $this->db->get('users')->result_array();
     }
 
-    public function get_plan_by_id($user_id = ''){
-        return $this->db->get_where('plans', array('institute_id' => $user_id));
+    public function get_plan_by_id($plan_id = ''){
+        return $this->db->get_where('plans', array('id' => $plan_id));
     }
-    
+
 
     public function add_user($role_id = 2, $class_id = '') {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
@@ -61,7 +82,7 @@ class User_model extends CI_Model {
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
             if (isset($_POST['type'])){
-                $user_type = html_escape($this->input->post('type'));   
+                $user_type = html_escape($this->input->post('type'));
             }
             $instructor_logged_in = html_escape($this->input->post('current_instructor'));
             if ($user_type == "institute"){
@@ -70,9 +91,9 @@ class User_model extends CI_Model {
                     $data['institute_id'] = $this->session->userdata('user_id');
                 }
                 else {
-                    $data['institute_id'] = html_escape($this->input->post('institutes'));      
+                    $data['institute_id'] = html_escape($this->input->post('institutes'));
                 }
-                
+
             }elseif($user_type == "freelancer"){
                 $data['type'] = $user_type;
                 $data['institute_id'] = NULL;
@@ -126,7 +147,7 @@ class User_model extends CI_Model {
             $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
         }
     }
-    
+
 
     public function check_institute($institute){
         $duplicate_email_check = $this->db->get_where('users', array('institute_id' => $institute));
@@ -165,7 +186,7 @@ class User_model extends CI_Model {
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
             $user_type = html_escape($this->input->post('type'));
-            
+
             //Association multiple instructors to institute
             // $instructor_list = $this->input->post('instructors');
             // foreach ($instructor_list as $instructor_id) {
@@ -224,6 +245,36 @@ class User_model extends CI_Model {
 
         $this->upload_user_image($user_id);
     }
+    public function check_plan(){
+      if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+      }
+      $plan_id = $this->session->userdata('plan_id');
+      if ($plan_id > 0) {
+          $user_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+          if ($plan_id == $user_plan['id']){
+            return true;
+          }
+      }else{
+        redirect(site_url('institute/purchase_plan'), 'refresh');
+      }
+    }
+
+
+public function update_user_plan($user_id, $plan_id){
+  if ($user_id > 0){
+    $count_user = $this->db->get_where('users', array('id' => $user_id))->num_rows();
+    if ($count_user == 1){
+      $data['plan_id'] = $plan_id;
+      $this->db->where('id', $user_id);
+      $this->db->update('users', $data);
+      $this->session->set_userdata('plan_id', $plan_id);
+    }
+
+  }
+
+}
+
     public function delete_user($user_id = "") {
         $this->db->where('id', $user_id);
         $this->db->delete('users');
@@ -307,6 +358,15 @@ class User_model extends CI_Model {
         }else{
             $this->db->where('role_id', 3);
             return $this->db->get('users')->result_array();
+        }
+    }
+
+    public function get_single_institute($id = 0){
+        if ($id > 0){
+            $this->db->where('id', $id);
+            return $this->db->get('users')->row_array();
+        }else{
+          $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
         }
     }
 

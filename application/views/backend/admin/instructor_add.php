@@ -40,15 +40,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#social_information" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                    <i class="mdi mdi-wifi mr-1"></i>
-                                    <span class="d-none d-sm-inline"><?php echo get_phrase('social_information'); ?></span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="#finish" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-checkbox-marked-circle-outline mr-1"></i>
-                                    <span class="d-none d-sm-inline"><?php echo get_phrase('finish'); ?></span>
+                                    <span class="d-none d-sm-inline"><?php echo get_phrase('create_instructor'); ?></span>
                                 </a>
                             </li>
                         </ul>
@@ -71,30 +65,6 @@
                                             <label class="col-md-3 col-form-label" for="last_name"><?php echo get_phrase('last_name'); ?> <span class="required">*</span> </label>
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="linkedin_link"><?php echo get_phrase('biography'); ?></label>
-                                            <div class="col-md-9">
-                                                <textarea name="biography" id = "summernote-basic" class="form-control"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="user_image"><?php echo get_phrase('user_image'); ?></label>
-                                            <div class="col-md-9">
-                                                <div class="d-flex">
-                                                  <div class="">
-                                                      <img class = "rounded-circle img-thumbnail" src="<?php echo $this->user_model->get_user_image_url($user_data['id']);?>" alt="" style="height: 50px; width: 50px;">
-                                                  </div>
-                                                  <div class="flex-grow-1 mt-1 pl-3">
-                                                      <div class="input-group">
-                                                          <div class="custom-file">
-                                                              <input type="file" class="custom-file-input" name = "user_image" id="user_image" onchange="changeTitleOfImageUploader(this)" accept="image/*">
-                                                              <label class="custom-file-label ellipsis" for="user_image"><?php echo get_phrase('choose_user_image'); ?></label>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
                                             </div>
                                         </div>
                                     </div> <!-- end col -->
@@ -148,34 +118,6 @@
                                 </div> <!-- end row -->
                             </div>
 
-                            <div class="tab-pane" id="social_information">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="facebook_link"> <?php echo get_phrase('facebook'); ?></label>
-                                            <div class="col-md-9">
-                                                <input type="text" id="facebook_link" name="facebook_link" class="form-control" value="<?php echo $social_links['facebook']; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="twitter_link"><?php echo get_phrase('twitter'); ?></label>
-                                            <div class="col-md-9">
-                                                <input type="text" id="twitter_link" name="twitter_link" class="form-control" value="<?php echo $social_links['twitter']; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="linkedin_link"><?php echo get_phrase('linkedin'); ?></label>
-                                            <div class="col-md-9">
-                                                <input type="text" id="linkedin_link" name="linkedin_link" class="form-control" value="<?php echo $social_links['linkedin']; ?>">
-                                            </div>
-                                        </div>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-                            </div>
-                            <?php
-                                $paypal_keys = json_decode($user_data['paypal_keys'], true);
-                                $stripe_keys = json_decode($user_data['stripe_keys'], true);
-                             ?>
                             <div class="tab-pane" id="finish">
                                 <div class="row">
                                     <div class="col-12">

@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (file_exists("application/aws-module/aws-autoloader.php")) {
     include APPPATH . 'aws-module/aws-autoloader.php';
 }
-
+require 'upload-to-aws.php';
 class Crud_model extends CI_Model
 {
 
@@ -37,6 +37,19 @@ class Crud_model extends CI_Model
 
         $this->db->order_by('date_added', 'desc');
         return $this->db->get('classes')->result_array();
+    }
+
+    public function get_classes_course()
+    {
+      $courses = $this->get_classes('all','all','all');
+      $course_ids = array();
+
+      foreach ($courses as $key => $course) {
+        array_push($course_ids, $course['course_id']);
+      }
+
+      $this->db->where_in('id', $course_ids);
+      return $this->db->get('course')->result_array();
     }
 
     public function get_institute_classes()
@@ -134,15 +147,15 @@ class Crud_model extends CI_Model
         if ($validity_name == false) {
             $this->session->set_flashdata('error_message', get_phrase('class_name_duplication'));
         } else {
-            
+
             $institute_id = $this->input->post('institutes');
-            
+
             if ($institute_id == ''){
                 $institute_id = $this->session->userdata('user_id');
             }
             if ($institute_id > 0){
-                $institute = $this->user_model->get_institute($institute_id);
-                $plan = $this->user_model->get_plan_by_id($institute[0]['id'])->row_array();
+                $institute = $this->user_model->get_single_institute($institute_id);
+                $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
 
                 $institute_courses_count = $this->count_institute_courses($institute_id);
                 $course_ids = array();
@@ -157,7 +170,7 @@ class Crud_model extends CI_Model
                 } else {
                     return array();
                 }
-        
+
                  $course_classes = $this->db->get('classes')->result_array();
                  if (count($course_classes) >= $plan['classes']){
                     $this->session->set_flashdata('error_message', get_phrase('you_inscrease_class_limit'));
@@ -171,7 +184,7 @@ class Crud_model extends CI_Model
             }else{
                 $this->session->set_flashdata('error_message', get_phrase('class_not_created'));
             }
-            
+
         }
     }
 
@@ -234,6 +247,7 @@ class Crud_model extends CI_Model
         $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
         $data_plan['students'] = html_escape($this->input->post('students'));
         $data_plan['cloud_space'] = html_escape($this->input->post('cloud_space'));
+        $data_plan['price'] = html_escape($this->input->post('price'));
         // $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
         $data_plan['date_added'] = strtotime(date('D, d-M-Y'));
         $this->db->insert('plans', $data_plan);
@@ -248,6 +262,7 @@ class Crud_model extends CI_Model
         $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
         $data_plan['students'] = html_escape($this->input->post('students'));
         $data_plan['cloud_space'] = html_escape($this->input->post('cloud_space'));
+        $data_plan['price'] = html_escape($this->input->post('price'));
         // $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
         $data_plan['last_modified'] = strtotime(date('D, d-M-Y'));
         $this->db->where('id', $plan_id);
@@ -679,7 +694,7 @@ class Crud_model extends CI_Model
         }else{
             $outcomes = $this->trim_and_return_json($this->input->post('outcomes'));
             $requirements = $this->trim_and_return_json($this->input->post('requirements'));
-    
+
             $data['title'] = html_escape($this->input->post('title'));
             $data['short_description'] = $this->input->post('short_description');
             $data['description'] = $this->input->post('description');
@@ -701,7 +716,7 @@ class Crud_model extends CI_Model
             } else {
                 $data['course_overview_provider'] = "";
             }
-    
+
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $data['section'] = json_encode(array());
             $data['is_top_course'] = $this->input->post('is_top_course');
@@ -738,13 +753,13 @@ class Crud_model extends CI_Model
                 }
             }
             $this->db->insert('course', $data);
-    
+
             $course_id = $this->db->insert_id();
             // Create folder if does not exist
             if (!file_exists('uploads/thumbnails/course_thumbnails')) {
                 mkdir('uploads/thumbnails/course_thumbnails', 0777, true);
             }
-    
+
             // Upload different number of images according to activated theme. Data is taking from the config.json file
             $course_media_files = themeConfiguration(get_frontend_settings('theme'), 'course_media_files');
             foreach ($course_media_files as $course_media => $size) {
@@ -752,7 +767,7 @@ class Crud_model extends CI_Model
                     move_uploaded_file($_FILES[$course_media]['tmp_name'], 'uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg');
                 }
             }
-    
+
             if ($data['status'] == 'approved') {
                 $this->session->set_flashdata('flash_message', get_phrase('course_added_successfully'));
             } elseif ($data['status'] == 'pending') {
@@ -760,31 +775,45 @@ class Crud_model extends CI_Model
             } elseif ($data['status'] == 'draft') {
                 $this->session->set_flashdata('flash_message', get_phrase('your_course_has_been_added_to_draft'));
             }
-    
+
             $this->session->set_flashdata('flash_message', get_phrase('course_has_been_added_successfully'));
             return $course_id;
         }
     }
 
     public function check_institute_course_limit($institute_id=''){
-        if ($institute_id == ''){
-            $institute_id = $this->session->userdata('user_id');
-        }
-        $institute = $this->user_model->get_institute($institute_id);
-        $plan = $this->user_model->get_plan_by_id($institute[0]['id'])->row_array();
-        $institute_id = $institute[0]['id'];
-        if($institute_id > 0){
-            $institute_courses_count = $this->count_institute_courses($institute_id);
-            echo '<pre>',print_r($institute_courses_count),'</pre>';
-            die;
-            if (count($institute_courses_count) >= $plan['courses']){
-                return false;
-            }else{
-                return true;
-            }
-        }
-        
-    }
+         if ($this->session->userdata('role_name') == 'admin' && $institute_id ==''){
+           $this->session->set_flashdata('error_message', get_phrase('please_choose_the_institute'));
+           redirect(site_url('admin/course_form/add_course'), 'refresh');
+         }
+           if ($institute_id == ''){
+               $institute_id = $this->session->userdata('user_id');
+           }
+           $institute = $this->user_model->get_single_institute($institute_id);
+           $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
+           if($institute['plan_id'] == $plan['id']){
+             $institute_id = $institute['id'];
+             if($institute_id > 0){
+                 $institute_courses_count = $this->count_institute_courses($institute_id);
+                 if ($plan['courses'] > 0){
+                   if (count($institute_courses_count) >= $plan['courses']){
+                   return false;
+                   }else{
+                       return true;
+                   }
+                 }else {
+                   $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+                   redirect(site_url('admin/course_form/add_course'), 'refresh');
+                 }
+             }else{
+               $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
+             }
+         }else{
+           $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+           redirect(site_url('admin/course_form/add_course'), 'refresh');
+         }
+
+       }
 
     public function trim_and_return_json($untrimmed_array)
     {
@@ -951,9 +980,9 @@ class Crud_model extends CI_Model
     {
         return $this->db->get_where('course', array('id' => $course_id));
     }
-    public function get_plan_by_id($user_id = "")
+    public function get_plan_by_id($plan_id = "")
     {
-        return $this->db->get_where('plans', array('institute_id' => $user_id))->row_array();
+        return $this->db->get_where('plans', array('id' => $plan_id))->row_array();
     }
 
     public function delete_course($course_id)
@@ -1192,8 +1221,7 @@ class Crud_model extends CI_Model
             $fileName = $_FILES['video_file_for_amazon_s3']['name'];
             $tmp = explode('.', $fileName);
             $fileExtension = strtoupper(end($tmp));
-
-            $video_extensions = ['WEBM', 'MP4'];
+            $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
             if (!in_array($fileExtension, $video_extensions)) {
                 $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
@@ -1204,33 +1232,12 @@ class Crud_model extends CI_Model
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
 
-            $upload_loaction = get_settings('video_upload_location');
-            $access_key = get_settings('amazon_s3_access_key');
-            $secret_key = get_settings('amazon_s3_secret_key');
-            $bucket = get_settings('amazon_s3_bucket_name');
-            $region = get_settings('amazon_s3_region_name');
-
-            $s3config = array(
-                'region' => $region,
-                'version' => 'latest',
-                'credentials' => [
-                    'key' => $access_key, //Put key here
-                    'secret' => $secret_key, // Put Secret here
-                ],
-            );
-
             $tmpfile = $_FILES['video_file_for_amazon_s3'];
-
-            $s3 = new Aws\S3\S3Client($s3config);
+            $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
+            $s3_model = new S3_model();
+            $s3= $s3_model->create_s3_object();
             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-
-            $result = $s3->putObject([
-                'Bucket' => $bucket,
-                'Key' => $key,
-                'SourceFile' => $tmpfile['tmp_name'],
-                'ACL' => 'public-read',
-            ]);
-
+            $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
             $data['video_url'] = $result['ObjectURL'];
             $data['video_type'] = 'amazon';
             $data['lesson_type'] = 'video';
@@ -1644,6 +1651,21 @@ class Crud_model extends CI_Model
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('payment', $data);
         }
+    }
+
+    public function plan_purchase($user_id, $method, $amount_paid)
+    {
+        $plan_id = $this->session->userdata('plan_id');
+        if ($plan_id > 0){
+            $data['user_id'] = $user_id;
+            $data['payment_type'] = $method;
+            $data['plan_id'] = $plan_id;
+            $course_details = $this->get_course_by_id($purchased_course)->row_array();
+            $data['amount'] = $amount_paid;
+            $data['date_added'] = strtotime(date('D, d-M-Y'));
+            $this->db->insert('payment', $data);
+            $this->user_model->update_user_plan($user_id, $plan_id);
+          }
     }
 
     public function get_default_lesson($section_id)

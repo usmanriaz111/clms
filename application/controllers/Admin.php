@@ -148,6 +148,25 @@ class Admin extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+    public function video_form($param1 = "", $param2 = "") {
+        if ($this->session->userdata('admin_login') != true) {
+          redirect(site_url('login'), 'refresh');
+        }
+        elseif ($param1 == 'add_video_form') {
+          $page_data['page_name'] = 'video_add';
+          $page_data['page_title'] = get_phrase('video_add');
+          $page_data['institutes'] = $this->user_model->get_institute();
+          $this->load->view('backend/index', $page_data);
+        }
+        elseif ($param1 == 'edit_video_form') {
+          $page_data['page_name'] = 'video_edit';
+          $page_data['user_id'] = $param2;
+          $page_data['institutes'] = $this->user_model->get_institute();
+          $page_data['page_title'] = get_phrase('video_edit');
+          $this->load->view('backend/index', $page_data);
+        }
+    }
+    
     public function instructor_form($param1 = "", $param2 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -218,10 +237,17 @@ class Admin extends CI_Controller
             $this->crud_model->delete_class($param2);
             redirect(site_url('admin/classes'), 'refresh');
         }
+        $page_data['selected_course_id'] = isset($_GET['course_id']) ? $_GET['course_id'] : "all";
+        $page_data['selected_institute_id'] = isset($_GET['institute_id']) ? $_GET['institute_id'] : "all";
+        $page_data['selected_instructor_id'] = isset($_GET['instructor_id']) ? $_GET['instructor_id'] : "all";
 
         $page_data['page_name'] = 'classes';
         $page_data['page_title'] = get_phrase('class');
-        $page_data['classes'] = $this->crud_model->get_classes();
+        $page_data['courses'] = $this->crud_model->get_classes_course();
+        $page_data['instructors'] = $this->user_model->get_classes_instructor();
+        $page_data['institutes'] = $this->user_model->get_classes_institute();
+        $page_data['classes'] = $this->crud_model->get_classes($page_data['selected_course_id'],$page_data['selected_institute_id'],$page_data['selected_instructor_id']);
+        
         $this->load->view('backend/index', $page_data);
     }
     public function class_form($param1 = "", $param2 = "")
@@ -824,6 +850,10 @@ class Admin extends CI_Controller
 
         if ($param1 == "add") {
             $instructor_id = $this->input->post('instructors');
+            if($instructor_id == ''){
+              $this->session->set_flashdata('error_message', get_phrase('please_select_a_instructor'));
+              redirect(site_url('admin/course_form/add_course/'), 'refresh');
+            }
             $course_id = $this->crud_model->add_course('', $instructor_id);
             if ($course_id > 0){
             redirect(site_url('admin/course_form/course_edit/' . $course_id), 'refresh');

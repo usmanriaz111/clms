@@ -84,22 +84,6 @@
 				</a>
 			</li>
 
-			<li class="side-nav-item <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student'): ?> active <?php endif; ?>">
-				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student'): ?> active <?php endif; ?>">
-					<i class="dripicons-network-3"></i>
-					<span> <?php echo get_phrase('enrolment'); ?> </span>
-					<span class="menu-arrow"></span>
-				</a>
-				<ul class="side-nav-second-level" aria-expanded="false">
-					<li class = "<?php if($page_name == 'enrol_history') echo 'active'; ?>">
-						<a href="<?php echo site_url('admin/enrol_history'); ?>"><?php echo get_phrase('enrol_history'); ?></a>
-					</li>
-
-					<li class = "<?php if($page_name == 'enrol_student') echo 'active'; ?>">
-						<a href="<?php echo site_url('admin/enrol_student'); ?>"><?php echo get_phrase('enrol_a_student'); ?></a>
-					</li>
-				</ul>
-			</li>
 			<li class="side-nav-item">
 				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'admin_revenue' || $page_name == 'instructor_revenue' || $page_name == 'invoice'): ?> active <?php endif; ?>">
 					<i class="dripicons-box"></i>

@@ -17,10 +17,9 @@ class User extends CI_Controller {
         $this->get_protected_routes($this->router->method);
     }
 
-
     public function get_protected_routes($method) {
       // IF ANY FUNCTION DOES NOT REQUIRE PUBLIC INSTRUCTOR, PUT THE NAME HERE.
-      $unprotected_routes = ['save_course_progress']; 
+      $unprotected_routes = ['save_course_progress'];
 
       if (!in_array($method, $unprotected_routes)) {
         if (get_settings('allow_instructor') != 1){
@@ -36,6 +35,7 @@ class User extends CI_Controller {
         }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'user'){
             redirect(site_url('home'), 'refresh');
         }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'institute'){
+          $this->user_model->check_plan();
             $this->courses();
         }
         else {
@@ -457,7 +457,7 @@ class User extends CI_Controller {
           $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_quize'));
           redirect(site_url('user/courses'), 'refresh');
         }
-        
+
     }
 
     public function ajax_sort_section() {

@@ -1,4 +1,5 @@
 <?php
+// require 'upload-to-aws.php';
 /**
  * CodeIgniter
  *
@@ -312,4 +313,8 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+
+require 'vendor/autoload.php';
+// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+// $dotenv->load();
 require_once BASEPATH.'core/CodeIgniter.php';

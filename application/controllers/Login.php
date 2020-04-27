@@ -37,6 +37,7 @@ class Login extends CI_Controller {
             $role = $this->db->get_where('role', array('id' => $row->role_id))->row_array();
             $role_name = strtolower($role['name']);
             $this->session->set_userdata('user_id', $row->id);
+            $this->session->set_userdata('plan_id', $row->plan_id);
             $this->session->set_userdata('role_id', $row->role_id);
             $this->session->set_userdata('role_name', $role_name);
             $this->session->set_userdata('role', get_user_role('user_role', $row->id));

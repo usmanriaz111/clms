@@ -35,14 +35,12 @@
                   <tbody>
                       <?php
                        foreach ($institutes as $key => $user): ?>
-                       <?php
-                       $plan = $this->crud_model->get_plan_by_id($user['id']);
-                       ?>
                         <tr>
+                          <?php
+                          $plan = $this->crud_model->get_plan_by_id($user['plan_id']);
+                          ?>
                             <td><?php echo $key+1; ?></td>
-                            <td>
-                                <img src="<?php echo $this->user_model->get_user_image_url($user['id']);?>" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">
-                            </td>
+                            <td><img src="<?php echo $this->user_model->get_user_image_url($user['id']);?>" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail"></td>
                             <td><?php echo $user['first_name'].' '.$user['last_name']; ?></td>
                             <td><?php echo $user['email']; ?></td>
                             <td>
