@@ -31,7 +31,7 @@ class S3_model {
         try {
             $result = $s3->putObject([
                 'Bucket' => $bucketName,
-                'Key'    => $key,
+                'Key'    => strtolower( str_replace(' ','_',$this->session->userdata('name'))).'/'.'course-name'.'/'.$key,
                 'Body'   => fopen($video_path, 'r'),
                 'ACL'    => 'public-read',
             ]);
