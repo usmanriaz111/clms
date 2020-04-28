@@ -1,13 +1,26 @@
+<style>
+.preload { 
+    z-index: 99999;
+    width:100px;
+    height: 100px;
+    position: fixed;
+    top: 30%;
+    left: 45%;
+}
+</style>
 <?php
 // $param2 = course id
 $course_details = $this->crud_model->get_course_by_id($param2)->row_array();
 $sections = $this->crud_model->get_section('course', $param2)->result_array();
 ?>
+<div class="preload">
+<img src="http://i.imgur.com/KUJoe.gif">
+</div>
 <form action="<?php echo site_url('admin/lessons/'.$param2.'/add'); ?>" method="post" enctype="multipart/form-data">
 
     <div class="form-group">
         <label><?php echo get_phrase('title'); ?></label>
-        <input type="text" name = "title" class="form-control" required>
+        <input type="text" id="title" name = "title" class="form-control" required>
     </div>
 
     <input type="hidden" name="course_id" value="<?php echo $param2; ?>">
@@ -26,10 +39,6 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         <select class="form-control select2" data-toggle="select2" name="lesson_type" id="lesson_type" required onchange="show_lesson_type_form(this.value)">
             <option value=""><?php echo get_phrase('select_type_of_lesson'); ?></option>
             <option value="video-url"><?php echo get_phrase('video'); ?></option>
-            <option value="s3"><?php echo get_phrase('s3'); ?></option>
-            <?php if (addon_status('amazon-s3')): ?>
-                <option value="s3-video"><?php echo get_phrase('video_file'); ?></option>
-            <?php endif;?>
             <option value="other-txt"><?php echo get_phrase('text_file'); ?></option>
             <option value="other-pdf"><?php echo get_phrase('pdf_file'); ?></option>
             <option value="other-doc"><?php echo get_phrase('document_file'); ?></option>
@@ -43,6 +52,7 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
             <label for="lesson_provider"><?php echo get_phrase('lesson_provider'); ?>( <?php echo get_phrase('for_web_application'); ?> )</label>
             <select class="form-control select2" data-toggle="select2" name="lesson_provider" id="lesson_provider" onchange="check_video_provider(this.value)">
                 <option value=""><?php echo get_phrase('select_lesson_provider'); ?></option>
+                <option value="s3"><?php echo get_phrase('s3'); ?></option>
                 <option value="youtube"><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo"><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5">HTML5</option>
@@ -88,6 +98,7 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         </div>
 
         <!-- This portion is for mobile application video lesson -->
+        <div id="mobile-view">
         <div class="form-group">
             <label for="lesson_provider"><?php echo get_phrase('lesson_provider'); ?>( <?php echo get_phrase('for_mobile_application'); ?> )</label>
             <select class="form-control select2" data-toggle="select2" name="lesson_provider_for_mobile_application" id="lesson_provider_for_mobile_application">
@@ -102,6 +113,7 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         <div class="form-group">
             <label><?php echo get_phrase('duration'); ?>( <?php echo get_phrase('for_mobile_application'); ?> )</label>
             <input type="text" class="form-control" data-toggle='timepicker' data-minute-step="5" name="html5_duration_for_mobile_application" id = "html5_duration_for_mobile_application" data-show-meridian="false" value="00:00:00">
+        </div>
         </div>
     </div>
 
@@ -139,13 +151,21 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         </div>
 
         <div class="text-center">
-            <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('add_lesson'); ?></button>
+            <button class = "btn btn-success" id="add_lesson" type="submit" name="button"><?php echo get_phrase('add_lesson'); ?></button>
         </div>
     </form>
     <script type="text/javascript">
     $(document).ready(function() {
         initSelect2(['#section_id','#lesson_type', '#lesson_provider', '#lesson_provider_for_mobile_application']);
         initTimepicker();
+        $('.preload').hide();
+        $('#add_lesson').click(function(){
+        if(typeof($('#video_file_for_amazon_s3').val()) != "undefined"){
+            if($('#title').val() != ''){
+            $(".preload").fadeIn(1000, function() {});
+            }
+        }
+    });
     });
     function ajax_get_video_details(video_url) {
         $('#perloader').show();
@@ -209,13 +229,24 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
     function check_video_provider(provider) {
         if (provider === 'youtube' || provider === 'vimeo') {
             $('#html5').hide();
+            $('#amazon-s3').hide();
+            $('#mobile-view').hide();
             $('#youtube_vimeo').show();
         }else if(provider === 'html5'){
             $('#youtube_vimeo').hide();
+            $('#amazon-s3').hide();
+            $('#mobile-view').hide();
             $('#html5').show();
+        }else if(provider === 's3'){
+            $('#youtube_vimeo').hide();
+            $('#html5').hide();
+            $('#mobile-view').hide();
+            $('#amazon-s3').show();
         }else {
             $('#youtube_vimeo').hide();
             $('#html5').hide();
+            $('#mobile-view').hide();
+            $('#amazon-s3').hide();
         }
     }
 </script>
