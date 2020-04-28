@@ -1,3 +1,16 @@
+<style>
+.preload { 
+    z-index: 99999;
+    width:100px;
+    height: 100px;
+    position: fixed;
+    top: 30%;
+    left: 45%;
+}
+</style>
+<div class="preload">
+<img src="http://i.imgur.com/KUJoe.gif">
+</div>
 <?php
 // $param2 = lesson id and $param3 = course id
 $lesson_details = $this->crud_model->get_lessons('lesson', $param2)->row_array();
@@ -26,7 +39,7 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
         <label for="section_id"><?php echo get_phrase('lesson_type'); ?></label>
         <select class="form-control select2" data-toggle="select2" name="lesson_type" id="lesson_type" required onchange="show_lesson_type_form(this.value)">
             <option value=""><?php echo get_phrase('select_type_of_lesson'); ?></option>
-            <option value="video-url" <?php if($lesson_details['attachment_type'] == 'url' || $lesson_details['attachment_type'] == '') echo 'selected'; ?>><?php echo get_phrase('video_url'); ?></option>
+            <option value="video-url" <?php if($lesson_details['attachment_type'] == 'url' || $lesson_details['attachment_type'] == '') echo 'selected'; ?>><?php echo get_phrase('video'); ?></option>
             <?php if (addon_status('amazon-s3')): ?>
                 <option value="s3-video" <?php if($lesson_details['attachment_type'] == 'file' || $lesson_details['video_type'] == 'amazon') echo 'selected'; ?>><?php echo get_phrase('video_file'); ?></option>
             <?php endif;?>
@@ -43,6 +56,7 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
             <label for="lesson_provider"><?php echo get_phrase('lesson_provider'); ?>( <?php echo get_phrase('for_web_application'); ?> )</label>
             <select class="form-control select2" data-toggle="select2" name="lesson_provider" id="lesson_provider" onchange="check_video_provider(this.value)">
                 <option value=""><?php echo get_phrase('select_lesson_provider'); ?></option>
+                <option value="s3" <?php if(strtolower($lesson_details['video_type']) == 'amazon') echo 'selected'; ?>><?php echo get_phrase('s3'); ?></option>
                 <option value="youtube" <?php if(strtolower($lesson_details['video_type']) == 'youtube') echo 'selected'; ?>><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo" <?php if(strtolower($lesson_details['video_type']) == 'vimeo') echo 'selected'; ?>><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5" <?php if(strtolower($lesson_details['video_type']) == 'html5') echo 'selected'; ?>>HTML5</option>
@@ -85,7 +99,7 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
                 </div>
             </div>
         </div>
-
+        <div id="mobile-view">
         <!-- This portion is for mobile application video lesson -->
         <div class="form-group">
             <label for="lesson_provider"><?php echo get_phrase('lesson_provider'); ?>( <?php echo get_phrase('for_mobile_application'); ?> )</label>
@@ -104,6 +118,7 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
             <input type="text" class="form-control" data-toggle='timepicker' data-minute-step="5" name="html5_duration_for_mobile_application" id = "html5_duration_for_mobile_application" data-show-meridian="false" value="<?php echo $lesson_details['duration_for_mobile_application']; ?>">
         </div>
     </div>
+        </div>
 
     <div class="" id = "other" <?php if($lesson_details['lesson_type'] != 'other'):?> style="display: none;" <?php endif; ?>>
         <div class="form-group">
@@ -139,7 +154,7 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
     </div>
 
     <div class="text-center">
-        <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('update_lesson'); ?></button>
+        <button class = "btn btn-success" type="submit" id="add_lesson" name="button"><?php echo get_phrase('update_lesson'); ?></button>
     </div>
 
 </form>
@@ -150,11 +165,18 @@ $(document).ready(function() {
     initSelect2(['#section_id','#lesson_type', '#lesson_provider', '#lesson_provider_for_mobile_application']);
     initTimepicker();
     show_lesson_type_form($('#lesson_type').val());
-});
+    $('.preload').hide();
+        $('#add_lesson').click(function(){
+        if(typeof($('#video_file_for_amazon_s3').val()) != "undefined"){
+            if($('#title').val() != ''){
+            $(".preload").fadeIn(1000, function() {});
+            }
+        }
+    });
 
 function ajax_get_section(course_id) {
     $.ajax({
-        url: '<?php echo site_url('user/ajax_get_section/');?>' + course_id ,
+        url: '<?php echo site_url('admin/ajax_get_section/');?>' + course_id ,
         success: function(response)
         {
             jQuery('#section_id').html(response);
@@ -166,7 +188,7 @@ function ajax_get_video_details(video_url) {
     $('#perloader').show();
     if(checkURLValidity(video_url)){
         $.ajax({
-            url: '<?php echo site_url('user/ajax_get_video_details');?>',
+            url: '<?php echo site_url('admin/ajax_get_video_details');?>',
             type : 'POST',
             data : {video_url : video_url},
             success: function(response)
@@ -196,6 +218,13 @@ function checkURLValidity(video_url) {
         return false;
     }
 }
+    if($('#lesson_provider').val() == 's3'){
+            $('#youtube_vimeo').hide();
+            $('#html5').hide();
+            $('#mobile-view').hide();
+            $('#amazon-s3').show();
+    }
+});
 
 function show_lesson_type_form(param) {
     var checker = param.split('-');
@@ -221,16 +250,26 @@ function show_lesson_type_form(param) {
 }
 
 function check_video_provider(provider) {
-    if (provider === 'youtube' || provider === 'vimeo') {
-        $('#html5').hide();
-        $('#youtube_vimeo').show();
-    }else if(provider === 'html5'){
-        console.log(provider);
-        $('#youtube_vimeo').hide();
-        $('#html5').show();
-    }else {
-        $('#youtube_vimeo').hide();
-        $('#html5').hide();
+        if (provider === 'youtube' || provider === 'vimeo') {
+            $('#html5').hide();
+            $('#amazon-s3').hide();
+            $('#mobile-view').hide();
+            $('#youtube_vimeo').show();
+        }else if(provider === 'html5'){
+            $('#youtube_vimeo').hide();
+            $('#amazon-s3').hide();
+            $('#mobile-view').hide();
+            $('#html5').show();
+        }else if(provider === 's3'){
+            $('#youtube_vimeo').hide();
+            $('#html5').hide();
+            $('#mobile-view').hide();
+            $('#amazon-s3').show();
+        }else {
+            $('#youtube_vimeo').hide();
+            $('#html5').hide();
+            $('#mobile-view').hide();
+            $('#amazon-s3').hide();
+        }
     }
-}
 </script>

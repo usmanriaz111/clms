@@ -39,9 +39,6 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         <select class="form-control select2" data-toggle="select2" name="lesson_type" id="lesson_type" required onchange="show_lesson_type_form(this.value)">
             <option value=""><?php echo get_phrase('select_type_of_lesson'); ?></option>
             <option value="video-url"><?php echo get_phrase('video'); ?></option>
-            <?php if (addon_status('amazon-s3')): ?>
-                <option value="s3-video"><?php echo get_phrase('video_file'); ?></option>
-            <?php endif;?>
             <option value="other-txt"><?php echo get_phrase('text_file'); ?></option>
             <option value="other-pdf"><?php echo get_phrase('pdf_file'); ?></option>
             <option value="other-doc"><?php echo get_phrase('document_file'); ?></option>
