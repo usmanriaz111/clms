@@ -166,7 +166,6 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         if(typeof($('#video_file_for_amazon_s3').val()) != "undefined"){
             if($('#title').val() != ''){
             $(".preload").fadeIn(1000, function() {});
-            $('#add_lesson').prop('disabled', true);
             }
         }
     });
