@@ -16,6 +16,36 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+    public function add_s3_settings(){
+       $user_id = $this->session->userdata('user_id');
+       $data['access_key'] = html_escape($this->input->post('aws_access_key'));
+       $data['secret_key'] = html_escape($this->input->post('aws_secret_key'));
+       $data['region'] = html_escape($this->input->post('region'));
+       $data['url'] = html_escape($this->input->post('aws_url'));
+       $data['bucket_name'] = html_escape($this->input->post('bucket_name'));
+       $data['user_id'] = $user_id;
+       $data_class['date_added'] = strtotime(date('D, d-M-Y'));
+       return $this->db->insert('s3_settings', $data);
+       $this->session->set_flashdata('flash_message', get_phrase('s3_keys_successfully_added'));
+    }
+
+    public function edit_s3_settings($id = ''){
+        
+        $data['access_key'] = html_escape($this->input->post('aws_access_key'));
+        $data['secret_key'] = html_escape($this->input->post('aws_secret_key'));
+        $data['region'] = html_escape($this->input->post('region'));
+        $data['url'] = html_escape($this->input->post('aws_url'));
+        $data['bucket_name'] = html_escape($this->input->post('bucket_name'));
+        $data['last_modified'] = strtotime(date('D, d-M-Y'));
+        $this->db->where('id', $id);
+        $this->db->update('s3_settings', $data);
+        $this->session->set_flashdata('flash_message', get_phrase('s3_keys_update_successfully'));
+     }
+
+     public function get_s3_settings(){
+        return $this->db->get_where('s3_settings', array('user_id' => $this->session->userdata('user_id')));
+     }
+
     public function curret_user_classes()
     {
         $course_ids = array();
