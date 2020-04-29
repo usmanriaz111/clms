@@ -70,6 +70,9 @@
 				<li class = "<?php if($page_name == 'payment_settings') echo 'active'; ?>">
 					<a href="<?php echo site_url('institute/payment_settings'); ?>"><?php echo get_phrase('payment_settings'); ?></a>
 				</li>
+				<li class = "<?php if($page_name == 's3_settings') echo 'active'; ?>">
+						<a href="<?php echo site_url('institute/amazons3_setting_form/add_form'); ?>"><?php echo get_phrase('s3_settings'); ?></a>
+					</li>
 			</ul>
 		</li>
 	    </ul>

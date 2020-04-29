@@ -31,6 +31,29 @@ class Institute extends CI_Controller {
       }
     }
 
+    public function amazons3_setting($param1='', $param2=''){
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+    }
+      if($param1 == "add"){
+          $this->crud_model->add_s3_settings();
+      }elseif($param1 == "edit"){
+          $this->crud_model->edit_s3_settings($param2);
+      }
+      redirect(site_url('institute/amazons3_setting_form/add_form'), 'refresh');
+      
+  }
+
+  public function amazons3_setting_form($param1='', $param2=''){
+    if ($this->session->userdata('user_login') != true) {
+      redirect(site_url('login'), 'refresh');
+  }
+      if($param1 == "add_form"){
+          $page_data['page_name'] = 'amazons3_setting';
+          $page_data['page_title'] = get_phrase('s3_setting');
+          $this->load->view('backend/index.php', $page_data);
+      }
+  }
 
     public function purchase_plan(){
       if ($this->session->userdata('user_login') != true) {
