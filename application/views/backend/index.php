@@ -23,7 +23,7 @@
             <!-- SIDEBAR -->
             <?php
             if($logged_in_user_role == 'institute'){
-                if($this->user_model->check_plan()){
+                if($this->user_model->check_plan(false)){
                     include $logged_in_user_role.'/'.'navigation.php';
                 }
 

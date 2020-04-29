@@ -35,7 +35,7 @@ class User extends CI_Controller {
         }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'user'){
             redirect(site_url('home'), 'refresh');
         }elseif($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'institute'){
-          $this->user_model->check_plan();
+          $this->user_model->check_plan(true);
             $this->courses();
         }
         else {

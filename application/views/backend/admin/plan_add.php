@@ -43,6 +43,11 @@
         <label for="cloud_space"><?php echo get_phrase('cloud_space'); ?></label>
         <input class="form-control" type="text" name="cloud_space" id="cloud_space" required>
     </div>
+    <div class="form-group">
+        <label for="cloud_space"><?php echo get_phrase('private'); ?></label></br>
+        <input class="" type="radio" checked name="is_private" value="yes">yes
+        <input class="" type="radio" name="is_private" value="no">no
+    </div>
     <div class="text-center">
         <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>
     </div>
