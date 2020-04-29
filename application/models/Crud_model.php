@@ -871,14 +871,14 @@ class Crud_model extends CI_Model
                       return true;
                   }
                 }else {
-                  $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+                  $this->session->set_flashdata('error_message', get_phrase('You_donot_have_more_space'));
                   redirect(site_url('admin/course_form/add_course'), 'refresh');
                 }
             }else{
               $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
             }
         }else{
-          $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+          $this->session->set_flashdata('error_message', get_phrase('you_can not_purchased_any_plan'));
           redirect(site_url('admin/course_form/add_course'), 'refresh');
         }
 
