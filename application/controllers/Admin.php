@@ -267,9 +267,9 @@ class Admin extends CI_Controller
 
         $page_data['page_name'] = 'classes';
         $page_data['page_title'] = get_phrase('class');
-        $page_data['courses'] = $this->crud_model->get_classes_course();
-        $page_data['instructors'] = $this->user_model->get_classes_instructor();
-        $page_data['institutes'] = $this->user_model->get_classes_institute();
+        // $page_data['courses'] = $this->crud_model->get_classes_course();
+        // $page_data['instructors'] = $this->user_model->get_classes_instructor();
+        // $page_data['institutes'] = $this->user_model->get_classes_institute();
         $page_data['classes'] = $this->crud_model->get_classes($page_data['selected_course_id'],$page_data['selected_institute_id'],$page_data['selected_instructor_id']);
         
         $this->load->view('backend/index', $page_data);
