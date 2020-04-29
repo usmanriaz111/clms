@@ -55,6 +55,9 @@ section.pricing {
   opacity: 1;
   transition: all 0.2s;
 }
+.fa-clock{
+color: #4e5bf2 !important;
+}
 
 /* Hover Effects on Card */
 
@@ -93,7 +96,7 @@ section.pricing {
         <div class="card mb-5 mb-lg-0">
           <div class="card-body">
             <h5 class="card-title text-uppercase text-center"><?php echo strtoupper($plan['name'])?></h5>
-            <h6 class="card-price text-center">$ <?php echo $plan['price']?></h6>
+            <h6 class="card-price text-center">$ <?php echo number_format((float)$plan['price'], 2, '.', '')?></h6>
             <h5 class="period text-center">Per Month</h5>
             <hr>
             <ul class="fa-ul">
@@ -105,7 +108,11 @@ section.pricing {
             </ul>
             <form action="<?php echo site_url('institute/plan_price'); ?>" method="post">
                 <input type="hidden" name="plan_id" value="<?php echo $plan['id']; ?>" />
-                <button class = "btn btn-block btn-primary text-uppercase" type="submit" name="button"><?php echo get_phrase('GET STARRED'); ?></button>
+                <?php if($this->user_model->get_current_user_plan() == $plan['id']){ ?>
+                  <button class = "btn btn-block btn-secondary text-uppercase" type="submit" name="button" disabled><?php echo get_phrase('GET STARRED'); ?></button>
+                <?php } else {?>
+                <button class = "btn btn-block btn-primary text-uppercase" type="submit" name="button" ><?php echo get_phrase('GET STARRED'); ?></button>
+                <?php } ?>
             </form>
           </div>
         </div>

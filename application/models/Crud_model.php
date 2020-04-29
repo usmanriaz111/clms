@@ -16,6 +16,36 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+    public function add_s3_settings(){
+       $user_id = $this->session->userdata('user_id');
+       $data['access_key'] = html_escape($this->input->post('aws_access_key'));
+       $data['secret_key'] = html_escape($this->input->post('aws_secret_key'));
+       $data['region'] = html_escape($this->input->post('region'));
+       $data['url'] = html_escape($this->input->post('aws_url'));
+       $data['bucket_name'] = html_escape($this->input->post('bucket_name'));
+       $data['user_id'] = $user_id;
+       $data_class['date_added'] = strtotime(date('D, d-M-Y'));
+       return $this->db->insert('s3_settings', $data);
+       $this->session->set_flashdata('flash_message', get_phrase('s3_keys_successfully_added'));
+    }
+
+    public function edit_s3_settings($id = ''){
+        
+        $data['access_key'] = html_escape($this->input->post('aws_access_key'));
+        $data['secret_key'] = html_escape($this->input->post('aws_secret_key'));
+        $data['region'] = html_escape($this->input->post('region'));
+        $data['url'] = html_escape($this->input->post('aws_url'));
+        $data['bucket_name'] = html_escape($this->input->post('bucket_name'));
+        $data['last_modified'] = strtotime(date('D, d-M-Y'));
+        $this->db->where('id', $id);
+        $this->db->update('s3_settings', $data);
+        $this->session->set_flashdata('flash_message', get_phrase('s3_keys_update_successfully'));
+     }
+
+     public function get_s3_settings(){
+        return $this->db->get_where('s3_settings', array('user_id' => $this->session->userdata('user_id')));
+     }
+
     public function curret_user_classes()
     {
         $course_ids = array();
@@ -841,14 +871,14 @@ class Crud_model extends CI_Model
                       return true;
                   }
                 }else {
-                  $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+                  $this->session->set_flashdata('error_message', get_phrase('You_donot_have_more_space'));
                   redirect(site_url('admin/course_form/add_course'), 'refresh');
                 }
             }else{
               $this->session->set_flashdata('error_message', get_phrase('institute_not_found'));
             }
         }else{
-          $this->session->set_flashdata('error_message', get_phrase('please_choose_a_plan'));
+          $this->session->set_flashdata('error_message', get_phrase('you_can not_purchased_any_plan'));
           redirect(site_url('admin/course_form/add_course'), 'refresh');
         }
 
@@ -1202,7 +1232,7 @@ class Crud_model extends CI_Model
 
         $lesson_type_array = explode('-', $this->input->post('lesson_type'));
         $lesson_type = $lesson_type_array[0];
-
+    
         $data['attachment_type'] = $lesson_type_array[1];
         $data['lesson_type'] = $lesson_type;
 
@@ -1236,7 +1266,61 @@ class Crud_model extends CI_Model
                 $sec = sprintf('%02d', $duration_formatter[2]);
                 $data['duration'] = $hour . ':' . $min . ':' . $sec;
                 $data['video_type'] = 'html5';
-            } else {
+            }elseif($lesson_provider == 's3'){
+                
+                $space_validity = $this->check_institute_membory_limit($course['institute_id']);
+                if ($space_validity == false){
+                    $this->session->set_flashdata('error_message', get_phrase('You do not have more storage'));
+                }else{
+                    $video_size = $_FILES['video_file_for_amazon_s3']['size'];
+                    
+                    if ($video_size > 1024){
+                    $video_kb_size = round($video_size / 1024, 4);
+                    }
+                
+                // SET MAXIMUM EXECUTION TIME 600
+                ini_set('max_execution_time', '600');
+    
+                $fileName = $_FILES['video_file_for_amazon_s3']['name'];
+                $tmp = explode('.', $fileName);
+                $fileExtension = strtoupper(end($tmp));
+                $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
+                if (!in_array($fileExtension, $video_extensions)) {
+                    $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
+                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
+                }
+    
+                if ($this->input->post('amazon_s3_duration') == "") {
+                    $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_duration'));
+                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
+                }
+    
+                $tmpfile = $_FILES['video_file_for_amazon_s3'];
+                $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
+                $s3_model = new S3_model();
+                $s3= $s3_model->create_s3_object();
+                $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
+                $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
+                $data['video_url'] = $result['ObjectURL'];
+                $data['video_type'] = 'amazon';
+                $data['video_size'] = $video_kb_size;
+                $data['lesson_type'] = 'video';
+                $data['attachment_type'] = 'url';
+    
+                $duration_formatter = explode(':', $this->input->post('amazon_s3_duration'));
+                $hour = sprintf('%02d', $duration_formatter[0]);
+                $min = sprintf('%02d', $duration_formatter[1]);
+                $sec = sprintf('%02d', $duration_formatter[2]);
+                $data['duration'] = $hour . ':' . $min . ':' . $sec;
+    
+                $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
+                $data['video_type_for_mobile_application'] = "html5";
+                $data['video_url_for_mobile_application'] = $result['ObjectURL'];
+    
+                }
+            }
+            
+            else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
@@ -1256,60 +1340,6 @@ class Crud_model extends CI_Model
             $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
             $data['video_type_for_mobile_application'] = 'html5';
             $data['video_url_for_mobile_application'] = $mobile_app_lesson_url;
-        } elseif ($lesson_type == "s3") {
-            $space_validity = $this->check_institute_membory_limit($course['institute_id']);
-            if ($space_validity == false){
-                $this->session->set_flashdata('error_message', get_phrase('You do not have more storage'));
-            }else{
-                $video_size = $_FILES['video_file_for_amazon_s3']['size'];
-                
-                if ($video_size > 1024){
-                $video_kb_size = round($video_size / 1024, 4);
-                }
-            
-            // SET MAXIMUM EXECUTION TIME 600
-            ini_set('max_execution_time', '600');
-
-            $fileName = $_FILES['video_file_for_amazon_s3']['name'];
-            $tmp = explode('.', $fileName);
-            $fileExtension = strtoupper(end($tmp));
-            $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
-            if (!in_array($fileExtension, $video_extensions)) {
-                $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
-                redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
-            }
-
-            if ($this->input->post('amazon_s3_duration') == "") {
-                $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_duration'));
-                redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
-            }
-
-            $tmpfile = $_FILES['video_file_for_amazon_s3'];
-            $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
-            $s3_model = new S3_model();
-            $s3= $s3_model->create_s3_object();
-            $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-            $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
-            $data['video_url'] = $result['ObjectURL'];
-            // echo $video_kb_size;
-            // die;
-            $data['video_type'] = 'amazon';
-            $data['video_size'] = $video_kb_size;
-            $data['lesson_type'] = 'video';
-            $data['attachment_type'] = 'file';
-
-            $duration_formatter = explode(':', $this->input->post('amazon_s3_duration'));
-            $hour = sprintf('%02d', $duration_formatter[0]);
-            $min = sprintf('%02d', $duration_formatter[1]);
-            $sec = sprintf('%02d', $duration_formatter[2]);
-            $data['duration'] = $hour . ':' . $min . ':' . $sec;
-
-            $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
-            $data['video_type_for_mobile_application'] = "html5";
-            $data['video_url_for_mobile_application'] = $result['ObjectURL'];
-
-            }
-
         } else {
             if ($_FILES['attachment']['name'] == "") {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_attachment'));
@@ -1346,7 +1376,7 @@ class Crud_model extends CI_Model
     {
 
         $previous_data = $this->db->get_where('lesson', array('id' => $lesson_id))->row_array();
-
+        $course = $this->db->get_where('course', array('id' => $previous_data['course_id']))->row_array();
         $data['course_id'] = html_escape($this->input->post('course_id'));
         $data['title'] = html_escape($this->input->post('title'));
         $data['section_id'] = html_escape($this->input->post('section_id'));
@@ -1393,7 +1423,60 @@ class Crud_model extends CI_Model
                     }
                     move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg');
                 }
-            } else {
+            }elseif($lesson_provider == 's3'){
+               
+                $space_validity = $this->check_institute_membory_limit($course['institute_id']);
+                if ($space_validity == false){
+                    $this->session->set_flashdata('error_message', get_phrase('You do not have more storage'));
+                }else{
+                    $video_size = $_FILES['video_file_for_amazon_s3']['size'];
+                    
+                    if ($video_size > 1024){
+                    $video_kb_size = round($video_size / 1024, 4);
+                    }
+                
+                // SET MAXIMUM EXECUTION TIME 600
+                ini_set('max_execution_time', '600');
+    
+                $fileName = $_FILES['video_file_for_amazon_s3']['name'];
+                $tmp = explode('.', $fileName);
+                $fileExtension = strtoupper(end($tmp));
+                $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
+                if (!in_array($fileExtension, $video_extensions)) {
+                    $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
+                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
+                }
+    
+                if ($this->input->post('amazon_s3_duration') == "") {
+                    $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_duration'));
+                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
+                }
+    
+                $tmpfile = $_FILES['video_file_for_amazon_s3'];
+                $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
+                $s3_model = new S3_model();
+                $s3= $s3_model->create_s3_object();
+                $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
+                $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
+                $data['video_url'] = $result['ObjectURL'];
+                $data['video_type'] = 'amazon';
+                $data['video_size'] = $video_kb_size;
+                $data['lesson_type'] = 'video';
+                $data['attachment_type'] = 'url';
+    
+                $duration_formatter = explode(':', $this->input->post('amazon_s3_duration'));
+                $hour = sprintf('%02d', $duration_formatter[0]);
+                $min = sprintf('%02d', $duration_formatter[1]);
+                $sec = sprintf('%02d', $duration_formatter[2]);
+                $data['duration'] = $hour . ':' . $min . ':' . $sec;
+    
+                $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
+                $data['video_type_for_mobile_application'] = "html5";
+                $data['video_url_for_mobile_application'] = $result['ObjectURL'];
+    
+                }
+            }
+             else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
@@ -1414,71 +1497,7 @@ class Crud_model extends CI_Model
             $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
             $data['video_type_for_mobile_application'] = 'html5';
             $data['video_url_for_mobile_application'] = $mobile_app_lesson_url;
-        } elseif ($lesson_type == "s3") {
-            // SET MAXIMUM EXECUTION TIME 600
-            ini_set('max_execution_time', '600');
-
-            if (isset($_FILES['video_file_for_amazon_s3']) && !empty($_FILES['video_file_for_amazon_s3']['name'])) {
-                $fileName = $_FILES['video_file_for_amazon_s3']['name'];
-                $tmp = explode('.', $fileName);
-                $fileExtension = strtoupper(end($tmp));
-
-                $video_extensions = ['WEBM', 'MP4'];
-                if (!in_array($fileExtension, $video_extensions)) {
-                    $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
-                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
-                }
-
-                $upload_loaction = get_settings('video_upload_location');
-                $access_key = get_settings('amazon_s3_access_key');
-                $secret_key = get_settings('amazon_s3_secret_key');
-                $bucket = get_settings('amazon_s3_bucket_name');
-                $region = get_settings('amazon_s3_region_name');
-
-                $s3config = array(
-                    'region' => $region,
-                    'version' => 'latest',
-                    'credentials' => [
-                        'key' => $access_key, //Put key here
-                        'secret' => $secret_key, // Put Secret here
-                    ],
-                );
-
-                $tmpfile = $_FILES['video_file_for_amazon_s3'];
-
-                $s3 = new Aws\S3\S3Client($s3config);
-                $key = str_replace(".", "-" . rand(1, 9999) . ".", preg_replace('/\s+/', '', $tmpfile['name']));
-
-                $result = $s3->putObject([
-                    'Bucket' => $bucket,
-                    'Key' => $key,
-                    'SourceFile' => $tmpfile['tmp_name'],
-                    'ACL' => 'public-read',
-                ]);
-
-                $data['video_url'] = $result['ObjectURL'];
-                $data['video_url_for_mobile_application'] = $result['ObjectURL'];
-            }
-
-            $data['video_type'] = 'amazon';
-            $data['lesson_type'] = 'video';
-            $data['attachment_type'] = 'file';
-
-            if ($this->input->post('amazon_s3_duration') == "") {
-                $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_duration'));
-                redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
-            }
-
-            $duration_formatter = explode(':', $this->input->post('amazon_s3_duration'));
-            $hour = sprintf('%02d', $duration_formatter[0]);
-            $min = sprintf('%02d', $duration_formatter[1]);
-            $sec = sprintf('%02d', $duration_formatter[2]);
-            $data['duration'] = $hour . ':' . $min . ':' . $sec;
-
-            $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
-            $data['video_type_for_mobile_application'] = "html5";
-
-        } else {
+        }else {
             if ($_FILES['attachment']['name'] != "") {
                 // unlinking previous attachments
                 if ($previous_data['attachment'] != "") {

@@ -170,7 +170,7 @@ class Install extends CI_Controller {
     // Set line to collect lines that wrap
     $templine = '';
     // Read in entire file
-    $lines = file('./uploads/install.sql');
+    $lines = file('./uploads/addon_install.sql');
     // Loop through each line
     foreach ($lines as $line) {
       // Skip it if it's a comment

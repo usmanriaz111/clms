@@ -245,11 +245,18 @@ class User_model extends CI_Model {
 
         $this->upload_user_image($user_id);
     }
+
+public function get_current_user_plan(){
+    $current_user = $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
+    return $current_user['plan_id'];
+}
+
     public function check_plan(){
       if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
       }
-      $plan_id = $this->session->userdata('plan_id');
+      $current_user = $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
+      $plan_id = $current_user['plan_id'];
       if ($plan_id > 0) {
           $user_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
           if ($plan_id == $user_plan['id']){

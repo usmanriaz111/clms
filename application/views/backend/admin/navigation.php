@@ -167,11 +167,9 @@
 						<a href="<?php echo site_url('addons/certificate/settings'); ?>"><?php echo get_phrase('certificate_settings'); ?></a>
 					</li>
 				<?php endif; ?>
-				<?php if (addon_status('amazon-s3')): ?>
 					<li class = "<?php if($page_name == 's3_settings') echo 'active'; ?>">
-						<a href="<?php echo site_url('addons/amazons3/settings'); ?>"><?php echo get_phrase('s3_settings'); ?></a>
+						<a href="<?php echo site_url('admin/amazons3_setting_form/add_form'); ?>"><?php echo get_phrase('s3_settings'); ?></a>
 					</li>
-				<?php endif; ?>
 				<li class = "<?php if($page_name == 'payment_settings') echo 'active'; ?>">
 					<a href="<?php echo site_url('admin/payment_settings'); ?>"><?php echo get_phrase('payment_settings'); ?></a>
 				</li>
