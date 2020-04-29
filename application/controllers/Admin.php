@@ -989,12 +989,15 @@ class Admin extends CI_Controller
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        
+        $institute_name =strtolower( str_replace(' ','_',$this->session->userdata('name'))); 
+       
         if ($param1 == 'add') {
-            $this->crud_model->add_lesson();
+            $this->crud_model->add_lesson( $institute_name);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
             redirect('admin/course_form/course_edit/' . $course_id);
         } elseif ($param1 == 'edit') {
-            $this->crud_model->edit_lesson($param2);
+            $this->crud_model->edit_lesson($param2,  $institute_name);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_updated_successfully'));
             redirect('admin/course_form/course_edit/' . $course_id);
         } elseif ($param1 == 'delete') {

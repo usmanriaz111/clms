@@ -1231,7 +1231,7 @@ class Crud_model extends CI_Model
         $this->db->update('course', $updater);
     }
 
-    public function add_lesson()
+    public function add_lesson( $institute_name = '')
     {
         $course_id = html_escape($this->input->post('course_id'));
         $data['course_id'] = $course_id;
@@ -1276,7 +1276,9 @@ class Crud_model extends CI_Model
                 $data['duration'] = $hour . ':' . $min . ':' . $sec;
                 $data['video_type'] = 'html5';
             }elseif($lesson_provider == 's3'){
-                
+                if($course['title']){
+                    $institute_name =$institute_name .'/'. $course['title'];
+                }
                 $space_validity = $this->check_institute_membory_limit($course['institute_id']);
                 if ($space_validity == false){
                     $this->session->set_flashdata('error_message', get_phrase('You do not have more storage'));
@@ -1309,7 +1311,7 @@ class Crud_model extends CI_Model
                 $s3_model = new S3_model();
                 $s3= $s3_model->create_s3_object();
                 $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-                $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension);
+                $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension,  $institute_name);
                 $data['video_url'] = $result['ObjectURL'];
                 $data['video_type'] = 'amazon';
                 $data['video_size'] = $video_kb_size;
@@ -1381,7 +1383,7 @@ class Crud_model extends CI_Model
         }
     }
 
-    public function edit_lesson($lesson_id)
+    public function edit_lesson($lesson_id,  $institute_name = '')
     {
 
         $previous_data = $this->db->get_where('lesson', array('id' => $lesson_id))->row_array();
