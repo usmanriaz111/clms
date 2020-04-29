@@ -251,7 +251,7 @@ public function get_current_user_plan(){
     return $current_user['plan_id'];
 }
 
-    public function check_plan(){
+    public function check_plan($home){
       if ($this->session->userdata('user_login') != true) {
           redirect(site_url('login'), 'refresh');
       }
@@ -263,7 +263,9 @@ public function get_current_user_plan(){
             return true;
           }
       }else{
+          if($home == true){
         redirect(site_url('institute/purchase_plan'), 'refresh');
+          }
       }
     }
 

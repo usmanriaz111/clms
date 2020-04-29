@@ -46,6 +46,11 @@
         <label><?php echo get_phrase('cloud_space'); ?></label>
         <input class="form-control" type="text" name="cloud_space"  value="<?php echo $plan_data['cloud_space']; ?>" id="cloud_space" required>
     </div>
+    <div class="form-group">
+    <label for="cloud_space"><?php echo get_phrase('private'); ?></label></br>
+        <input class="" type="radio" <?php if($plan_data['private'] == 'yes') echo 'checked'?> name="is_private" value="yes">yes
+        <input class="" type="radio" <?php if($plan_data['private'] == 'no') echo 'checked'?> name="is_private" value="no">no
+    </div>
     <div class="text-center">
         <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>
     </div>
@@ -54,3 +59,14 @@
 </div>
 </div>
 </div>
+<script>
+     $('#is_private').change(function()
+      {
+        if ($(this).is(':checked')) {
+           $(this).prop( "value", 'yes' );
+        }else{
+            $(this).prop( "value", 'no' );
+            $(this).removeAttr('checked');
+        }
+      });
+</script>

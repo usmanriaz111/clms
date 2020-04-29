@@ -1,4 +1,8 @@
-
+<style>
+  .table td, .table th{
+    padding: .95rem 0.5rem !important;
+  }
+</style>
 <div class="row ">
     <div class="col-xl-12">
         <div class="card">

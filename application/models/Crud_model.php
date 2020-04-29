@@ -268,6 +268,13 @@ class Crud_model extends CI_Model
         return $query;
     }
 
+    public function get_public_plans()
+    {
+        $this->db->where('private', 'no');
+        $query = $this->db->get('plans')->result_array();
+        return $query;
+    }
+
     // Adding plan functionalities
     public function add_plan()
     {
@@ -280,6 +287,7 @@ class Crud_model extends CI_Model
         $data_plan['price'] = html_escape($this->input->post('price'));
         // $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
         $data_plan['date_added'] = strtotime(date('D, d-M-Y'));
+        $data_plan['private'] = html_escape($this->input->post('is_private'));
         $this->db->insert('plans', $data_plan);
         $this->session->set_flashdata('flash_message', get_phrase('plan_added_successfully'));
     }
@@ -295,6 +303,7 @@ class Crud_model extends CI_Model
         $data_plan['price'] = html_escape($this->input->post('price'));
         // $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
         $data_plan['last_modified'] = strtotime(date('D, d-M-Y'));
+        $data_plan['private'] = html_escape($this->input->post('is_private'));
         $this->db->where('id', $plan_id);
         $this->db->update('plans', $data_plan);
         $this->session->set_flashdata('flash_message', get_phrase('plan_update_successfully'));

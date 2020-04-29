@@ -1,4 +1,8 @@
-
+<style>
+  .table td, .table th{
+    padding: .95rem 0.5rem !important;
+  }
+</style>
 <div class="row ">
     <div class="col-xl-12">
         <div class="card">
@@ -29,6 +33,7 @@
                       <th><?php echo get_phrase('no_of_students_per_course'); ?></th>
                       <th><?php echo get_phrase('cloud_space_per_course'); ?></th>
                       <th><?php echo get_phrase('Institute'); ?></th>
+                      <th><?php echo get_phrase('private'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
@@ -57,6 +62,7 @@
                             }
 
                             ?></td>
+                            <td><?php echo $plan['private']; ?></td>
                             <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
