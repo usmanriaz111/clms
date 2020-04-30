@@ -32,4 +32,30 @@ class Modal extends CI_Controller {
 		$page_data['param7']		=	$param7;
 		$this->load->view( 'backend/'.$logged_in_user_role.'/'.$page_name.'.php' ,$page_data);
 	}
+
+	function type_popup($page_name = '' , $param2 = '' , $param3 = '', $param4 = '', $param5 = '', $param6 = '', $param7 = '')
+	{
+		$logged_in_user_role 		= strtolower($this->session->userdata('role'));
+		$page_data['param2']		=	$param2;
+		$page_data['param3']		=	$param3;
+		$page_data['param4']		=	$param4;
+		$page_data['param5']		=	$param5;
+		$page_data['param6']		=	$param6;
+		$page_data['param7']		=	$param7;
+		$this->load->view( 'backend/'.$logged_in_user_role.'/'.$page_name.'.php' ,$page_data);
+	}
+
+	public function create_course(){
+		$logged_in_user_role = strtolower($this->session->userdata('role'));
+		if($logged_in_user_role == 'institute'){
+			$institute_id = $this->session->userdata('user_id');
+			$page_data['instructors'] = $this->crud_model->sync_instructors($institute_id);	
+		}
+		$page_data['categories'] = $this->crud_model->get_categories();
+        $page_data['page_title'] = get_phrase('add_course');
+        $page_data['institutes'] = $this->user_model->get_institute();
+ 		$page_name = 'create_course_popup';
+		$this->load->view( 'backend/'.$logged_in_user_role.'/'.$page_name.'.php' ,$page_data);
+	}
+
 }

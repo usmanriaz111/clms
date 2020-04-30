@@ -30,36 +30,6 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#requirements" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                            <i class="mdi mdi-bell-alert mr-1"></i>
-                                            <span class="d-none d-sm-inline"><?php echo get_phrase('requirements'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#outcomes" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                            <i class="mdi mdi-camera-control mr-1"></i>
-                                            <span class="d-none d-sm-inline"><?php echo get_phrase('outcomes'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#pricing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                            <i class="mdi mdi-currency-cny mr-1"></i>
-                                            <span class="d-none d-sm-inline"><?php echo get_phrase('pricing'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#media" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                            <i class="mdi mdi-library-video mr-1"></i>
-                                            <span class="d-none d-sm-inline"><?php echo get_phrase('media'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#seo" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                            <i class="mdi mdi-tag-multiple mr-1"></i>
-                                            <span class="d-none d-sm-inline"><?php echo get_phrase('seo'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a href="#finish" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                             <i class="mdi mdi-checkbox-marked-circle-outline mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('create_course'); ?></span>
@@ -75,18 +45,6 @@
                                                     <label class="col-md-2 col-form-label" for="course_title"><?php echo get_phrase('course_title'); ?> <span class="required">*</span> </label>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" id="course_title" name = "title" placeholder="<?php echo get_phrase('enter_course_title'); ?>" required>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="short_description"><?php echo get_phrase('short_description'); ?></label>
-                                                    <div class="col-md-10">
-                                                        <textarea name="short_description" id = "short_description" class="form-control"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="description"><?php echo get_phrase('description'); ?></label>
-                                                    <div class="col-md-10">
-                                                        <textarea name="description" id = "description" class="form-control"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-3">
@@ -108,9 +66,9 @@
                                             <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
                                                 <div class="col-md-10">
-                                                <input type="radio" id="public" name="type" value="public" checked class="js-course-type">
+                                                <input type="radio" id="public" name="type" value="public" checked >
                                                 <label for="public">Public</label>
-                                                <input type="radio" id="private" name="type" value="private" class="js-course-type">
+                                                <input type="radio" id="private" name="type" value="private">
                                                 <label for="private">Private</label>
                                                 </div>
                                             </div>
@@ -134,34 +92,6 @@
                                                     </select>
                                                     </div>
                                                 </div>
-                                            <div class="form-group row mb-3">
-                                                <label class="col-md-2 col-form-label" for="level"><?php echo get_phrase('level'); ?></label>
-                                                <div class="col-md-10">
-                                                    <select class="form-control select2" data-toggle="select2" name="level" id="level">
-                                                        <option value="beginner"><?php echo get_phrase('beginner'); ?></option>
-                                                        <option value="advanced"><?php echo get_phrase('advanced'); ?></option>
-                                                        <option value="intermediate"><?php echo get_phrase('intermediate'); ?></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row mb-3">
-                                                <label class="col-md-2 col-form-label" for="language_made_in"><?php echo get_phrase('language_made_in'); ?></label>
-                                                <div class="col-md-10">
-                                                    <select class="form-control select2" data-toggle="select2" name="language_made_in" id="language_made_in">
-                                                        <?php foreach ($languages as $language): ?>
-                                                            <option value="<?php echo $language; ?>"><?php echo ucfirst($language); ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row mb-3">
-                                                <div class="offset-md-2 col-md-10">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" name="is_top_course" id="is_top_course" value="1">
-                                                        <label class="custom-control-label" for="is_top_course"><?php echo get_phrase('check_if_this_course_is_top_course'); ?></label>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div> <!-- end col -->
                                     </div> <!-- end row -->
                                 </div> <!-- end tab pane -->

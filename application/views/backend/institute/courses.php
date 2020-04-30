@@ -1,9 +1,14 @@
+<style>
+  .table td, .table th{
+    padding: .95rem 0.5rem !important;
+  }
+</style>
 <div class="row ">
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo get_phrase('courses'); ?>
-                    <a href="<?php echo site_url('institute/course_form/add_course'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_new_course'); ?></a>
+                <a class="btn btn-outline-primary btn-rounded alignToTitle" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/create_course/')"><?php echo get_phrase('add_new_course'); ?></a>
                 </h4>
             </div> <!-- end card body-->
         </div> <!-- end card -->
@@ -159,6 +164,7 @@
                                 <th><?php echo get_phrase('lesson_and_section'); ?></th>
                                 <th><?php echo get_phrase('enrolled_student'); ?></th>
                                 <th><?php echo get_phrase('status'); ?></th>
+                                <th><?php echo get_phrase('type'); ?></th>
                                 <th><?php echo get_phrase('price'); ?></th>
                                 <th><?php echo get_phrase('actions'); ?></th>
                             </tr>
@@ -195,6 +201,18 @@
                                         <?php elseif ($course['status'] == 'draft'):?>
                                             <i class="mdi mdi-circle text-secondary" style="font-size: 19px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?php echo get_phrase($course['status']); ?>"></i>
                                         <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                            <?php if ($course['type'] == 'public'): ?>
+                                                <a class="dropdown-item" href="<?php echo site_url('institute/change_course_type/private/'.$course['id']); ?>">
+                                                        <input type="checkbox">Private
+                                                    </a>
+                                            <?php else: ?>
+                                                <a class="dropdown-item" href="<?php echo site_url('institute/change_course_type/public/'.$course['id']); ?>">
+                                                        <input type="checkbox" checked>Private
+                                                    </a>
+                                            <?php endif; ?>
+
                                     </td>
                                     <td>
                                         <?php if ($course['is_free_course'] == null): ?>

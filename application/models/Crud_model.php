@@ -744,6 +744,7 @@ class Crud_model extends CI_Model
             $data['category_id'] = $category_details['parent'];
             $data['requirements'] = $requirements;
             $data['price'] = $this->input->post('price');
+            $data['type'] = $this->input->post('type');
             $data['discount_flag'] = $this->input->post('discount_flag');
             $data['discounted_price'] = $this->input->post('discounted_price');
             $data['level'] = $this->input->post('level');
@@ -783,11 +784,12 @@ class Crud_model extends CI_Model
                     $data['status'] = 'active';
                 } else {
                     if ($user_param > 0) {
-                        if ($type == 'public') {
-                            $data['status'] = 'pending';
-                        } else {
-                            $data['status'] = 'active';
-                        }
+                        $data['status'] = 'pending';
+                        // if ($type == 'public') {
+                            
+                        // } else {
+                        //     $data['status'] = 'active';
+                        // }
                     }
                 }
             }
@@ -923,6 +925,7 @@ class Crud_model extends CI_Model
         $data['category_id'] = $category_details['parent'];
         $data['requirements'] = $requirements;
         $data['is_free_course'] = $this->input->post('is_free_course');
+        $data['type'] = $this->input->post('type');
         $data['price'] = $this->input->post('price');
         $data['discount_flag'] = $this->input->post('discount_flag');
         $data['discounted_price'] = $this->input->post('discounted_price');
@@ -986,6 +989,22 @@ class Crud_model extends CI_Model
         $updater = array(
             'status' => $status,
         );
+        $this->db->where('id', $course_id);
+        $this->db->update('course', $updater);
+    }
+
+    public function change_course_type($type = "", $course_id = "")
+    {
+        if ($type == 'public') {
+            $updater = array(
+                'type' => $type,
+                'status' => 'pending',
+            );
+        }else{
+            $updater = array(
+                'type' => $type,
+            );
+        }
         $this->db->where('id', $course_id);
         $this->db->update('course', $updater);
     }

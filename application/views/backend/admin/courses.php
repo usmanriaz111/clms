@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo get_phrase('courses'); ?>
-                    <a href="<?php echo site_url('admin/course_form/add_course'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_new_course'); ?></a>
+                <a class="btn btn-outline-primary btn-rounded alignToTitle" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/create_course/')"><?php echo get_phrase('add_new_course'); ?></a>
                 </h4>
             </div> <!-- end card body-->
         </div> <!-- end card -->
@@ -150,6 +150,7 @@
                                 <th><?php echo get_phrase('lesson_and_section'); ?></th>
                                 <th><?php echo get_phrase('enrolled_student'); ?></th>
                                 <th><?php echo get_phrase('status'); ?></th>
+                                <th><?php echo get_phrase('type'); ?></th>
                                 <th><?php echo get_phrase('price'); ?></th>
                                 <th><?php echo get_phrase('actions'); ?></th>
                             </tr>
@@ -191,7 +192,7 @@
                                             <?php if ($course['status'] == 'active'): ?>
                                                 <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
                                                     <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
-                                                        <input type="checkbox"/>Public
+                                                        <input type="checkbox" checked>Public
                                                     </a>
                                                 <?php else: ?>
                                                     <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
@@ -201,13 +202,25 @@
                                             <?php else: ?>
                                                 <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
                                                     <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
-                                                          <input type="checkbox" checked/>Private
+                                                          <input type="checkbox"/>Public
                                                     </a>
                                                 <?php else: ?>
                                                     <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
-                                                        <input type="checkbox" checked/>Private
+                                                        <input type="checkbox"/>Public
                                                     </a>
                                                 <?php endif; ?>
+                                            <?php endif; ?>
+
+                                    </td>
+                                    <td class="text-center">
+                                            <?php if ($course['type'] == 'public'): ?>
+                                                <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/type_popup/mail_on_course_type_changing_modal/private/<?php echo $course['id']; ?>', '<?php echo get_phrase('inform_instructor'); ?>');">
+                                                        <input type="checkbox">Private
+                                                    </a>
+                                            <?php else: ?>
+                                                <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/type_popup/mail_on_course_type_changing_modal/public/<?php echo $course['id']; ?>','<?php echo get_phrase('inform_instructor'); ?>');">
+                                                        <input type="checkbox" checked>Private
+                                                    </a>
                                             <?php endif; ?>
 
                                     </td>
