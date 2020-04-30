@@ -723,7 +723,43 @@ class Crud_model extends CI_Model
             return $this->db->get('lesson');
         }
     }
-
+      
+    public function create_live_session(){
+       $class_id = html_escape($this->input->post('live_class_session'));
+       $name = html_escape($this->input->post('name'));
+       $no_of_mins = html_escape($this->input->post('time'));
+       $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=random-5063656&moderatorPW=mp&name=random-798204&record=false&voiceBridge=76909&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=f2795b38dd3c18a1f790ec6e15b53d28ba53dc75';
+       $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+6890188&meetingID=random-798204&password=mp&redirect=true&checksum=6835197131dd09ce5fa7cfbe79244ca48dd4c6cb';
+       $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+6890188&meetingID=random-798204&password=ap&redirect=true&checksum=98742edc81a62b5c21d55933a72fada40d2dd07e';
+       $timeout = 10;
+       $ch = curl_init();
+       curl_setopt ( $ch, CURLOPT_URL, $url );
+       curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+       curl_setopt ( $ch, CURLOPT_TIMEOUT, $timeout );
+       $http_respond = curl_exec($ch);
+       $http_respond = trim( strip_tags( $http_respond ) );
+       $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+       curl_close( $ch ); 
+       if ( ( $http_code == "200" ) || ( $http_code == "302" ) ) {
+         echo 'i am alive';
+         $ch = curl_init();
+         curl_setopt($ch, CURLOPT_URL, $url);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+         $response = curl_exec($ch);
+         $xml = simplexml_load_string($response);
+         echo $xml->internalMeetingID;
+         curl_close($ch);
+       } else {
+         echo 'i am not alive';
+         $ch = curl_init();
+         curl_setopt($ch, CURLOPT_URL, $url);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+         $response = curl_exec($ch);
+         $xml = simplexml_load_string($response);
+         echo $xml->internalMeetingID;
+         curl_close($ch);
+       }
+    }
     public function add_course($param1 = "", $user_param = 0)
     {
         $institute_id = $this->input->post('institutes');

@@ -73,12 +73,22 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                            <span class="d-none d-sm-inline"><?php echo get_phrase('curriculum'); ?></span>
                                        </a>
                                    </li>
+                                   <li class="nav-item">
+                                       <a href="#live_session" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                           <i class="mdi mdi-account-circle mr-1"></i>
+                                           <span class="d-none d-sm-inline"><?php echo get_phrase('live_session'); ?></span>
+                                       </a>
+                                   </li>
                                 </ul>
 
                                 <div class="tab-content b-0 mb-0">
                                     <div class="tab-pane active" id="curriculum">
                                         <?php include 'curriculum.php'; ?>
                                     </div>
+                             
+                                    <div class="tab-pane active" id="live_session">
+                                        <?php include 'live_session.php'; ?>
+                                    </div>    
 
                                 <div class="tab-pane" id="basic">
                                     <div class="row justify-content-center">

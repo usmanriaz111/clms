@@ -378,13 +378,15 @@ class Institute extends CI_Controller {
 
       echo json_encode($json_data);
     }
-
     public function course_actions($param1 = "", $param2 = "") {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
         $this->user_model->check_plan(true);
-
+        if (html_escape($this->input->post('live_class_session'))){
+            $this->crud_model->create_live_session();
+            redirect(site_url('institute'), 'refresh');
+        }
         if ($param1 == "add") {
             $instructor_id = $this->input->post('instructors');
             $course_id = $this->crud_model->add_course("", $instructor_id );
