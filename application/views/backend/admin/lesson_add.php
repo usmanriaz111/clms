@@ -6,6 +6,10 @@
     position: fixed;
     top: 30%;
     left: 45%;
+    opacity: 1!important;
+}
+.blure-model{
+    opacity: 0;
 }
 </style>
 <?php

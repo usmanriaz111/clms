@@ -31,6 +31,16 @@ class Institute extends CI_Controller {
       }
     }
 
+    public function change_course_type($updated_type = "", $course_id)
+    {
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $this->crud_model->change_course_type($updated_type, $course_id);
+        $this->session->set_flashdata('flash_message', get_phrase('course_type_updated'));
+        redirect('institute/courses');
+    }
+
     public function amazons3_setting($param1='', $param2=''){
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');

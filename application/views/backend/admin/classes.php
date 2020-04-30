@@ -55,6 +55,7 @@
                                         <i class="mdi mdi-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="<?php echo site_url('admin/class_id/'.$cls['id'].'/add_student'); ?>"><?php echo get_phrase('add_student'); ?></a></li>
                                         <li><a class="dropdown-item" href="<?php echo site_url('admin/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
                                         <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/classes/delete/'.$cls['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
                                     </ul>
