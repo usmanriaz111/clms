@@ -231,17 +231,17 @@ class Install extends CI_Controller {
     $this->load->database();
     $admin_email = $this->db->get_where('users', array('id' => 1))->row()->email;
 
-    // session_start();
-    // if (isset($_SESSION['purchase_code'])) {
-    //   $data['value']  = $_SESSION['purchase_code'];
-    //   $this->db->where('key', 'purchase_code');
-    //   $this->db->update('settings', $data);
-    // }
-    // session_destroy();
+    session_start();
+    if (isset($_SESSION['purchase_code'])) {
+      $data['value']  = $_SESSION['purchase_code'];
+      $this->db->where('key', 'purchase_code');
+      $this->db->update('settings', $data);
+    }
+    session_destroy();
 
-    // $page_data['admin_email'] = $admin_email;
-    // $page_data['page_name'] = 'success';
-    // $this->load->view('install/index', $page_data);
+    $page_data['admin_email'] = $admin_email;
+    $page_data['page_name'] = 'success';
+    $this->load->view('install/index', $page_data);
   }
 
   function configure_routes() {
