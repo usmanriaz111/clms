@@ -780,6 +780,7 @@ class Crud_model extends CI_Model
             $data['category_id'] = $category_details['parent'];
             $data['requirements'] = $requirements;
             $data['price'] = $this->input->post('price');
+            $data['type'] = $this->input->post('type');
             $data['discount_flag'] = $this->input->post('discount_flag');
             $data['discounted_price'] = $this->input->post('discounted_price');
             $data['level'] = $this->input->post('level');
@@ -819,11 +820,12 @@ class Crud_model extends CI_Model
                     $data['status'] = 'active';
                 } else {
                     if ($user_param > 0) {
-                        if ($type == 'public') {
-                            $data['status'] = 'pending';
-                        } else {
-                            $data['status'] = 'active';
-                        }
+                        $data['status'] = 'pending';
+                        // if ($type == 'public') {
+                            
+                        // } else {
+                        //     $data['status'] = 'active';
+                        // }
                     }
                 }
             }
@@ -904,7 +906,7 @@ class Crud_model extends CI_Model
             $institute_id = $institute['id'];
             if($institute_id > 0){
                 $count_sizes = 0.0;
-                $institute_courses_count = $this->count_institute_courses($institute_id);
+                $institute_courses_count = $this->count_institute_courses($institute_id)->result_array();
                 foreach ($institute_courses_count as $row) {
                     $count_sizes += $row['video_size'];
                 }
@@ -959,6 +961,7 @@ class Crud_model extends CI_Model
         $data['category_id'] = $category_details['parent'];
         $data['requirements'] = $requirements;
         $data['is_free_course'] = $this->input->post('is_free_course');
+        $data['type'] = $this->input->post('type');
         $data['price'] = $this->input->post('price');
         $data['discount_flag'] = $this->input->post('discount_flag');
         $data['discounted_price'] = $this->input->post('discounted_price');
@@ -1022,6 +1025,22 @@ class Crud_model extends CI_Model
         $updater = array(
             'status' => $status,
         );
+        $this->db->where('id', $course_id);
+        $this->db->update('course', $updater);
+    }
+
+    public function change_course_type($type = "", $course_id = "")
+    {
+        if ($type == 'public') {
+            $updater = array(
+                'type' => $type,
+                'status' => 'pending',
+            );
+        }else{
+            $updater = array(
+                'type' => $type,
+            );
+        }
         $this->db->where('id', $course_id);
         $this->db->update('course', $updater);
     }
@@ -1108,7 +1127,7 @@ class Crud_model extends CI_Model
 
     public function get_top_courses()
     {
-        return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active'));
+        return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active', 'type', 'public'));
     }
 
     public function get_default_category_id()
@@ -1699,6 +1718,7 @@ class Crud_model extends CI_Model
         $this->db->order_by("id", "desc");
         $this->db->limit('10');
         $this->db->where('status', 'active');
+        $this->db->where('type', 'public');
         return $this->db->get('course')->result_array();
     }
 
@@ -1783,7 +1803,7 @@ class Crud_model extends CI_Model
             $data['user_id'] = $user_id;
             $data['payment_type'] = $method;
             $data['plan_id'] = $plan_id;
-            $course_details = $this->get_course_by_id($purchased_course)->row_array();
+            // $course_details = $this->get_course_by_id($purchased_course)->row_array();
             $data['amount'] = $amount_paid;
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('payment', $data);

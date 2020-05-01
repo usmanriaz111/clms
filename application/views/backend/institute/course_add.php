@@ -108,9 +108,9 @@
                                             <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
                                                 <div class="col-md-10">
-                                                <input type="radio" id="public" name="type" value="public" checked class="js-course-type">
+                                                <input type="radio" id="public" name="type" value="public" checked>
                                                 <label for="public">Public</label>
-                                                <input type="radio" id="private" name="type" value="private" class="js-course-type">
+                                                <input type="radio" id="private" name="type" value="private">
                                                 <label for="private">Private</label>
                                                 </div>
                                             </div>

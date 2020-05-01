@@ -33,6 +33,7 @@
                       <th><?php echo get_phrase('no_of_students_per_course'); ?></th>
                       <th><?php echo get_phrase('cloud_space_per_course'); ?></th>
                       <th><?php echo get_phrase('Institute'); ?></th>
+                      <th><?php echo get_phrase('expire_date'); ?></th>
                       <th><?php echo get_phrase('private'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
@@ -60,8 +61,8 @@
                             }else{
                               echo $institute[0]['first_name'].' '.$institute[0]['last_name'];
                             }
-
                             ?></td>
+                            <td><?php echo gmdate('D, d-M-Y', strtotime("+1 month",$plan['purchase_date'])); ?></td>
                             <td><?php echo $plan['private']; ?></td>
                             <td>
                                   <div class="dropright dropright">

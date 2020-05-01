@@ -23,7 +23,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                 <div class="row">
                     <div class="col-xl-12">
                         <form class="required-form" action="<?php echo site_url('institute/course_actions/edit/'.$course_id); ?>" method="post" enctype="multipart/form-data">
-                            <div id="">
+                            <div id="basicwizard">
                                 <ul class="nav nav-pills nav-justified form-wizard-header mb-3">
                                     <li class="nav-item">
                                         <a href="#basic" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
@@ -68,7 +68,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                       <a href="#curriculum" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
+                                       <a href="#curriculum" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                            <i class="mdi mdi-account-circle mr-1"></i>
                                            <span class="d-none d-sm-inline"><?php echo get_phrase('curriculum'); ?></span>
                                        </a>
@@ -82,7 +82,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                 </ul>
 
                                 <div class="tab-content b-0 mb-0">
-                                    <div class="tab-pane active" id="curriculum">
+                                    <div class="tab-pane" id="curriculum">
                                         <?php include 'curriculum.php'; ?>
                                     </div>
                              
@@ -127,6 +127,15 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group row mb-3">
+                                                <label class="col-md-2 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                                <div class="col-md-10">
+                                                <input type="radio" id="public" name="type" value="public" <?php if($course_details['type'] == 'public')echo'checked'?>>
+                                                <label for="public">Public</label>
+                                                <input type="radio" id="private" name="type" value="private" <?php if($course_details['type'] == 'private')echo'checked'?>>
+                                                <label for="private">Private</label>
+                                                </div>
+                                            </div>
                                         <div class="form-group row mb-3">
                                             <label class="col-md-2 col-form-label" for="level"><?php echo get_phrase('level'); ?></label>
                                             <div class="col-md-10">

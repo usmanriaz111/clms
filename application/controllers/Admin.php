@@ -373,6 +373,16 @@ class Admin extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+    public function import_students($param1 = '', $param2 = ''){
+          if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+          $page_data['class_id'] = $param2;
+          $page_data['page_name'] = 'import_students';
+          $page_data['page_title'] = get_phrase('import_students');
+          $this->load->view('backend/index', $page_data);
+      }
+
     public function user_form($param1 = "", $param2 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -953,6 +963,26 @@ class Admin extends CI_Controller
         $this->crud_model->change_course_status($updated_status, $course_id);
         $this->session->set_flashdata('flash_message', get_phrase('course_status_updated'));
         redirect(site_url('admin/courses?category_id=' . $category_id . '&status=' . $status . '&instructor_id=' . $instructor_id . '&price=' . $price), 'refresh');
+    }
+
+    public function change_course_type($updated_type = "")
+    {
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $course_id = $this->input->post('course_id');
+        $category_id = $this->input->post('category_id');
+        $instructor_id = $this->input->post('instructor_id');
+        $price = $this->input->post('price');
+        $status = $this->input->post('status');
+        if (isset($_POST['mail_subject']) && isset($_POST['mail_body'])) {
+            $mail_subject = $this->input->post('mail_subject');
+            $mail_body = $this->input->post('mail_body');
+            $this->email_model->send_mail_on_course_status_changing($course_id, $mail_subject, $mail_body);
+        }
+        $this->crud_model->change_course_type($updated_type, $course_id);
+        $this->session->set_flashdata('flash_message', get_phrase('course_type_updated'));
+        redirect('admin/courses');
     }
 
     public function change_course_status_for_admin($updated_status = "", $course_id = "", $category_id = "", $status = "", $instructor_id = "", $price = "")

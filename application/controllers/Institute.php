@@ -31,6 +31,34 @@ class Institute extends CI_Controller {
       }
     }
 
+    public function change_course_type($updated_type = "", $course_id)
+    {
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $this->crud_model->change_course_type($updated_type, $course_id);
+        $this->session->set_flashdata('flash_message', get_phrase('course_type_updated'));
+        redirect('institute/courses');
+    }
+
+    public function class_id($param1 = '', $param2 = ''){
+      if ($this->session->userdata('user_login') != true) {
+          redirect(site_url('login'), 'refresh');
+      } else {
+          if ($param2 == 'add_student'){
+          $page_data['class_id'] = $param1;
+          $page_data['page_name'] = 'user_add';
+          $page_data['page_title'] = get_phrase('student_add');
+          $this->load->view('backend/index', $page_data);
+          }elseif($param2 == 'users'){
+              $page_data['page_name'] = 'users';
+              $page_data['page_title'] = get_phrase('students');
+              $page_data['users'] = $this->user_model->get_class_enrolled_students($param1);
+              $this->load->view('backend/index', $page_data);
+          }
+      }
+  }
+
     public function amazons3_setting($param1='', $param2=''){
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');
@@ -195,11 +223,12 @@ class Institute extends CI_Controller {
         }
     }
 
-    public function import_students(){
+    public function import_students($param1 = '', $param2 = ''){
       $this->user_model->check_plan(true);
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $page_data['class_id'] = $param2;
         $page_data['page_name'] = 'import_students';
         $page_data['page_title'] = get_phrase('import_students');
         $this->load->view('backend/index', $page_data);
@@ -762,21 +791,22 @@ class Institute extends CI_Controller {
           $this->load->view('backend/index', $page_data);
         }
     }
-    public function users($param1 = "", $param2 = "") {
+    
+    public function users($param1 = "", $param2 = "")
+    {
         if ($this->session->userdata('user_login') != true) {
-          redirect(site_url('login'), 'refresh');
+            redirect(site_url('login'), 'refresh');
         }
         if ($param1 == "add") {
-          $this->user_model->add_user();
-          redirect(site_url('institute/users'), 'refresh');
+            $this->user_model->add_user(2, $param2);
+            redirect(site_url('institute/classes'), 'refresh');
         }
-        elseif ($param1 == "edit") {
-          $this->user_model->edit_user($param2);
-          redirect(site_url('institute/users'), 'refresh');
-        }
-        elseif ($param1 == "delete") {
-          $this->user_model->delete_user($param2);
-          redirect(site_url('institute/users'), 'refresh');
+        if ($param1 == "edit") {
+            $this->user_model->edit_user($param2);
+            redirect(site_url('institute/classes'), 'refresh');
+        } elseif ($param1 == "delete") {
+            $this->user_model->delete_user($param2);
+            redirect(site_url('institute/classes'), 'refresh');
         }
 
         $page_data['page_name'] = 'users';
@@ -784,6 +814,7 @@ class Institute extends CI_Controller {
         $page_data['users'] = $this->user_model->get_user($param2);
         $this->load->view('backend/index', $page_data);
     }
+
     // this function is responsible for managing multiple choice question
     function manage_multiple_choices_options() {
         $page_data['number_of_options'] = $this->input->post('number_of_options');

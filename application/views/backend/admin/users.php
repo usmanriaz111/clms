@@ -23,18 +23,12 @@
                       <th><?php echo get_phrase('photo'); ?></th>
                       <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('email'); ?></th>
-                      <th><?php echo get_phrase('enrolled_course'); ?></th>
-                      <th><?php echo get_phrase('enrolled_class'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
                   <tbody>
                       <?php
-foreach ($users->result_array() as $key => $user): ?>
-                       <?php
-$class_name = $this->crud_model->get_class_by_id($user['class_id']);
-$course = $this->crud_model->get_course_by_id($class_name['course_id'])->row_array();
-?>
+                        foreach ($users->result_array() as $key => $user): ?>
                           <tr>
                               <td><?php echo $key + 1; ?></td>
                               <td>
@@ -46,12 +40,6 @@ $course = $this->crud_model->get_course_by_id($class_name['course_id'])->row_arr
                                 <?php endif;?>
                               </td>
                               <td><?php echo $user['email']; ?></td>
-                              <td>
-                                 <?php echo $course['title']; ?>
-                              </td>
-                              <td>
-                                  <?php echo $class_name['name']; ?>
-                              </td>
                               <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

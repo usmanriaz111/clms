@@ -7,7 +7,11 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo $page_title; ?>
+                <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php
+
+use phpDocumentor\Reflection\Types\Null_;
+
+echo $page_title; ?>
                 <a href = "<?php echo site_url('admin/institute_form/add_insttitue_form'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_institute'); ?></a>
             </h4>
             </div> <!-- end card body-->

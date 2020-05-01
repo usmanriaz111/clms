@@ -23,7 +23,6 @@
                       <th><?php echo get_phrase('photo'); ?></th>
                       <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('email'); ?></th>
-                      <th><?php echo get_phrase('enrolled_courses'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
@@ -41,16 +40,6 @@
                                 <?php endif; ?>
                               </td>
                               <td><?php echo $user['email']; ?></td>
-                              <td>
-                                 <?php
-                                    $enrolled_courses = $this->crud_model->enrol_history_by_user_id($user['id']);?>
-                                    <ul>
-                                        <?php foreach ($enrolled_courses->result_array() as $enrolled_course):
-                                            $course_details = $this->crud_model->get_course_by_id($enrolled_course['course_id'])->row_array();?>
-                                            <li><?php echo $course_details['title']; ?></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                              </td>
                               <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

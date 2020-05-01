@@ -48,6 +48,7 @@
                             <td><?php echo $instructor['first_name'].' '.$instructor['last_name']; ?></td>
                             <td><?php echo $enrolled_students.' '.'<a href="'.site_url('admin/class_id/'.$cls['id'].'/users').'"/><span class="mdi mdi-24px mdi-eye"></span></a>'; ?>
                             <a href = "<?php echo site_url('admin/class_id/'.$cls['id'].'/add_student'); ?>" class=""><span class="mdi mdi-24px mdi-account-plus"></span></a>
+                            <a href="<?php echo site_url('admin/import_students/class_id/'.$cls['id']); ?>"><span class="mdi mdi-24px mdi-file-import"></span></a>
                         </td>
                             <td>
                                   <div class="dropright dropright">
@@ -55,6 +56,8 @@
                                         <i class="mdi mdi-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="<?php echo site_url('admin/import_students/class_id/'.$cls['id']); ?>"><?php echo get_phrase('import_students'); ?></a></li>
+                                        <li><a class="dropdown-item" href="<?php echo site_url('admin/class_id/'.$cls['id'].'/add_student'); ?>"><?php echo get_phrase('add_student'); ?></a></li>
                                         <li><a class="dropdown-item" href="<?php echo site_url('admin/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
                                         <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/classes/delete/'.$cls['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
                                     </ul>
