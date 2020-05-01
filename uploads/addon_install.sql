@@ -11,4 +11,5 @@
 --   PRIMARY KEY (`id`)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-ALTER TABLE `plans` ADD `private` VARCHAR(20) NOT NULL DEFAULT 'no' AFTER `last_modified`;
+-- ALTER TABLE `plans` ADD `private` VARCHAR(20) NOT NULL DEFAULT 'no' AFTER `last_modified`;
+ALTER TABLE `users` ADD `purchase_date` INT(11) NOT NULL AFTER `plan_id`;

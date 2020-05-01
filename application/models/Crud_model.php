@@ -835,7 +835,7 @@ class Crud_model extends CI_Model
            if($institute['plan_id'] == $plan['id']){
              $institute_id = $institute['id'];
              if($institute_id > 0){
-                 $institute_courses_count = $this->count_institute_courses($institute_id)->result_array();
+                 $institute_courses_count = $this->count_institute_courses($institute_id);
                  if ($plan['courses'] > 0){
                    if (count($institute_courses_count) >= $plan['courses']){
                    return false;
@@ -1091,7 +1091,7 @@ class Crud_model extends CI_Model
 
     public function get_top_courses()
     {
-        return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active'));
+        return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active', 'type', 'public'));
     }
 
     public function get_default_category_id()
@@ -1682,6 +1682,7 @@ class Crud_model extends CI_Model
         $this->db->order_by("id", "desc");
         $this->db->limit('10');
         $this->db->where('status', 'active');
+        $this->db->where('type', 'public');
         return $this->db->get('course')->result_array();
     }
 
