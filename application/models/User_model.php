@@ -270,6 +270,7 @@ public function get_current_user_plan(){
               $expire_date = gmdate('D, d-M-Y', strtotime("+1 month",$current_user['purchase_date']));
               if($current_date > $expire_date){
                 if($home == true){
+                    $this->session->set_flashdata('flash_message', get_phrase('your_plan_is_expired, please_upgrade_with_new_plan'));
                     redirect(site_url('institute/purchase_plan'), 'refresh');
                   }
               }else{
