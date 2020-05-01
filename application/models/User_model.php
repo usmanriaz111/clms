@@ -148,6 +148,12 @@ class User_model extends CI_Model {
         }
     }
 
+    public function check_students_limit($class_id){
+        if($class_id > 0){
+            return $this->db->get_where('users', array('class_id' => $class_id))->num_rows();
+        }
+    }
+
 
     public function check_institute($institute){
         $duplicate_email_check = $this->db->get_where('users', array('institute_id' => $institute));
@@ -260,11 +266,19 @@ public function get_current_user_plan(){
       if ($plan_id > 0) {
           $user_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
           if ($plan_id == $user_plan['id']){
-            return true;
+              $current_date = date('D, d-M-Y');
+              $expire_date = gmdate('D, d-M-Y', strtotime("+1 month",$current_user['purchase_date']));
+              if($current_date > $expire_date){
+                if($home == true){
+                    redirect(site_url('institute/purchase_plan'), 'refresh');
+                  }
+              }else{
+                return true;
+              }
           }
       }else{
           if($home == true){
-        redirect(site_url('institute/purchase_plan'), 'refresh');
+            redirect(site_url('institute/purchase_plan'), 'refresh');
           }
       }
     }
@@ -275,6 +289,7 @@ public function update_user_plan($user_id, $plan_id){
     $count_user = $this->db->get_where('users', array('id' => $user_id))->num_rows();
     if ($count_user == 1){
       $data['plan_id'] = $plan_id;
+      $data['purchase_date'] = strtotime(gmdate("Y-m-d H:i:s"));
       $this->db->where('id', $user_id);
       $this->db->update('users', $data);
       $this->session->set_userdata('plan_id', $plan_id);

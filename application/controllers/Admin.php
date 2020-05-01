@@ -373,6 +373,16 @@ class Admin extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+    public function import_students($param1 = '', $param2 = ''){
+          if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+          $page_data['class_id'] = $param2;
+          $page_data['page_name'] = 'import_students';
+          $page_data['page_title'] = get_phrase('import_students');
+          $this->load->view('backend/index', $page_data);
+      }
+
     public function user_form($param1 = "", $param2 = "")
     {
         if ($this->session->userdata('admin_login') != true) {

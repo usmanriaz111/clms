@@ -191,21 +191,28 @@
 
                                             <?php if ($course['status'] == 'active'): ?>
                                                 <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
-                                                    <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
+                                                    <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
                                                         <input type="checkbox" checked>Public
                                                     </a>
                                                 <?php else: ?>
-                                                    <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
+                                                    <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
                                                           <input type="checkbox"/>Public
                                                     </a>
                                                 <?php endif; ?>
+                                                
+                                                <?php elseif($course['status'] == 'block'): ?>
+                                                    <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
+                                                    <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
+                                                          <input type="checkbox" checked/>Block
+                                                    </a>
+                                                    <?php endif; ?>
                                             <?php else: ?>
                                                 <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
-                                                    <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
+                                                    <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
                                                           <input type="checkbox"/>Public
                                                     </a>
                                                 <?php else: ?>
-                                                    <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_instructor'); ?>');">
+                                                    <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
                                                         <input type="checkbox"/>Public
                                                     </a>
                                                 <?php endif; ?>
@@ -243,8 +250,13 @@
                                           <ul class="dropdown-menu">
                                               <li><a class="dropdown-item" href="<?php echo site_url('home/course/'.slugify($course['title']).'/'.$course['id']); ?>" target="_blank"><?php echo get_phrase('view_course_on_frontend');?></a></li>
                                               <li><a class="dropdown-item" href="<?php echo site_url('admin/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('edit_this_course');?></a></li>
-                                              <li><a class="dropdown-item" href="<?php echo site_url('admin/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('section_and_lesson');?></a></li
+                                              <li><a class="dropdown-item" href="<?php echo site_url('admin/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('section_and_lesson');?></a></li>
                                               <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/course_actions/delete/'.$course['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
+                                              <li>
+                                              <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/block/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
+                                                        Block
+                                                    </a>
+                                              </li>
                                           </ul>
                                       </div>
                                     </td>

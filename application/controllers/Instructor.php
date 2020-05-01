@@ -205,57 +205,25 @@ class Instructor extends CI_Controller {
       if ($this->session->userdata('user_login') != true) {
         redirect(site_url('login'), 'refresh');
       }
-      elseif ($param1 == "add") {
-        $this->crud_model->add_class();
-        redirect(site_url('instructor/classes'), 'refresh');
-      }
-      elseif ($param1 == "edit") {
-        $this->crud_model->edit_class($param2);
-        redirect(site_url('instructor/classes'), 'refresh');
-      }
-      elseif ($param1 == "delete") {
-        $this->crud_model->delete_class($param2);
-        redirect(site_url('instructor/classes'), 'refresh');
-      }
       $instructor_id = $this->session->userdata('user_id');
       $page_data['page_name'] = 'classes';
       $page_data['page_title'] = get_phrase('class');
       $page_data['classes'] = $this->crud_model->curret_user_classes();
       $this->load->view('backend/index', $page_data);
     }
-    public function class_form($param1 = "", $param2 = "") {
-      if ($this->session->userdata('user_login') != true) {
-        redirect(site_url('login'), 'refresh');
-      }
-      elseif ($param1 == 'add_class_form') {
-        $instructor_id = $this->session->userdata('user_id');
-        $page_data['page_name'] = 'class_add';
-        $page_data['courses'] = $this->crud_model->sync_courses($instructor_id);
-        $page_data['page_title'] = get_phrase('class_add');
-        $this->load->view('backend/index', $page_data);
-      }
-      elseif ($param1 == 'edit_class_form') {
-        $instructor_id = $this->session->userdata('user_id');
-        $page_data['page_name'] = 'class_edit';
-        $page_data['class_id'] = $param2;
-        $page_data['courses'] = $this->crud_model->sync_courses($instructor_id);
-        $page_data['page_title'] = get_phrase('class_edit');
-        $this->load->view('backend/index', $page_data);
-      }
-    }
-
+ 
     // Ajax Portion
     public function ajax_get_video_details() {
         $video_details = $this->video_model->getVideoDetails($_POST['video_url']);
         echo $video_details['duration'];
     }
 
-    public function users($param1 = "", $param2 = "") {
-        $page_data['page_name'] = 'users';
-        $page_data['page_title'] = get_phrase('student');
-        $page_data['users'] = $this->user_model->get_user($param2);
-        $this->load->view('backend/index', $page_data);
-    }
+    // public function users($param1 = "", $param2 = "") {
+    //     $page_data['page_name'] = 'users';
+    //     $page_data['page_title'] = get_phrase('student');
+    //     $page_data['users'] = $this->user_model->get_user($param2);
+    //     $this->load->view('backend/index', $page_data);
+    // }
     // this function is responsible for managing multiple choice question
     function manage_multiple_choices_options() {
         $page_data['number_of_options'] = $this->input->post('number_of_options');
