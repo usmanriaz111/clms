@@ -6,6 +6,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         <div class="card">
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo get_phrase('update').': '.$course_details['title']; ?></h4>
+                <a class="btn btn-outline-primary btn-rounded alignToTitle" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/create_live_session/<?php echo $course_id;?>/')"><?php echo get_phrase('Create Live Session'); ?></a>
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->

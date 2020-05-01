@@ -725,12 +725,14 @@ class Crud_model extends CI_Model
     }
       
     public function create_live_session(){
-       $class_id = html_escape($this->input->post('live_class_session'));
-       $name = html_escape($this->input->post('name'));
-       $no_of_mins = html_escape($this->input->post('time'));
-       $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=random-5063656&moderatorPW=mp&name=random-798204&record=false&voiceBridge=76909&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=f2795b38dd3c18a1f790ec6e15b53d28ba53dc75';
-       $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+6890188&meetingID=random-798204&password=mp&redirect=true&checksum=6835197131dd09ce5fa7cfbe79244ca48dd4c6cb';
-       $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+6890188&meetingID=random-798204&password=ap&redirect=true&checksum=98742edc81a62b5c21d55933a72fada40d2dd07e';
+       $logged_in_user_role = strtolower($this->session->userdata('role'));
+       $data['class_id'] = html_escape($this->input->post('live_session_class'));
+       $data['name'] = html_escape($this->input->post('session_name'));
+       $data['mints'] = html_escape($this->input->post('time'));
+       $data['date_added'] = strtotime(date('D, d-M-Y'));
+       $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
+       $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
+       $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=ap&redirect=true&checksum=38a15d8d41739cc42c3ceedb85345a54ce4d826c';
        $timeout = 10;
        $ch = curl_init();
        curl_setopt ( $ch, CURLOPT_URL, $url );
@@ -741,16 +743,24 @@ class Crud_model extends CI_Model
        $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
        curl_close( $ch ); 
        if ( ( $http_code == "200" ) || ( $http_code == "302" ) ) {
-         echo 'i am alive';
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
          $response = curl_exec($ch);
          $xml = simplexml_load_string($response);
-         echo $xml->internalMeetingID;
+         if($xml->returncode == 'SUCCESS'){
+            $this->db->insert('live_sessions', $data);
+            $page_data['page_name'] = 'live_session_url_popup';
+            $page_data['admin_url'] = $institute_url;
+            $page_data['student_url'] = $student_url;
+            $page_data['role'] = $logged_in_user_role;
+            return $page_data;
+         }else{
+            $this->session->set_flashdata('error_message', get_phrase('session_is_not_created_please_contact_with_administration'));
+         }
          curl_close($ch);
        } else {
-         echo 'i am not alive';
+        $this->session->set_flashdata('error_message', get_phrase('server_is_down_please_contact_with_administration'));
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
