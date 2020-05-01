@@ -20,7 +20,7 @@
             <p><?php echo $admin_url; ?></p>
             <strong>Instructor Url:</strong>
             <p><?php echo $admin_url; ?></p>
-            <strong>Institute Url:</strong>
+            <strong>Student Url:</strong>
             <p><?php echo $student_url; ?></p>
             <a href="<?php site_url('institute/courses');?>" class="btn btn-primary">Go to Courses</a>
          </div>
