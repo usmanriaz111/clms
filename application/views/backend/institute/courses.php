@@ -180,7 +180,11 @@
                                 <tr>
                                     <td><?php echo ++$key; ?></td>
                                     <td>
-                                        <strong><a href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>" title=<?php echo ($course['title'])?>><?php echo ellipsis(substr($course['title'],0,16)); ?></a></strong><br>
+                                    <?php if ($course['status'] != 'block'): ?>    
+                                    <strong><a href="<?php echo site_url('institute/course_form/course_edit/'.$course['id']); ?>" title=<?php echo ($course['title'])?>><?php echo ellipsis(substr($course['title'],0,16)); ?></a></strong><br>
+                                    <?php else:?>
+                                        <strong><?php echo ellipsis(substr($course['title'],0,16)); ?></strong><br>   
+                                    <?php endif;?>
                                         <small title=<?php echo ($instructor_details['first_name'].' '.$instructor_details['last_name'])?> class="text-muted"><?php echo get_phrase('instructor').': <b>'.$instructor_details['first_name'].'</b>'; ?></small>
                                     </td>
                                     <td>
@@ -200,10 +204,19 @@
                                             <i class="mdi mdi-circle text-success" style="font-size: 19px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?php echo get_phrase($course['status']); ?>"></i>
                                         <?php elseif ($course['status'] == 'draft'):?>
                                             <i class="mdi mdi-circle text-secondary" style="font-size: 19px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?php echo get_phrase($course['status']); ?>"></i>
+                                            <?php elseif ($course['status'] == 'block'):?>
+                                            <i class="mdi mdi-circle text-danger" style="font-size: 19px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?php echo get_phrase($course['status']); ?>"></i>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                            <?php if ($course['type'] == 'public'): ?>
+                                    <?php if ($course['status'] == 'block'): ?> 
+                                        <?php if ($course['type'] == 'public'): ?>
+                                            <input type="checkbox">Private
+                                            <?php else: ?>
+                                                <input type="checkbox" checked disabled>Private
+                                            <?php endif; ?>
+                                    <?php else: ?>
+                                        <?php if ($course['type'] == 'public'): ?>
                                                 <a class="dropdown-item" href="<?php echo site_url('institute/change_course_type/private/'.$course['id']); ?>">
                                                         <input type="checkbox">Private
                                                     </a>
@@ -212,6 +225,8 @@
                                                         <input type="checkbox" checked>Private
                                                     </a>
                                             <?php endif; ?>
+                                    <?php endif;?>
+                                            
 
                                     </td>
                                     <td>
@@ -226,6 +241,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
+                                    <?php if ($course['status'] != 'block'): ?>
                                         <div class="dropright dropright">
                                           <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                               <i class="mdi mdi-dots-vertical"></i>
@@ -242,6 +258,7 @@
                                               <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('institute/course_actions/delete/'.$course['id']); ?>');"><?php echo get_phrase('delete_this_course'); ?></a></li>
                                           </ul>
                                       </div>
+                                              <?php endif;?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

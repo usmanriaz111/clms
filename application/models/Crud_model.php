@@ -870,7 +870,7 @@ class Crud_model extends CI_Model
             $institute_id = $institute['id'];
             if($institute_id > 0){
                 $count_sizes = 0.0;
-                $institute_courses_count = $this->count_institute_courses($institute_id);
+                $institute_courses_count = $this->count_institute_courses($institute_id)->result_array();
                 foreach ($institute_courses_count as $row) {
                     $count_sizes += $row['video_size'];
                 }
@@ -1091,7 +1091,7 @@ class Crud_model extends CI_Model
 
     public function get_top_courses()
     {
-        return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active'));
+        return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active', 'type', 'public'));
     }
 
     public function get_default_category_id()
@@ -1682,6 +1682,7 @@ class Crud_model extends CI_Model
         $this->db->order_by("id", "desc");
         $this->db->limit('10');
         $this->db->where('status', 'active');
+        $this->db->where('type', 'public');
         return $this->db->get('course')->result_array();
     }
 
@@ -1766,7 +1767,7 @@ class Crud_model extends CI_Model
             $data['user_id'] = $user_id;
             $data['payment_type'] = $method;
             $data['plan_id'] = $plan_id;
-            $course_details = $this->get_course_by_id($purchased_course)->row_array();
+            // $course_details = $this->get_course_by_id($purchased_course)->row_array();
             $data['amount'] = $amount_paid;
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('payment', $data);

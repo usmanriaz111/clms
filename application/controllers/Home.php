@@ -105,6 +105,7 @@ class Home extends CI_Controller {
             $config['base_url']  = site_url('home/courses/');
             $this->pagination->initialize($config);
             $this->db->where('status', 'active');
+            $this->db->where('type', 'public');
             $page_data['courses'] = $this->db->get('course', $config['per_page'], $this->uri->segment(3))->result_array();
         }else {
             $courses = $this->crud_model->filter_course($selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating);
