@@ -2,6 +2,9 @@
   .table td, .table th{
     padding: .95rem 0.5rem !important;
   }
+  thead, tbody{
+      text-align: center;
+   }
 </style>
 <div class="row ">
     <div class="col-xl-12">

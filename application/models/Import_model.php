@@ -10,9 +10,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         
         public function insert($data, $institute_id) {
             $user_role = $this->session->userdata('role_name');
-            // if($user_role == 'institute'){
-            //     $institute_id = $this->session->userdata('user_id');
-            // }
             $institute_data = $this->db->get_where('users', array('id' => $institute_id))->row_array();
             if ($institute_data['plan_id'] > 0){
                 $plan_id = $institute_data['plan_id'];
@@ -21,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 foreach ($data as $user){
                     $student_count = $this->user_model->check_students_limit($user['class_id']);
                         if($student_count >= $plan['students'] ){
-                            $this->session->set_flashdata('error_message', get_phrase($plan['students'].' students imported '.'no_more_students_added'));
+                            $this->session->set_flashdata('error_message', get_phrase($plan['students'].' students imported successfully'.'no_more_students_added'));
                             redirect(site_url($user_role.'/classes'), 'refresh');
                         }else{
                             $this->db->insert('users',$user);
