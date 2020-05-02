@@ -1030,9 +1030,10 @@ class Admin extends CI_Controller
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-        
-        $institute_name =strtolower( str_replace(' ','_',$this->session->userdata('name'))); 
-       
+        $instructor_id = $this->crud_model->sync_instructor_id($course_id);
+        $institute_id = $this->user_model->sync_institute_id($instructor_id);
+        $institute = $this->db->get_where('users', array('id' => $institute_id['id']))->row_array();
+        $institute_name = $institute['first_name'] . '_'.$institute['last_name'];       
         if ($param1 == 'add') {
             $this->crud_model->add_lesson( $institute_name);
             $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
