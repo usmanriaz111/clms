@@ -2,6 +2,9 @@
    .table td, .table th{
    padding: .95rem 0.5rem !important;
    }
+   thead, tbody{
+      text-align: center;
+   }
 </style>
 <div class="row ">
    <div class="col-xl-12">
@@ -145,7 +148,6 @@
                         <th><?php echo get_phrase('title'); ?></th>
                         <th><?php echo get_phrase('category'); ?></th>
                         <th><?php echo get_phrase('lesson_and_section'); ?></th>
-                        <th><?php echo get_phrase('enrolled_student'); ?></th>
                         <th><?php echo get_phrase('status'); ?></th>
                         <th><?php echo get_phrase('type'); ?></th>
                         <th><?php echo get_phrase('price'); ?></th>
@@ -175,9 +177,6 @@
                         <td>
                            <small class="text-muted"><?php echo '<b>'.get_phrase('total_section').'</b>: '.$sections->num_rows(); ?></small><br>
                            <small class="text-muted"><?php echo '<b>'.get_phrase('total_lesson').'</b>: '.$lessons->num_rows(); ?></small><br>
-                        </td>
-                        <td>
-                           <small class="text-muted"><?php echo '<b>'.get_phrase('total_enrolment').'</b>: '.$enroll_history->num_rows(); ?></small>
                         </td>
                         <td class="text-center">
                            <?php if ($course['status'] == 'pending'): ?>
@@ -246,9 +245,15 @@
                                  <li><a class="dropdown-item" href="<?php echo site_url('admin/course_form/course_edit/'.$course['id']); ?>"><?php echo get_phrase('section_and_lesson');?></a></li>
                                  <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/course_actions/delete/'.$course['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
                                  <li>
-                                    <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/block/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
+                                    <?php  if($course['status'] == 'block') {?>
+                                       <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
+                                    Unblock
+                                    </a>
+                                    <?php } else{?>
+                                       <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/block/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
                                     Block
                                     </a>
+                                    <?php }?>
                                  </li>
                               </ul>
                            </div>
