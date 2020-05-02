@@ -187,7 +187,7 @@
                            <?php if ($course['status'] == 'active'): ?>
                            <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
                            <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
-                           <input type="checkbox" checked>Approval
+                           <input type="checkbox" checked>Approved
                            </a>
                            <?php else: ?>
                            <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/pending/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
@@ -203,11 +203,11 @@
                            <?php else: ?>
                            <?php if ($course['user_id'] != $this->session->userdata('user_id')): ?>
                            <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/popup/mail_on_course_status_changing_modal/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
-                           <input type="checkbox"/>Approval
+                           <input type="checkbox"/>Approved
                            </a>
                            <?php else: ?>
                            <a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url();?>admin/change_course_status_for_admin/active/<?php echo $course['id']; ?>/<?php echo $selected_category_id; ?>/<?php echo $selected_instructor_id; ?>/<?php echo $selected_price; ?>/<?php echo $selected_status;?>', '<?php echo get_phrase('inform_institute'); ?>');">
-                           <input type="checkbox"/>Approval
+                           <input type="checkbox"/>Approved
                            </a>
                            <?php endif; ?>
                            <?php endif; ?>
