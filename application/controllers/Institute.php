@@ -469,6 +469,11 @@ class Institute extends CI_Controller {
             $this->load->view('backend/index', $page_data);
 
         }elseif ($param1 == 'course_edit') {
+          $course_details = $this->crud_model->get_course_by_id($param2)->row_array();
+          if($course_details['status'] == 'block'){
+            $this->session->set_flashdata('error_message', get_phrase('Access_denied'));
+            redirect(site_url('institute/courses'), 'refresh');
+          }
             // $this->is_the_course_belongs_to_current_instructor($param2);
             $page_data['page_name'] = 'course_edit';
             $page_data['course_id'] =  $param2;
