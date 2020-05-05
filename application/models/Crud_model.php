@@ -731,6 +731,7 @@ class Crud_model extends CI_Model
        $data['name'] = html_escape($this->input->post('session_name'));
        $data['mints'] = html_escape($this->input->post('time'));
        $data['date_added'] = strtotime(date('D, d-M-Y'));
+       $data['start_session'] = strtotime($this->input->post('start_session'));
        $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
        $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
        $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=ap&redirect=true&checksum=38a15d8d41739cc42c3ceedb85345a54ce4d826c';
@@ -769,6 +770,7 @@ class Crud_model extends CI_Model
          $xml = simplexml_load_string($response);
          echo $xml->internalMeetingID;
          curl_close($ch);
+         redirect($logged_in_user_role.'/courses');
        }
     }
     public function add_course($param1 = "", $user_param = 0)
@@ -831,12 +833,12 @@ class Crud_model extends CI_Model
                     $data['status'] = 'active';
                 } else {
                     if ($user_param > 0) {
-                        $data['status'] = 'pending';
-                        // if ($type == 'public') {
-                            
-                        // } else {
-                        //     $data['status'] = 'active';
-                        // }
+                        
+                        if ($type == 'private') {
+                            $data['status'] = 'active';
+                        } else {
+                            $data['status'] = 'pending';
+                        }
                     }
                 }
             }
@@ -972,7 +974,7 @@ class Crud_model extends CI_Model
         $data['category_id'] = $category_details['parent'];
         $data['requirements'] = $requirements;
         $data['is_free_course'] = $this->input->post('is_free_course');
-        $data['type'] = $this->input->post('type');
+        $type = $this->input->post('type');
         $data['price'] = $this->input->post('price');
         $data['discount_flag'] = $this->input->post('discount_flag');
         $data['discounted_price'] = $this->input->post('discounted_price');
@@ -1000,9 +1002,14 @@ class Crud_model extends CI_Model
         if ($type == "save_to_draft") {
             $data['status'] = 'draft';
         } else {
-            if ($this->session->userdata('admin_login')) {
-                $data['status'] = 'active';
-            } else {
+            // if ($this->session->userdata('admin_login')) {
+            //     $data['status'] = 'active';
+            // } else {
+            //     $data['status'] = $course_details['status'];
+            // }
+            if($type == 'public'){
+                $data['status'] = 'pending';
+            }else{
                 $data['status'] = $course_details['status'];
             }
         }
