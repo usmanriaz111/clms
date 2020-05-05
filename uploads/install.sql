@@ -244,6 +244,7 @@ CREATE TABLE `live_sessions` (
   `student_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -260,6 +261,7 @@ CREATE TABLE `plans` (
   `institute_id` int(65) DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
+  `private` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -325,6 +327,7 @@ CREATE TABLE `users` (
   `status` int(11) DEFAULT NULL,
   `class_id` int(11)DEFAULT NULL,
   `plan_id` int(11)DEFAULT NULL,
+  `purchase_date` int(11)DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
