@@ -5,6 +5,7 @@ if (file_exists("application/aws-module/aws-autoloader.php")) {
     include APPPATH . 'aws-module/aws-autoloader.php';
 }
 require 'upload-to-aws.php';
+require 'aws-ec2-client.php';
 class Crud_model extends CI_Model
 {
 
