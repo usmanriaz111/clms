@@ -266,17 +266,10 @@ public function get_current_user_plan(){
       if ($plan_id > 0) {
           $user_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
           if ($plan_id == $user_plan['id']){
-
-              $expire_date =$current_user['purchase_date'];
-              
-              $current_date =  date("m:d:Y h:i:s A");
-              //$current_date->add(new DateInterval('P1M'));
-              //$interval = new DateInterval('P1M');
-              //$current_date->add($interval);
-              echo date('Y-m-d H:i:s', strtotime('+month day', $current_date));;
-              //echo date("m:d:Y h:i:s A");
-              die;
-              if($current_date > $expire_date){
+              $purchase_date = $current_user['purchase_date'];
+              $current_date =  date("Y-m-d H:i:s");
+              $expiry = date('Y-m-d H:i:s', strtotime($purchase_date. ' + 1 month'));
+              if($current_date > $expiry){
                 if($home == true){
                     $this->session->set_flashdata('flash_message', get_phrase('your_plan_is_expired, please_upgrade_with_new_plan'));
                     redirect(site_url('institute/purchase_plan'), 'refresh');

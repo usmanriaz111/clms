@@ -287,7 +287,7 @@ class Crud_model extends CI_Model
         $data_plan['cloud_space'] = html_escape($this->input->post('cloud_space'));
         $data_plan['price'] = html_escape($this->input->post('price'));
         // $data_plan['institute_id'] = html_escape($this->input->post('institutes'));
-        $data_plan['date_added'] = date('D, d-M-Y');
+        $data_plan['date_added'] = strtotime(date('D, d-M-Y'));
         $data_plan['private'] = html_escape($this->input->post('is_private'));
         $this->db->insert('plans', $data_plan);
         $this->session->set_flashdata('flash_message', get_phrase('plan_added_successfully'));
