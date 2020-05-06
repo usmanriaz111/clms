@@ -32,13 +32,18 @@ class Institute extends CI_Controller {
     }
 
     public function live_session($param1='', $param2=''){
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      
       if($param1 == "add"){
-          $data = $this->crud_model->create_live_session();
-          $page_data['admin_url'] = $data['admin_url'];
-          $page_data['student_url'] = $data['student_url'];
-          $page_data['page_name'] = $data['page_name'];
-          $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
-          $this->load->view('backend/index.php', $page_data);
+        $data = $this->crud_model->insert_live_session();
+        // $page_data['admin_url'] = $data['admin_url'];
+        // $page_data['student_url'] = $data['student_url'];
+        // $page_data['page_name'] = $data['page_name'];
+        $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
+        // $this->load->view('backend/index.php', $page_data);
+        redirect('institute/courses');
       }
   }
 

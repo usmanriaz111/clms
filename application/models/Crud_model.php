@@ -724,14 +724,21 @@ class Crud_model extends CI_Model
             return $this->db->get('lesson');
         }
     }
-      
-    public function create_live_session(){
-       $logged_in_user_role = strtolower($this->session->userdata('role'));
+
+    public function insert_live_session(){
        $data['class_id'] = html_escape($this->input->post('live_session_class'));
        $data['name'] = html_escape($this->input->post('session_name'));
        $data['mints'] = html_escape($this->input->post('time'));
        $data['date_added'] = strtotime(date('D, d-M-Y'));
-       $data['start_session'] = strtotime($this->input->post('start_session'));
+       $data['start_time'] = strtotime($this->input->post('start_session'));
+       $data['end_time'] = strtotime($this->input->post('start_session'));
+       $data['status'] = 1;
+       $this->db->insert('live_sessions', $data);
+       
+    }
+      
+    public function create_live_session(){
+       
        $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
        $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
        $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=ap&redirect=true&checksum=38a15d8d41739cc42c3ceedb85345a54ce4d826c';
@@ -751,11 +758,11 @@ class Crud_model extends CI_Model
          $response = curl_exec($ch);
          $xml = simplexml_load_string($response);
          if($xml->returncode == 'SUCCESS'){
-            $this->db->insert('live_sessions', $data);
+            // $this->db->insert('live_sessions', $data);
             $page_data['page_name'] = 'live_session_url_popup';
             $page_data['admin_url'] = $institute_url;
             $page_data['student_url'] = $student_url;
-            $page_data['role'] = $logged_in_user_role;
+            // $page_data['role'] = $logged_in_user_role;
             return $page_data;
          }else{
             $this->session->set_flashdata('error_message', get_phrase('session_is_not_created_please_contact_with_administration'));
@@ -770,7 +777,6 @@ class Crud_model extends CI_Model
          $xml = simplexml_load_string($response);
          echo $xml->internalMeetingID;
          curl_close($ch);
-         redirect($logged_in_user_role.'/courses');
        }
     }
     public function add_course($param1 = "", $user_param = 0)
@@ -919,7 +925,7 @@ class Crud_model extends CI_Model
             $institute_id = $institute['id'];
             if($institute_id > 0){
                 $count_sizes = 0.0;
-                $institute_courses_count = $this->count_institute_courses($institute_id)->result_array();
+                $institute_courses_count = $this->count_institute_courses($institute_id);
                 foreach ($institute_courses_count as $row) {
                     $count_sizes += $row['video_size'];
                 }
