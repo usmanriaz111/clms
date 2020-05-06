@@ -401,6 +401,11 @@ public function update_user_plan($user_id, $plan_id){
             return $this->db->get('users')->result_array();
     }
 
+    public function get_institutes(){
+        $this->db->where('role_id', 3);
+            return $this->db->get('users')->result_array();
+    }
+
     // public function get_unassigned_instructors(){
     //     $checker = array(
     //         'role_id' => 4,

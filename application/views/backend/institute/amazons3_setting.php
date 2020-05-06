@@ -41,7 +41,7 @@
 
                     <div class="form-group">
                         <label>AWS Base URL</label>
-                        <input type="text" class="form-control" id="aws_url" value="<?php echo $settings['url']?>" name="aws_url"  required>
+                        <input type="url" class="form-control" id="aws_url" value="<?php echo $settings['url']?>" name="aws_url"  required>
                     </div>
 
                     <div class="form-group">
@@ -75,7 +75,7 @@
 
                     <div class="form-group">
                         <label>AWS Base URL</label>
-                        <input type="text" class="form-control" id="aws_url" name="aws_url"  required>
+                        <input type="url" class="form-control" id="aws_url" name="aws_url"  required>
                     </div>
 
                     <div class="form-group">

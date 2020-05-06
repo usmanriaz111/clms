@@ -25,7 +25,7 @@ class Crud_model extends CI_Model
        $data['url'] = html_escape($this->input->post('aws_url'));
        $data['bucket_name'] = html_escape($this->input->post('bucket_name'));
        $data['user_id'] = $user_id;
-       $data_class['date_added'] = strtotime(date('D, d-M-Y'));
+       $data['date_added'] = strtotime(date('D, d-M-Y'));
        return $this->db->insert('s3_settings', $data);
        $this->session->set_flashdata('flash_message', get_phrase('s3_keys_successfully_added'));
     }
@@ -2164,7 +2164,7 @@ class Crud_model extends CI_Model
         }
     }
 
-    public function filter_course_for_backend($category_id, $instructor_id, $price, $status)
+    public function filter_course_for_backend($category_id, $user_id, $price, $status)
     {
         if ($category_id != "all") {
             $this->db->where('sub_category_id', $category_id);
@@ -2178,8 +2178,14 @@ class Crud_model extends CI_Model
             }
         }
 
-        if ($instructor_id != "all") {
-            $this->db->where('user_id', $instructor_id);
+        if ($user_id != "all") {
+            $user_role = $this->session->userdata('user_id');
+            if($user_role == 'admin'){
+                $this->db->where('institute_id', $user_id);
+            }else{
+                $this->db->where('user_id', $user_id);
+            }
+            
         }
 
         if ($status != "all") {

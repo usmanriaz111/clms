@@ -164,7 +164,7 @@
                                 <th><?php echo get_phrase('lesson_and_section'); ?></th>
                                 <th><?php echo get_phrase('enrolled_student'); ?></th>
                                 <th><?php echo get_phrase('status'); ?></th>
-                                <th><?php echo get_phrase('type'); ?></th>
+                                <th><?php echo get_phrase('public'); ?></th>
                                 <th><?php echo get_phrase('price'); ?></th>
                                 <th><?php echo get_phrase('actions'); ?></th>
                             </tr>

@@ -716,14 +716,14 @@ class Admin extends CI_Controller
         }
 
         $page_data['selected_category_id'] = isset($_GET['category_id']) ? $_GET['category_id'] : "all";
-        $page_data['selected_instructor_id'] = isset($_GET['instructor_id']) ? $_GET['instructor_id'] : "all";
+        $page_data['selected_institute_id'] = isset($_GET['institute_id']) ? $_GET['institute_id'] : "all";
         $page_data['selected_price'] = isset($_GET['price']) ? $_GET['price'] : "all";
         $page_data['selected_status'] = isset($_GET['status']) ? $_GET['status'] : "all";
 
         // Courses query is used for deciding if there is any course or not. Check the view you will get it
-        $page_data['courses'] = $this->crud_model->filter_course_for_backend($page_data['selected_category_id'], $page_data['selected_instructor_id'], $page_data['selected_price'], $page_data['selected_status']);
+        $page_data['courses'] = $this->crud_model->filter_course_for_backend($page_data['selected_category_id'], $page_data['selected_institute_id'], $page_data['selected_price'], $page_data['selected_status']);
         $page_data['status_wise_courses'] = $this->crud_model->get_status_wise_courses();
-        $page_data['instructors'] = $this->user_model->get_instructor();
+        $page_data['institutes'] = $this->user_model->get_institutes();
         $page_data['page_name'] = 'courses';
         $page_data['categories'] = $this->crud_model->get_categories();
         $page_data['page_title'] = get_phrase('active_courses');
@@ -972,8 +972,8 @@ class Admin extends CI_Controller
             $this->email_model->send_mail_on_course_status_changing($course_id, $mail_subject, $mail_body);
         }
         $this->crud_model->change_course_status($updated_status, $course_id);
-        $this->session->set_flashdata('flash_message', get_phrase('course_status_updated'));
-        redirect(site_url('admin/courses?category_id=' . $category_id . '&status=' . $status . '&instructor_id=' . $instructor_id . '&price=' . $price), 'refresh');
+        $this->session->set_flashdata('flash_message', get_phrase('course_'.$updated_status.'_updated'));
+        redirect('admin/courses');
     }
 
     public function change_course_type($updated_type = "")
@@ -986,13 +986,14 @@ class Admin extends CI_Controller
         $instructor_id = $this->input->post('instructor_id');
         $price = $this->input->post('price');
         $status = $this->input->post('status');
+        $type = $this->input->post('type');
         if (isset($_POST['mail_subject']) && isset($_POST['mail_body'])) {
             $mail_subject = $this->input->post('mail_subject');
             $mail_body = $this->input->post('mail_body');
             $this->email_model->send_mail_on_course_status_changing($course_id, $mail_subject, $mail_body);
         }
         $this->crud_model->change_course_type($updated_type, $course_id);
-        $this->session->set_flashdata('flash_message', get_phrase('course_type_updated'));
+        $this->session->set_flashdata('flash_message', get_phrase('course_'.$type.'_updated'));
         redirect('admin/courses');
     }
 

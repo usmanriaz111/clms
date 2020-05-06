@@ -111,14 +111,14 @@
                      </select>
                   </div>
                </div>
-               <!-- Course Instructors -->
+               <!-- Course Institutes -->
                <div class="col-xl-3">
                   <div class="form-group">
-                     <label for="instructor_id"><?php echo get_phrase('instructor'); ?></label>
-                     <select class="form-control select2" data-toggle="select2" name="instructor_id" id = 'instructor_id'>
-                        <option value="all" <?php if($selected_instructor_id == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
-                        <?php foreach ($instructors as $instructor): ?>
-                        <option value="<?php echo $instructor['id']; ?>" <?php if($selected_instructor_id == $instructor['id']) echo 'selected'; ?>><?php echo $instructor['first_name'].' '.$instructor['last_name']; ?></option>
+                     <label for="institute_id"><?php echo get_phrase('institute'); ?></label>
+                     <select class="form-control select2" data-toggle="select2" name="institute_id" id = 'institute_id'>
+                        <option value="all" <?php if($selected_institute_id == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
+                        <?php foreach ($institutes as $institute): ?>
+                        <option value="<?php echo $institute['id']; ?>" <?php if($selected_institute_id == $institute['id']) echo 'selected'; ?>><?php echo $institute['first_name'].' '.$institute['last_name']; ?></option>
                         <?php endforeach; ?>
                      </select>
                   </div>
@@ -149,7 +149,7 @@
                         <th><?php echo get_phrase('category'); ?></th>
                         <th><?php echo get_phrase('lesson_and_section'); ?></th>
                         <th><?php echo get_phrase('status'); ?></th>
-                        <th><?php echo get_phrase('type'); ?></th>
+                        <th><?php echo get_phrase('public'); ?></th>
                         <th><?php echo get_phrase('price'); ?></th>
                         <th><?php echo get_phrase('actions'); ?></th>
                      </tr>

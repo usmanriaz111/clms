@@ -48,7 +48,7 @@ class Institute extends CI_Controller {
             redirect(site_url('login'), 'refresh');
         }
         $this->crud_model->change_course_type($updated_type, $course_id);
-        $this->session->set_flashdata('flash_message', get_phrase('course_type_updated'));
+        $this->session->set_flashdata('flash_message', get_phrase('course_'.$updated_type.'_updated'));
         redirect('institute/courses');
     }
 
