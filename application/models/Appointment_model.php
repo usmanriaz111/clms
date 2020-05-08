@@ -9,7 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         {  
             // date_default_timezone_set("Asia/Calcutta");
             $start_time=strtotime("now");
-            $end_time=$start_time+1800;    
+            $end_time=$start_time+3600;    
             $this->db->where('start_time >=', $start_time);
             $this->db->where('start_time <=', $end_time);
             $this->db->where('status !=', 2);
