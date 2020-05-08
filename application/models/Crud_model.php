@@ -765,7 +765,7 @@ class Crud_model extends CI_Model
             // $page_data['role'] = $logged_in_user_role;
             return $page_data;
          }else{
-            return false;
+            return -1;
          }
          curl_close($ch);
        } else {
@@ -776,7 +776,7 @@ class Crud_model extends CI_Model
          $xml = simplexml_load_string($response);
          echo $xml->internalMeetingID;
          curl_close($ch);
-         return false;
+         return -1;
        }
     }
     public function add_course($param1 = "", $user_param = 0)

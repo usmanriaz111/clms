@@ -50,10 +50,9 @@ class Email_model extends CI_Model {
 
 		$this->send_smtp_mail($mail_body, $mail_subject, $instuctor_details['email'], $email_from);
 	}
-	public function send_mail_for_live_session_confirmation($start_date = "",$end_date = "", $mail_subject = "", $mail_body = "") {
-		echo 'asdf';
+	public function send_mail_for_live_session_confirmation($email, $mail_subject = "", $mail_body = "") {
 		$email_from = get_settings('system_email');
-		$this->send_smtp_mail($mail_body, $mail_subject, 'fixyourcell.ca@gmail.com','pk.rockstore@gmail.com');
+		$this->send_smtp_mail($mail_body, $mail_subject, $email,'pk.rockstore@gmail.com');
 	}
 	public function course_purchase_notification($student_id = "", $payment_method = "", $amount_paid = ""){
 		$purchased_courses 	= $this->session->userdata('cart_items');
