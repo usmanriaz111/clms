@@ -40,6 +40,13 @@
 			</li>
 
 			<li class="side-nav-item">
+				<a href="<?php echo site_url('institute/purchase_plan'); ?>" class="side-nav-link <?php if ($page_name == 'purchase_plan')echo 'active';?>">
+					<i class="mdi mdi-incognito"></i>
+					<span><?php echo get_phrase('Plans'); ?></span>
+				</a>
+			</li>
+
+			<li class="side-nav-item">
 				<a href="<?php echo site_url('institute/instructor_revenue'); ?>" class="side-nav-link <?php if ($page_name == 'report' || $page_name == 'invoice')echo 'active';?>">
 					<i class="dripicons-media-shuffle"></i>
 					<span><?php echo get_phrase('instructor_revenue'); ?></span>
@@ -56,9 +63,9 @@
 				<li class = "<?php if($page_name == 'payment_settings') echo 'active'; ?>">
 					<a href="<?php echo site_url('institute/payment_settings'); ?>"><?php echo get_phrase('payment_settings'); ?></a>
 				</li>
-				<li class = "<?php if($page_name == 's3_settings') echo 'active'; ?>">
+				<!-- <li class = "<?php if($page_name == 's3_settings') echo 'active'; ?>">
 						<a href="<?php echo site_url('institute/amazons3_setting_form/add_form'); ?>"><?php echo get_phrase('s3_settings'); ?></a>
-					</li>
+					</li> -->
 			</ul>
 		</li>
 	    </ul>
