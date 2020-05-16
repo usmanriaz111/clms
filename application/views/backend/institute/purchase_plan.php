@@ -95,24 +95,23 @@ color: #4e5bf2 !important;
       <div class="col-lg-4">
         <div class="card mb-5 mb-lg-0">
           <div class="card-body">
+          <?php if($this->user_model->get_current_user_plan() == $plan['id']){ ?>
+              <span class="text-success">Active</span>
+          <?php }?>
             <h5 class="card-title text-uppercase text-center"><?php echo strtoupper($plan['name'])?></h5>
             <h6 class="card-price text-center">$ <?php echo number_format((float)$plan['price'], 2, '.', '')?></h6>
             <h5 class="period text-center">Per Month</h5>
             <hr>
             <ul class="fa-ul">
               <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['courses']?> No of Courses</li>
+              <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['students'] ?> No of students per class</li>
               <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['classes']?> No of Classes</li>
               <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['course_minutes']?> Live session per course(minutes)</li>
-              <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['students'] ?> No of students per course</li>
               <li class=""><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['cloud_space'] ?>GB Cloud space</li>
             </ul>
             <form action="<?php echo site_url('institute/plan_price'); ?>" method="post">
                 <input type="hidden" name="plan_id" value="<?php echo $plan['id']; ?>" />
-                <?php if($this->user_model->get_current_user_plan() == $plan['id']){ ?>
-                  <button class = "btn btn-block btn-secondary text-uppercase" type="submit" name="button" disabled><?php echo get_phrase('GET STARRED'); ?></button>
-                <?php } else {?>
                 <button class = "btn btn-block btn-primary text-uppercase" type="submit" name="button" ><?php echo get_phrase('GET STARRED'); ?></button>
-                <?php } ?>
             </form>
           </div>
         </div>

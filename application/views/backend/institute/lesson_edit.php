@@ -56,7 +56,7 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
             <label for="lesson_provider"><?php echo get_phrase('lesson_provider'); ?>( <?php echo get_phrase('for_web_application'); ?> )</label>
             <select class="form-control select2" data-toggle="select2" name="lesson_provider" id="lesson_provider" onchange="check_video_provider(this.value)">
                 <option value=""><?php echo get_phrase('select_lesson_provider'); ?></option>
-                <option value="s3" <?php if(strtolower($lesson_details['video_type']) == 'amazon') echo 'selected'; ?>><?php echo get_phrase('s3'); ?></option>
+                <option value="s3" <?php if(strtolower($lesson_details['video_type']) == 'amazon') echo 'selected'; ?>><?php echo get_phrase('upload_video'); ?></option>
                 <option value="youtube" <?php if(strtolower($lesson_details['video_type']) == 'youtube') echo 'selected'; ?>><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo" <?php if(strtolower($lesson_details['video_type']) == 'vimeo') echo 'selected'; ?>><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5" <?php if(strtolower($lesson_details['video_type']) == 'html5') echo 'selected'; ?>>HTML5</option>

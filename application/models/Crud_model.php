@@ -186,7 +186,7 @@ class Crud_model extends CI_Model
             }
             if ($institute_id > 0){
                 $institute = $this->user_model->get_single_institute($institute_id);
-                $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
+                $plan = $this->check_plan($institute['id'])->row_array();
 
                 $institute_courses_count = $this->count_institute_courses($institute_id);
                 $course_ids = array();
@@ -913,6 +913,10 @@ class Crud_model extends CI_Model
         }
     }
 
+    public function check_plan($user_id){
+        return $this->db->get_where('purchased_plans', array('user_id' => $user_id));
+    }
+
     public function check_institute_course_limit($institute_id=''){
          if ($this->session->userdata('role_name') == 'admin' && $institute_id ==''){
            $this->session->set_flashdata('error_message', get_phrase('please_choose_the_institute'));
@@ -922,8 +926,8 @@ class Crud_model extends CI_Model
                $institute_id = $this->session->userdata('user_id');
            }
            $institute = $this->user_model->get_single_institute($institute_id);
-           $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
-           if($institute['plan_id'] == $plan['id']){
+           $plan = $this->check_plan($institute['id'])->row_array();
+           if($plan){
              $institute_id = $institute['id'];
              if($institute_id > 0){
                  $institute_courses_count = $this->count_institute_courses($institute_id);
@@ -1868,7 +1872,36 @@ class Crud_model extends CI_Model
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('payment', $data);
             $this->user_model->update_user_plan($user_id, $plan_id);
+            $this->purchased_plan($plan_id, $user_id);
           }
+    }
+
+    public function purchased_plan($plan_id, $user_id){
+        $plan_exist = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
+        if(count($plan_exist) > 0){
+            $curretn_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $data['plan_id'] = $curretn_plan['id'];
+            $data['courses'] = $curretn_plan['courses'] + $plan_exist['courses'];
+            $data['classes'] = $curretn_plan['classes'] + $plan_exist['classes'];
+            $data['course_minutes'] = $curretn_plan['course_minutes'] + $plan_exist['course_minutes'];
+            $data['students'] = $curretn_plan['students'] + $plan_exist['students'];
+            $data['cloud_space'] = $curretn_plan['cloud_space'] + $plan_exist['cloud_space'];
+            $data['last_modified'] = strtotime(date('D, d-M-Y'));
+            $this->db->update('purchased_plans', $data);
+
+        }else{
+            $curretn_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $data['user_id'] = $user_id;
+            $data['plan_id'] = $curretn_plan['id'];
+            $data['name'] = $curretn_plan['name'];
+            $data['courses'] = $curretn_plan['courses'];
+            $data['classes'] = $curretn_plan['classes'];
+            $data['course_minutes'] = $curretn_plan['course_minutes'];
+            $data['students'] = $curretn_plan['students'];
+            $data['cloud_space'] = $curretn_plan['cloud_space'];
+            $data['date_added'] = strtotime(date('D, d-M-Y'));
+            $this->db->insert('purchased_plans', $data);
+        }
     }
 
     public function get_default_lesson($section_id)
