@@ -726,15 +726,35 @@ class Crud_model extends CI_Model
     }
 
     public function insert_live_session(){
-       $data['class_id'] = html_escape($this->input->post('live_session_class'));
-       $data['name'] = html_escape($this->input->post('session_name'));
-       $data['mints'] = html_escape($this->input->post('time'));
-       $data['date_added'] = strtotime(date('D, d-M-Y'));
-       $data['start_time'] = strtotime($this->input->post('start_session'));
-       $data['end_time'] = strtotime($this->input->post('start_session'));
-       $data['status'] = 1;
-       $this->db->insert('live_sessions', $data);
+       $class_id = $this->input->post('live_session_class');
+       $minutes = $this->input->post('time');
+       $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
+       $course = $this->db->get_where('course', array('id' => $current_class['course_id']))->row_array();
+       $course_instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
+       $institute = $this->user_model->get_single_institute($course_instructor['institute_id']);
+       $plan = $this->check_plan($institute['id'])->row_array();
+       $remaining_minutes = $plan['remaining_minutes'];
+       if ($remaining_minutes > 0 && $remaining_minutes >= $minutes) {
+           $data['class_id'] = html_escape($class_id);
+           $data['name'] = html_escape($this->input->post('session_name'));
+           $data['mints'] = html_escape($minutes);
+           $data['date_added'] = strtotime(date('D, d-M-Y'));
+           $data['start_time'] = strtotime($this->input->post('start_session'));
+           $data['end_time'] = strtotime($this->input->post('end_session'));
+           $data['status'] = 1;
+           $this->db->insert('live_sessions', $data);
+           $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
+           $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
+       }else{
+            $this->session->set_flashdata('error_message', get_phrase('you_have_only '.$remaining_minutes.' remaining_minutes'));
+       }
        
+    }
+
+    public function update_plan_minutes($plan_id, $remaining_minutes, $minutes){
+        $plan['remaining_minutes'] = $remaining_minutes - $minutes;
+        $this->db->where('id', $plan_id);
+        $this->db->update('purchased_plans', $plan);
     }
     
     function get_create_url($meeting_id, $name, $mins){
@@ -1883,26 +1903,29 @@ class Crud_model extends CI_Model
     public function purchased_plan($plan_id, $user_id){
         $plan_exist = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
         if(count($plan_exist) > 0){
-            $curretn_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
-            $data['plan_id'] = $curretn_plan['id'];
-            $data['courses'] = $curretn_plan['courses'] + $plan_exist['courses'];
-            $data['classes'] = $curretn_plan['classes'] + $plan_exist['classes'];
-            $data['course_minutes'] = $curretn_plan['course_minutes'] + $plan_exist['course_minutes'];
-            $data['students'] = $curretn_plan['students'] + $plan_exist['students'];
-            $data['cloud_space'] = $curretn_plan['cloud_space'] + $plan_exist['cloud_space'];
+            $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $data['plan_id'] = $current_plan['id'];
+            $data['courses'] = $current_plan['courses'] + $plan_exist['courses'];
+            $data['classes'] = $current_plan['classes'] + $plan_exist['classes'];
+            $data['course_minutes'] = $current_plan['course_minutes'] + $plan_exist['course_minutes'];
+            $data['remaining_minutes'] = $current_plan['remaining_minutes'] + $plan_exist['course_minutes'];
+            $data['students'] = $current_plan['students'] + $plan_exist['students'];
+            $data['cloud_space'] = $current_plan['cloud_space'] + $plan_exist['cloud_space'];
             $data['last_modified'] = strtotime(date('D, d-M-Y'));
+            $this->db->where('id', $plan_exist['id']);
             $this->db->update('purchased_plans', $data);
 
         }else{
-            $curretn_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
             $data['user_id'] = $user_id;
-            $data['plan_id'] = $curretn_plan['id'];
-            $data['name'] = $curretn_plan['name'];
-            $data['courses'] = $curretn_plan['courses'];
-            $data['classes'] = $curretn_plan['classes'];
-            $data['course_minutes'] = $curretn_plan['course_minutes'];
-            $data['students'] = $curretn_plan['students'];
-            $data['cloud_space'] = $curretn_plan['cloud_space'];
+            $data['plan_id'] = $current_plan['id'];
+            $data['name'] = $current_plan['name'];
+            $data['courses'] = $current_plan['courses'];
+            $data['classes'] = $current_plan['classes'];
+            $data['course_minutes'] = $current_plan['course_minutes'];
+            $data['remaining_minutes'] = $current_plan['course_minutes'];
+            $data['students'] = $current_plan['students'];
+            $data['cloud_space'] = $current_plan['cloud_space'];
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('purchased_plans', $data);
         }

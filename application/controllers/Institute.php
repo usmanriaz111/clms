@@ -41,7 +41,7 @@ class Institute extends CI_Controller {
         // $page_data['admin_url'] = $data['admin_url'];
         // $page_data['student_url'] = $data['student_url'];
         // $page_data['page_name'] = $data['page_name'];
-        $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
+        // $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
         // $this->load->view('backend/index.php', $page_data);
         redirect('institute/courses');
       }
