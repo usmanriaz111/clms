@@ -266,9 +266,10 @@ public function get_current_user_plan(){
       if ($plan_id > 0) {
           $user_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
           if ($plan_id == $user_plan['id']){
-              $current_date = date('D, d-M-Y');
-              $expire_date = gmdate('D, d-M-Y', strtotime("+1 month",$current_user['purchase_date']));
-              if($current_date > $expire_date){
+              $purchase_date = $current_user['purchase_date'];
+              $current_date =  date("Y-m-d H:i:s");
+              $expiry = date('Y-m-d H:i:s', strtotime($purchase_date. ' + 1 month'));
+              if($current_date > $expiry){
                 if($home == true){
                     $this->session->set_flashdata('flash_message', get_phrase('your_plan_is_expired, please_upgrade_with_new_plan'));
                     redirect(site_url('institute/purchase_plan'), 'refresh');
@@ -290,7 +291,7 @@ public function update_user_plan($user_id, $plan_id){
     $count_user = $this->db->get_where('users', array('id' => $user_id))->num_rows();
     if ($count_user == 1){
       $data['plan_id'] = $plan_id;
-      $data['purchase_date'] = strtotime(gmdate("Y-m-d H:i:s"));
+      $data['purchase_date'] = date("Y-m-d H:i:s");
       $this->db->where('id', $user_id);
       $this->db->update('users', $data);
       $this->session->set_userdata('plan_id', $plan_id);
@@ -397,6 +398,11 @@ public function update_user_plan($user_id, $plan_id){
 
     public function get_instructors(){
         $this->db->where('role_id', 4);
+            return $this->db->get('users')->result_array();
+    }
+
+    public function get_institutes(){
+        $this->db->where('role_id', 3);
             return $this->db->get('users')->result_array();
     }
 

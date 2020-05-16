@@ -1,17 +1,4 @@
-<style>
-   .preload { 
-    z-index: 99999;
-    width:100px;
-    height: 100px;
-    position: fixed;
-    top: 30%;
-    left: 45%;
-    opacity: 1!important;
-}
-</style>
-<div class="preload">
-<img src="http://i.imgur.com/KUJoe.gif">
-</div>
+
 <form class="required-form" action="<?php echo site_url('admin/live_session/add'); ?>" method="post" enctype="multipart/form-data">
    <div class="row">
       <div class="col-xl-12">
@@ -35,8 +22,12 @@
                   <input class="form-control" type="number" name="time" id="time" required>
                </div>
                <div class="form-group">
-               <label for="cloud_space"><?php echo get_phrase('date_time'); ?></label>
+               <label for="cloud_space"><?php echo get_phrase('start_time'); ?></label>
                <input type="text" id="datepicker" name="start_session" class="form-control" required>
+               </div>
+               <div class="form-group">
+               <label for="cloud_space"><?php echo get_phrase('end_time'); ?></label>
+               <input type="text" id="datepicker2" name="end_session" class="form-control" required>
                </div>
                <div class="text-center">
                   <button class = "btn btn-success" id="session_create" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>
@@ -58,6 +49,11 @@
     });
     });
    document.getElementById("datepicker").flatpickr({
+    enableTime: true,
+    dateFormat: "Y-m-d H:i:s",
+    altInput: true
+});
+document.getElementById("datepicker2").flatpickr({
     enableTime: true,
     dateFormat: "Y-m-d H:i:s",
     altInput: true

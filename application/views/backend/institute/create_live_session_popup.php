@@ -35,8 +35,12 @@
                   <input class="form-control" type="number" name="time" id="time" required>
                </div>
                <div class="form-group">
-               <label for="cloud_space"><?php echo get_phrase('date_time'); ?></label>
+               <label for="cloud_space"><?php echo get_phrase('start_time'); ?></label>
                <input type="text" id="datepicker" name="start_session" class="form-control" required>
+               </div>
+               <div class="form-group">
+               <label for="cloud_space"><?php echo get_phrase('end_time'); ?></label>
+               <input type="text" id="datepicker2" name="end_session" class="form-control" required>
                </div>
                <div class="text-center">
                   <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>
@@ -57,6 +61,11 @@
     });
     });
    document.getElementById("datepicker").flatpickr({
+    enableTime: true,
+    dateFormat: "Y-m-d H:i:s",
+    altInput: true
+});
+document.getElementById("datepicker2").flatpickr({
     enableTime: true,
     dateFormat: "Y-m-d H:i:s",
     altInput: true

@@ -5,6 +5,7 @@ if (file_exists("application/aws-module/aws-autoloader.php")) {
     include APPPATH . 'aws-module/aws-autoloader.php';
 }
 require 'upload-to-aws.php';
+require 'aws-ec2-client.php';
 class Crud_model extends CI_Model
 {
 
@@ -24,7 +25,7 @@ class Crud_model extends CI_Model
        $data['url'] = html_escape($this->input->post('aws_url'));
        $data['bucket_name'] = html_escape($this->input->post('bucket_name'));
        $data['user_id'] = $user_id;
-       $data_class['date_added'] = strtotime(date('D, d-M-Y'));
+       $data['date_added'] = strtotime(date('D, d-M-Y'));
        return $this->db->insert('s3_settings', $data);
        $this->session->set_flashdata('flash_message', get_phrase('s3_keys_successfully_added'));
     }
@@ -185,7 +186,7 @@ class Crud_model extends CI_Model
             }
             if ($institute_id > 0){
                 $institute = $this->user_model->get_single_institute($institute_id);
-                $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
+                $plan = $this->check_plan($institute['id'])->row_array();
 
                 $institute_courses_count = $this->count_institute_courses($institute_id);
                 $course_ids = array();
@@ -723,17 +724,80 @@ class Crud_model extends CI_Model
             return $this->db->get('lesson');
         }
     }
-      
-    public function create_live_session(){
-       $logged_in_user_role = strtolower($this->session->userdata('role'));
-       $data['class_id'] = html_escape($this->input->post('live_session_class'));
-       $data['name'] = html_escape($this->input->post('session_name'));
-       $data['mints'] = html_escape($this->input->post('time'));
-       $data['date_added'] = strtotime(date('D, d-M-Y'));
-       $data['start_session'] = strtotime($this->input->post('start_session'));
-       $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
-       $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
-       $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=ap&redirect=true&checksum=38a15d8d41739cc42c3ceedb85345a54ce4d826c';
+
+    public function insert_live_session(){
+       $class_id = $this->input->post('live_session_class');
+       $minutes = $this->input->post('time');
+       $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
+       $course = $this->db->get_where('course', array('id' => $current_class['course_id']))->row_array();
+       $course_instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
+       $institute = $this->user_model->get_single_institute($course_instructor['institute_id']);
+       $plan = $this->check_plan($institute['id'])->row_array();
+       $remaining_minutes = $plan['remaining_minutes'];
+       if ($remaining_minutes > 0 && $remaining_minutes >= $minutes) {
+           $data['class_id'] = html_escape($class_id);
+           $data['name'] = html_escape($this->input->post('session_name'));
+           $data['mints'] = html_escape($minutes);
+           $data['date_added'] = strtotime(date('D, d-M-Y'));
+           $data['start_time'] = strtotime($this->input->post('start_session'));
+           $data['end_time'] = strtotime($this->input->post('end_session'));
+           $data['status'] = 1;
+           $this->db->insert('live_sessions', $data);
+           $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
+           $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
+       }else{
+            $this->session->set_flashdata('error_message', get_phrase('you_have_only '.$remaining_minutes.' remaining_minutes'));
+       }
+       
+    }
+
+    public function update_plan_minutes($plan_id, $remaining_minutes, $minutes){
+        $plan['remaining_minutes'] = $remaining_minutes - $minutes;
+        $this->db->where('id', $plan_id);
+        $this->db->update('purchased_plans', $plan);
+    }
+    
+    function get_create_url($meeting_id, $name, $mins){
+        $query_str = 'name='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins;
+        $query_secret = 'createname='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins.$_ENV["shared_secret"];
+        $sh1_checksum = sha1($query_secret);
+        $name_str = 'https://dynamiclogicltd.info/bigbluebutton/api/create?'.$query_str.'&checksum='.$sh1_checksum;
+        return $name_str;
+        // $name='Test+Meeting&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444';
+    } 
+    function get_moderator_url($meeting_id,$current_instructor_name){
+        
+        $name = 'fullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=333444&redirect=true';
+        $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=333444&redirect=true'.$_ENV["shared_secret"];
+        $sh1_checksum = sha1($query_secret);
+        $name = 'https://dynamiclogicltd.info/bigbluebutton/api/join?'.$name.'&checksum='.$sh1_checksum;
+        return $name;
+    } 
+    function get_student_url($meeting_id,$current_instructor_name){
+        $name = 'fullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true';
+        $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true'.$_ENV["shared_secret"];
+        // $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true'.$_ENV["shared_secret"];
+        $sh1_checksum = sha1($query_secret);
+        $name = 'https://dynamiclogicltd.info/bigbluebutton/api/join?'.$name.'&checksum='.$sh1_checksum;
+        return $name;
+    }
+    public function create_live_session($current_instructor_name, $student_list, $live_session){
+       
+       $meeting_id = (rand(100,100000));
+       $url = $this->get_create_url($meeting_id,'DynamicLogic', $live_session['mins']+15);
+       $institute_url =$this->get_moderator_url($meeting_id, $current_instructor_name);
+       $student_urls = [];
+       foreach ($student_list as $student) 
+       {
+           
+            $student_url =$this->get_student_url($meeting_id, $student['first_name']);  
+            array_push($student_urls, $student_url);
+       }
+
+    
+    //    $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
+    //    $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
+    //    $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=ap&redirect=true&checksum=38a15d8d41739cc42c3ceedb85345a54ce4d826c';
        $timeout = 10;
        $ch = curl_init();
        curl_setopt ( $ch, CURLOPT_URL, $url );
@@ -750,18 +814,17 @@ class Crud_model extends CI_Model
          $response = curl_exec($ch);
          $xml = simplexml_load_string($response);
          if($xml->returncode == 'SUCCESS'){
-            $this->db->insert('live_sessions', $data);
+            // $this->db->insert('live_sessions', $data);
             $page_data['page_name'] = 'live_session_url_popup';
             $page_data['admin_url'] = $institute_url;
-            $page_data['student_url'] = $student_url;
-            $page_data['role'] = $logged_in_user_role;
+            $page_data['student_urls'] = $student_urls;
+            // $page_data['role'] = $logged_in_user_role;
             return $page_data;
          }else{
-            $this->session->set_flashdata('error_message', get_phrase('session_is_not_created_please_contact_with_administration'));
+            return -1;
          }
          curl_close($ch);
        } else {
-        $this->session->set_flashdata('error_message', get_phrase('server_is_down_please_contact_with_administration'));
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -769,7 +832,7 @@ class Crud_model extends CI_Model
          $xml = simplexml_load_string($response);
          echo $xml->internalMeetingID;
          curl_close($ch);
-         redirect($logged_in_user_role.'/courses');
+         return -1;
        }
     }
     public function add_course($param1 = "", $user_param = 0)
@@ -870,6 +933,10 @@ class Crud_model extends CI_Model
         }
     }
 
+    public function check_plan($user_id){
+        return $this->db->get_where('purchased_plans', array('user_id' => $user_id));
+    }
+
     public function check_institute_course_limit($institute_id=''){
          if ($this->session->userdata('role_name') == 'admin' && $institute_id ==''){
            $this->session->set_flashdata('error_message', get_phrase('please_choose_the_institute'));
@@ -879,8 +946,8 @@ class Crud_model extends CI_Model
                $institute_id = $this->session->userdata('user_id');
            }
            $institute = $this->user_model->get_single_institute($institute_id);
-           $plan = $this->user_model->get_plan_by_id($institute['plan_id'])->row_array();
-           if($institute['plan_id'] == $plan['id']){
+           $plan = $this->check_plan($institute['id'])->row_array();
+           if($plan){
              $institute_id = $institute['id'];
              if($institute_id > 0){
                  $institute_courses_count = $this->count_institute_courses($institute_id);
@@ -918,7 +985,7 @@ class Crud_model extends CI_Model
             $institute_id = $institute['id'];
             if($institute_id > 0){
                 $count_sizes = 0.0;
-                $institute_courses_count = $this->count_institute_courses($institute_id)->result_array();
+                $institute_courses_count = $this->count_institute_courses($institute_id);
                 foreach ($institute_courses_count as $row) {
                     $count_sizes += $row['video_size'];
                 }
@@ -1825,7 +1892,39 @@ class Crud_model extends CI_Model
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('payment', $data);
             $this->user_model->update_user_plan($user_id, $plan_id);
+            $this->purchased_plan($plan_id, $user_id);
           }
+    }
+
+    public function purchased_plan($plan_id, $user_id){
+        $plan_exist = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
+        if(count($plan_exist) > 0){
+            $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $data['plan_id'] = $current_plan['id'];
+            $data['courses'] = $current_plan['courses'] + $plan_exist['courses'];
+            $data['classes'] = $current_plan['classes'] + $plan_exist['classes'];
+            $data['course_minutes'] = $current_plan['course_minutes'] + $plan_exist['course_minutes'];
+            $data['remaining_minutes'] = $current_plan['remaining_minutes'] + $plan_exist['course_minutes'];
+            $data['students'] = $current_plan['students'] + $plan_exist['students'];
+            $data['cloud_space'] = $current_plan['cloud_space'] + $plan_exist['cloud_space'];
+            $data['last_modified'] = strtotime(date('D, d-M-Y'));
+            $this->db->where('id', $plan_exist['id']);
+            $this->db->update('purchased_plans', $data);
+
+        }else{
+            $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $data['user_id'] = $user_id;
+            $data['plan_id'] = $current_plan['id'];
+            $data['name'] = $current_plan['name'];
+            $data['courses'] = $current_plan['courses'];
+            $data['classes'] = $current_plan['classes'];
+            $data['course_minutes'] = $current_plan['course_minutes'];
+            $data['remaining_minutes'] = $current_plan['course_minutes'];
+            $data['students'] = $current_plan['students'];
+            $data['cloud_space'] = $current_plan['cloud_space'];
+            $data['date_added'] = strtotime(date('D, d-M-Y'));
+            $this->db->insert('purchased_plans', $data);
+        }
     }
 
     public function get_default_lesson($section_id)
@@ -2163,7 +2262,7 @@ class Crud_model extends CI_Model
         }
     }
 
-    public function filter_course_for_backend($category_id, $instructor_id, $price, $status)
+    public function filter_course_for_backend($category_id, $user_id, $price, $status)
     {
         if ($category_id != "all") {
             $this->db->where('sub_category_id', $category_id);
@@ -2177,8 +2276,14 @@ class Crud_model extends CI_Model
             }
         }
 
-        if ($instructor_id != "all") {
-            $this->db->where('user_id', $instructor_id);
+        if ($user_id != "all") {
+            $user_role = $this->session->userdata('user_id');
+            if($user_role == 'admin'){
+                $this->db->where('institute_id', $user_id);
+            }else{
+                $this->db->where('user_id', $user_id);
+            }
+            
         }
 
         if ($status != "all") {

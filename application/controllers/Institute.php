@@ -32,13 +32,18 @@ class Institute extends CI_Controller {
     }
 
     public function live_session($param1='', $param2=''){
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+      
       if($param1 == "add"){
-          $data = $this->crud_model->create_live_session();
-          $page_data['admin_url'] = $data['admin_url'];
-          $page_data['student_url'] = $data['student_url'];
-          $page_data['page_name'] = $data['page_name'];
-          $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
-          $this->load->view('backend/index.php', $page_data);
+        $data = $this->crud_model->insert_live_session();
+        // $page_data['admin_url'] = $data['admin_url'];
+        // $page_data['student_url'] = $data['student_url'];
+        // $page_data['page_name'] = $data['page_name'];
+        // $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
+        // $this->load->view('backend/index.php', $page_data);
+        redirect('institute/courses');
       }
   }
 
@@ -48,7 +53,7 @@ class Institute extends CI_Controller {
             redirect(site_url('login'), 'refresh');
         }
         $this->crud_model->change_course_type($updated_type, $course_id);
-        $this->session->set_flashdata('flash_message', get_phrase('course_type_updated'));
+        $this->session->set_flashdata('flash_message', get_phrase('course_'.$updated_type.'_updated'));
         redirect('institute/courses');
     }
 
@@ -62,6 +67,7 @@ class Institute extends CI_Controller {
           $page_data['page_title'] = get_phrase('student_add');
           $this->load->view('backend/index', $page_data);
           }elseif($param2 == 'users'){
+              $page_data['class_id'] = $param1;
               $page_data['page_name'] = 'users';
               $page_data['page_title'] = get_phrase('students');
               $page_data['users'] = $this->user_model->get_class_enrolled_students($param1);
@@ -70,29 +76,29 @@ class Institute extends CI_Controller {
       }
   }
 
-    public function amazons3_setting($param1='', $param2=''){
-      if ($this->session->userdata('user_login') != true) {
-        redirect(site_url('login'), 'refresh');
-    }
-      if($param1 == "add"){
-          $this->crud_model->add_s3_settings();
-      }elseif($param1 == "edit"){
-          $this->crud_model->edit_s3_settings($param2);
-      }
-      redirect(site_url('institute/amazons3_setting_form/add_form'), 'refresh');
+  //   public function amazons3_setting($param1='', $param2=''){
+  //     if ($this->session->userdata('user_login') != true) {
+  //       redirect(site_url('login'), 'refresh');
+  //   }
+  //     if($param1 == "add"){
+  //         $this->crud_model->add_s3_settings();
+  //     }elseif($param1 == "edit"){
+  //         $this->crud_model->edit_s3_settings($param2);
+  //     }
+  //     redirect(site_url('institute/amazons3_setting_form/add_form'), 'refresh');
       
-  }
+  // }
 
-  public function amazons3_setting_form($param1='', $param2=''){
-    if ($this->session->userdata('user_login') != true) {
-      redirect(site_url('login'), 'refresh');
-  }
-      if($param1 == "add_form"){
-          $page_data['page_name'] = 'amazons3_setting';
-          $page_data['page_title'] = get_phrase('s3_setting');
-          $this->load->view('backend/index.php', $page_data);
-      }
-  }
+  // public function amazons3_setting_form($param1='', $param2=''){
+  //   if ($this->session->userdata('user_login') != true) {
+  //     redirect(site_url('login'), 'refresh');
+  // }
+  //     if($param1 == "add_form"){
+  //         $page_data['page_name'] = 'amazons3_setting';
+  //         $page_data['page_title'] = get_phrase('s3_setting');
+  //         $this->load->view('backend/index.php', $page_data);
+  //     }
+  // }
 
     public function purchase_plan(){
       if ($this->session->userdata('user_login') != true) {
@@ -124,14 +130,14 @@ class Institute extends CI_Controller {
 
             //checking price
             if($this->session->userdata('plan_price') == $this->input->post('total_price_of_checking_out')):
-                $total_price_of_checking_out = $this->input->post('plan_price');
+                $total_price_of_checking_out = $this->input->post('total_price_of_checking_out');
             else:
-                $total_price_of_checking_out = $this->session->userdata('plan_price');
+                $total_price_of_checking_out = $this->input->post('total_price_of_checking_out');
             endif;
             $page_data['payment_request'] = $payment_request;
-            $page_data['user_details']    = $this->user_model->get_institute($this->session->userdata('user_id'));
+            $page_data['user_details']    = $this->user_model->get_single_institute($this->session->userdata('user_id'));
             $page_data['amount_to_pay']   = $total_price_of_checking_out;
-            $this->load->view('frontend/'.get_frontend_settings('theme').'/paypal_checkout', $page_data);
+            $this->load->view('backend/institute/paypal_checkout', $page_data);
         }
 
         // PAYPAL CHECKOUT ACTIONS

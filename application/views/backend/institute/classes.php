@@ -40,16 +40,18 @@
                             <td><?php echo $key+1; ?></td>
                             <td><strong><a href="<?php echo site_url('institute/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase($cls['name']); ?></a></strong></td>
                             <td><?php echo $course['title']; ?></td>
-                            <td><?php echo $enrolled_students.' '.'<a href="'.site_url('institute/class_id/'.$cls['id'].'/users').'"/><span class="mdi mdi-24px mdi-eye"></span></a>'; ?>
-                            <a href = "<?php echo site_url('institute/class_id/'.$cls['id'].'/add_student'); ?>" class=""><span class="mdi mdi-24px mdi-account-plus"></span></a>
-                            <a href="<?php echo site_url('Institute/import_students/class_id/'.$cls['id']); ?>"><span class="mdi mdi-24px mdi-file-import"></span></a>
+                            <td><?php echo $enrolled_students?>
+                            <!-- <a href = "<?php echo site_url('institute/class_id/'.$cls['id'].'/add_student'); ?>" class=""><span class="mdi mdi-24px mdi-account-plus"></span></a> -->
+                            <!-- <a href="<?php echo site_url('Institute/import_students/class_id/'.$cls['id']); ?>"><span class="mdi mdi-24px mdi-file-import"></span></a> -->
                         </td>
+                        <!-- <td><a href = "<?php echo site_url('institute/class_id/'.$cls['id'].'/users'); ?>" class="">View Students</a></td> -->
                             <td>
                                   <div class="dropright dropright">
                                     <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="mdi mdi-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"     href = "<?php echo site_url('institute/class_id/'.$cls['id'].'/users'); ?>" class="">View Students</a></li>
                                         <li><a class="dropdown-item" href="<?php echo site_url('Institute/import_students/class_id/'.$cls['id']); ?>"><?php echo get_phrase('import_students'); ?></a></li>
                                         <li><a class="dropdown-item" href="<?php echo site_url('institute/class_id/'.$cls['id'].'/add_student'); ?>"><?php echo get_phrase('add_student'); ?></a></li>
                                         <li><a class="dropdown-item" href="<?php echo site_url('institute/class_form/edit_class_form/'.$cls['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
