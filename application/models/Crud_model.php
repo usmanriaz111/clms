@@ -765,11 +765,10 @@ class Crud_model extends CI_Model
             // $page_data['role'] = $logged_in_user_role;
             return $page_data;
          }else{
-            $this->session->set_flashdata('error_message', get_phrase('session_is_not_created_please_contact_with_administration'));
+            return -1;
          }
          curl_close($ch);
        } else {
-        $this->session->set_flashdata('error_message', get_phrase('server_is_down_please_contact_with_administration'));
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -777,6 +776,7 @@ class Crud_model extends CI_Model
          $xml = simplexml_load_string($response);
          echo $xml->internalMeetingID;
          curl_close($ch);
+         return -1;
        }
     }
     public function add_course($param1 = "", $user_param = 0)
