@@ -192,6 +192,7 @@ class Institute extends CI_Controller {
         // STRIPE CHECKOUT ACTIONS
         public function stripe_payment($user_id = "", $amount_paid = "", $payment_request_mobile = "") {
 
+          
             $token_id = $this->input->post('stripeToken');
             $stripe_keys = get_settings('stripe_keys');
             $values = json_decode($stripe_keys);
