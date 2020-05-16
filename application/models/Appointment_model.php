@@ -24,7 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             ];
             $this->db->where('id', $appointment_id);
             $this->db->update('live_sessions', $data);
-          return $this->db->where('id', $appointment_id)->update('live_sessions', array('status' => 2));
+        //   return $this->db->where('id', $appointment_id)->update('live_sessions', array('status' => 2));
         }
         public function mark_continue($appointment_id)
         {
@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $this->db->where('id', $appointment_id);
             $this->db->update('live_sessions', $data);
             
-          return $this->db->where('id', $appointment_id)->update('live_sessions', array('status' => 1));
+        //   return $this->db->where('id', $appointment_id)->update('live_sessions', array('status' => 1));
         }
     }
 ?>
