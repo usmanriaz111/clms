@@ -246,7 +246,9 @@ CREATE TABLE `live_sessions` (
   `end_time` int(11) DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
+  `start_time` int(22) DEFAULT NULL,
+  `end_time` int(22) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
