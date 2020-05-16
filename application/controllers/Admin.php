@@ -1040,7 +1040,7 @@ class Admin extends CI_Controller
         $institute_name = $institute['first_name'] . '_'.$institute['last_name'];       
         if ($param1 == 'add') {
             $this->crud_model->add_lesson( $institute_name);
-            $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
+            // $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
             redirect('admin/course_form/course_edit/' . $course_id);
         } elseif ($param1 == 'edit') {
             $this->crud_model->edit_lesson($param2,  $institute_name);

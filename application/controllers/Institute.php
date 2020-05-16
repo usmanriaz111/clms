@@ -624,7 +624,6 @@ class Institute extends CI_Controller {
         if ($param1 == 'add') {
             // $this->is_the_course_belongs_to_current_instructor($course_id);
             $this->crud_model->add_lesson();
-            $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
             redirect('institute/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'edit') {

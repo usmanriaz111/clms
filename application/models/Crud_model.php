@@ -1427,46 +1427,58 @@ class Crud_model extends CI_Model
                     if ($video_size > 1024){
                     $video_kb_size = round($video_size / 1024, 4);
                     }
+
+                    $course_instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
+                    $institute = $this->user_model->get_single_institute($course_instructor['institute_id']);
+                    $plan = $this->check_plan($institute['id'])->row_array();
+                    $cloud_space = $plan['remaining_cloud_space'];
+                    if ($cloud_space >= $video_kb_size){
+
+                          // SET MAXIMUM EXECUTION TIME 600
+                            ini_set('max_execution_time', '600');
                 
-                // SET MAXIMUM EXECUTION TIME 600
-                ini_set('max_execution_time', '600');
-    
-                $fileName = $_FILES['video_file_for_amazon_s3']['name'];
-                $tmp = explode('.', $fileName);
-                $fileExtension = strtoupper(end($tmp));
-                $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
-                if (!in_array($fileExtension, $video_extensions)) {
-                    $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
-                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
-                }
-    
-                if ($this->input->post('amazon_s3_duration') == "") {
-                    $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_duration'));
-                    redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
-                }
-    
-                $tmpfile = $_FILES['video_file_for_amazon_s3'];
-                $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
-                $s3_model = new S3_model();
-                $s3= $s3_model->create_s3_object();
-                $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-                $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension,  $institute_name);
-                $data['video_url'] = $result['ObjectURL'];
-                $data['video_type'] = 'amazon';
-                $data['video_size'] = $video_kb_size;
-                $data['lesson_type'] = 'video';
-                $data['attachment_type'] = 'url';
-    
-                $duration_formatter = explode(':', $this->input->post('amazon_s3_duration'));
-                $hour = sprintf('%02d', $duration_formatter[0]);
-                $min = sprintf('%02d', $duration_formatter[1]);
-                $sec = sprintf('%02d', $duration_formatter[2]);
-                $data['duration'] = $hour . ':' . $min . ':' . $sec;
-    
-                $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
-                $data['video_type_for_mobile_application'] = "html5";
-                $data['video_url_for_mobile_application'] = $result['ObjectURL'];
-    
+                            $fileName = $_FILES['video_file_for_amazon_s3']['name'];
+                            $tmp = explode('.', $fileName);
+                            $fileExtension = strtoupper(end($tmp));
+                            $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
+                            if (!in_array($fileExtension, $video_extensions)) {
+                                $this->session->set_flashdata('error_message', get_phrase('please_select_valid_video_file.'));
+                                redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
+                            }
+                
+                            if ($this->input->post('amazon_s3_duration') == "") {
+                                $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_duration'));
+                                redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
+                            }
+                
+                            $tmpfile = $_FILES['video_file_for_amazon_s3'];
+                            $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
+                            $s3_model = new S3_model();
+                            $s3= $s3_model->create_s3_object();
+                            $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
+                            $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension,  $institute_name);
+                            $data['video_url'] = $result['ObjectURL'];
+                            $data['video_type'] = 'amazon';
+                            $data['video_size'] = $video_kb_size;
+                            $data['lesson_type'] = 'video';
+                            $data['attachment_type'] = 'url';
+                
+                            $duration_formatter = explode(':', $this->input->post('amazon_s3_duration'));
+                            $hour = sprintf('%02d', $duration_formatter[0]);
+                            $min = sprintf('%02d', $duration_formatter[1]);
+                            $sec = sprintf('%02d', $duration_formatter[2]);
+                            $data['duration'] = $hour . ':' . $min . ':' . $sec;
+                
+                            $data['duration_for_mobile_application'] = $hour . ':' . $min . ':' . $sec;
+                            $data['video_type_for_mobile_application'] = "html5";
+                            $data['video_url_for_mobile_application'] = $result['ObjectURL'];
+                            $this->update_plan_space($plan['id'], $cloud_space, $video_kb_size);
+
+                    }else{
+                        $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_more_cloud_space'));
+                        return false;
+                    }
+
                 }
             }
             
@@ -1520,6 +1532,13 @@ class Crud_model extends CI_Model
             }
             move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $inserted_id . '.jpg');
         }
+        $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
+    }
+
+    public function update_plan_space($plan_id, $remaining_space, $reduce_space){
+        $plan['remaining_cloud_space'] = $remaining_space - $reduce_space;
+        $this->db->where('id', $plan_id);
+        $this->db->update('purchased_plans', $plan);
     }
 
     public function edit_lesson($lesson_id,  $institute_name = '')
@@ -1900,19 +1919,24 @@ class Crud_model extends CI_Model
         $plan_exist = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
         if(count($plan_exist) > 0){
             $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $current_cloud_space = $current_plan['cloud_space'] * 1024 * 1024;
+            $existing_cloud_space = $plan_exist['cloud_space'];
+            $remaining_cloud_space = $plan_exist['remaining_cloud_space'];
             $data['plan_id'] = $current_plan['id'];
             $data['courses'] = $current_plan['courses'] + $plan_exist['courses'];
             $data['classes'] = $current_plan['classes'] + $plan_exist['classes'];
             $data['course_minutes'] = $current_plan['course_minutes'] + $plan_exist['course_minutes'];
             $data['remaining_minutes'] = $current_plan['remaining_minutes'] + $plan_exist['course_minutes'];
             $data['students'] = $current_plan['students'] + $plan_exist['students'];
-            $data['cloud_space'] = $current_plan['cloud_space'] + $plan_exist['cloud_space'];
+            $data['cloud_space'] = $current_cloud_space + $existing_cloud_space;
+            $data['remaining_cloud_space'] = $remaining_cloud_space + $current_cloud_space;
             $data['last_modified'] = strtotime(date('D, d-M-Y'));
             $this->db->where('id', $plan_exist['id']);
             $this->db->update('purchased_plans', $data);
 
         }else{
             $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
+            $cloud_space = ($current_plan['cloud_space'] * 1024 * 1024);;
             $data['user_id'] = $user_id;
             $data['plan_id'] = $current_plan['id'];
             $data['name'] = $current_plan['name'];
@@ -1921,7 +1945,8 @@ class Crud_model extends CI_Model
             $data['course_minutes'] = $current_plan['course_minutes'];
             $data['remaining_minutes'] = $current_plan['course_minutes'];
             $data['students'] = $current_plan['students'];
-            $data['cloud_space'] = $current_plan['cloud_space'];
+            $data['cloud_space'] = $cloud_space;
+            $data['remaining_cloud_space'] = $cloud_space;
             $data['date_added'] = strtotime(date('D, d-M-Y'));
             $this->db->insert('purchased_plans', $data);
         }

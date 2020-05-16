@@ -277,6 +277,7 @@ CREATE TABLE `purchased_plans` (
   `remaining_minutes` decimal(65) NULL,
   `students` int(11) NULL,
   `cloud_space` decimal(65) NULL,
+  `remaining_cloud_space` decimal(65) NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
