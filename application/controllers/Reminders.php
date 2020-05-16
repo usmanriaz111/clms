@@ -66,11 +66,12 @@
                           
                             $mail_body = 'your live session is going to start in '.gmdate("Y-m-d\TH:i:s\Z",$live_session['start_time']).'and end at '.gmdate("Y-m-d\TH:i:s\Z",$live_session['end_time']);
                             $mail_subject = 'live sessions start links  Teacher Url: '.$data['admin_url'];
-                            $this->email_model->send_mail_for_live_session_confirmation($class_student[i]['email'], $mail_body,$mail_subject);
-                        }                            
+                            $this->email_model->send_mail_for_live_session_confirmation($class_students[$i]['email'], $mail_body,$mail_subject);
+                        }     
+                                            
                         $mail_body = 'your live session is going to start in '.gmdate("Y-m-d\TH:i:s\Z",$live_session['start_time']).'and end at '.gmdate("Y-m-d\TH:i:s\Z",$live_session['end_time']);
                         $mail_subject = 'live sessions start links <br />   Url: '.$data['student_urls'][i];
-                        $this->email_model->send_mail_for_live_session_confirmation($class_student[i]['email'], $mail_body,$mail_subject);
+                        $this->email_model->send_mail_for_live_session_confirmation($class_students[$i]['email'], $mail_body,$mail_subject);
                         $this->Appointment_model->mark_continue($live_session['id']);
                                         
                       
