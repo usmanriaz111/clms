@@ -130,14 +130,14 @@ class Institute extends CI_Controller {
 
             //checking price
             if($this->session->userdata('plan_price') == $this->input->post('total_price_of_checking_out')):
-                $total_price_of_checking_out = $this->input->post('plan_price');
+                $total_price_of_checking_out = $this->input->post('total_price_of_checking_out');
             else:
-                $total_price_of_checking_out = $this->session->userdata('plan_price');
+                $total_price_of_checking_out = $this->input->post('total_price_of_checking_out');
             endif;
             $page_data['payment_request'] = $payment_request;
-            $page_data['user_details']    = $this->user_model->get_institute($this->session->userdata('user_id'));
+            $page_data['user_details']    = $this->user_model->get_single_institute($this->session->userdata('user_id'));
             $page_data['amount_to_pay']   = $total_price_of_checking_out;
-            $this->load->view('frontend/'.get_frontend_settings('theme').'/paypal_checkout', $page_data);
+            $this->load->view('backend/institute/paypal_checkout', $page_data);
         }
 
         // PAYPAL CHECKOUT ACTIONS
