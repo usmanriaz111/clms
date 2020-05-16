@@ -9,7 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         {  
             // date_default_timezone_set("Asia/Calcutta");
             $start_time=strtotime("now");
-            $end_time=$start_time+3600;    
+            $end_time=$start_time+950;    
             $this->db->where('start_time >=', $start_time);
             $this->db->where('start_time <=', $end_time);
             $this->db->where('status !=', 2);
@@ -17,9 +17,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
             return $result; 
         }
      
-        public function mark_reminded($appointment_id)
+        public function mark_end($appointment_id)
         {
+            $data = [
+                'status' => 2,
+            ];
+            $this->db->where('id', $appointment_id);
+            $this->db->update('live_sessions', $data);
           return $this->db->where('id', $appointment_id)->update('live_sessions', array('status' => 2));
+        }
+        public function mark_continue($appointment_id)
+        {
+            $data = [
+                'status' => 1,
+            ];
+            $this->db->where('id', $appointment_id);
+            $this->db->update('live_sessions', $data);
+            
+          return $this->db->where('id', $appointment_id)->update('live_sessions', array('status' => 1));
         }
     }
 ?>
