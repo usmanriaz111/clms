@@ -756,6 +756,7 @@ class Crud_model extends CI_Model
     function get_student_url($meeting_id,$current_instructor_name){
         $name = 'fullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true';
         $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true'.$_ENV["shared_secret"];
+        // $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true'.$_ENV["shared_secret"];
         $sh1_checksum = sha1($query_secret);
         $name = 'https://dynamiclogicltd.info/bigbluebutton/api/join?'.$name.'&checksum='.$sh1_checksum;
         return $name;
@@ -768,16 +769,11 @@ class Crud_model extends CI_Model
        $student_urls = [];
        foreach ($student_list as $student) 
        {
+           
             $student_url =$this->get_student_url($meeting_id, $student['first_name']);  
             array_push($student_urls, $student_url);
        }
-   
-    //    echo $url;
-    //    echo '............';
-    //    echo $institute_url;
-    //    echo '............';
-    //    echo $student_urls[0];
-    //    die; 
+
     
     //    $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
     //    $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
