@@ -39,6 +39,7 @@
 </form>
 
 <script>
+   var dateToday = new Date();
     $(document).ready(function() {
         initTimepicker();
         $('.preload').hide();
@@ -51,11 +52,13 @@
    document.getElementById("datepicker").flatpickr({
     enableTime: true,
     dateFormat: "Y-m-d H:i:s",
-    altInput: true
+    altInput: true,
+    minDate: dateToday,
 });
 document.getElementById("datepicker2").flatpickr({
     enableTime: true,
     dateFormat: "Y-m-d H:i:s",
-    altInput: true
+    altInput: true,
+    minDate: dateToday,
 });
 </script>

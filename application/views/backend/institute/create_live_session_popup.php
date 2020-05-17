@@ -60,14 +60,20 @@
             }
     });
     });
+    var dateToday = new Date();
    document.getElementById("datepicker").flatpickr({
     enableTime: true,
     dateFormat: "Y-m-d H:i:s",
-    altInput: true
+    altInput: true,
+    minDate: dateToday,
+    autoclose: true,
+    orientation: "bottom auto",
+   
 });
 document.getElementById("datepicker2").flatpickr({
     enableTime: true,
     dateFormat: "Y-m-d H:i:s",
-    altInput: true
+    altInput: true,
+    minDate: dateToday,
 });
 </script>

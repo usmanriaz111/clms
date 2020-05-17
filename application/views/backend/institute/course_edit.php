@@ -6,7 +6,6 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         <div class="card">
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo get_phrase('update').': '.$course_details['title']; ?></h4>
-                <a class="btn btn-outline-primary btn-rounded alignToTitle" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/create_live_session/<?php echo $course_id;?>/')"><?php echo get_phrase('Create Live Session'); ?></a>
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->
@@ -59,7 +58,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                     <li class="nav-item">
                                         <a href="#seo" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                             <i class="mdi mdi-tag-multiple mr-1"></i>
-                                            <span class="d-none d-sm-inline"><?php echo get_phrase('seo'); ?></span>
+                                            <span class="d-none d-sm-inline"><?php echo get_phrase('live_session'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -369,23 +368,8 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                             </div> <!-- end row -->
                         </div>
                         <div class="tab-pane" id="seo">
-                            <div class="row justify-content-center">
-                                <div class="col-xl-8">
-                                    <div class="form-group row mb-3">
-                                        <label class="col-md-2 col-form-label" for="website_keywords"><?php echo get_phrase('meta_keywords'); ?></label>
-                                        <div class="col-md-10">
-                                            <input type="text" class="form-control bootstrap-tag-input" id = "meta_keywords" name="meta_keywords" data-role="tagsinput" style="width: 100%;" value="<?php echo $course_details['meta_keywords']; ?>"/>
-                                        </div>
-                                    </div>
-                                </div> <!-- end col -->
-                                <div class="col-xl-8">
-                                    <div class="form-group row mb-3">
-                                        <label class="col-md-2 col-form-label" for="meta_description"><?php echo get_phrase('meta_description'); ?></label>
-                                        <div class="col-md-10">
-                                            <textarea name="meta_description" class="form-control"><?php echo $course_details['meta_description']; ?></textarea>
-                                        </div>
-                                    </div>
-                                </div> <!-- end col -->
+                            <div class="row justify-content-center mb-4">
+                            <a class="btn btn-outline-primary btn-rounded alignToTitle" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/create_live_session/<?php echo $course_id;?>/')"><?php echo get_phrase('Create Live Session'); ?></a>
                             </div> <!-- end row -->
                         </div>
                         <div class="tab-pane" id="finish">
