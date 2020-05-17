@@ -1923,11 +1923,11 @@ class Crud_model extends CI_Model
             $existing_cloud_space = $plan_exist['cloud_space'];
             $remaining_cloud_space = $plan_exist['remaining_cloud_space'];
             $data['plan_id'] = $current_plan['id'];
-            $data['courses'] = $current_plan['courses'] + $plan_exist['courses'];
-            $data['classes'] = $current_plan['classes'] + $plan_exist['classes'];
+            $data['courses'] = $current_plan['courses'];
+            $data['classes'] = $current_plan['classes'];
             $data['course_minutes'] = $current_plan['course_minutes'] + $plan_exist['course_minutes'];
             $data['remaining_minutes'] = $current_plan['remaining_minutes'] + $plan_exist['course_minutes'];
-            $data['students'] = $current_plan['students'] + $plan_exist['students'];
+            $data['students'] = $current_plan['students'];
             $data['cloud_space'] = $current_cloud_space + $existing_cloud_space;
             $data['remaining_cloud_space'] = $remaining_cloud_space + $current_cloud_space;
             $data['last_modified'] = strtotime(date('D, d-M-Y'));
@@ -1936,7 +1936,7 @@ class Crud_model extends CI_Model
 
         }else{
             $current_plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
-            $cloud_space = ($current_plan['cloud_space'] * 1024 * 1024);;
+            $cloud_space = ($current_plan['cloud_space'] * 1024 * 1024);
             $data['user_id'] = $user_id;
             $data['plan_id'] = $current_plan['id'];
             $data['name'] = $current_plan['name'];

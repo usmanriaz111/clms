@@ -33,8 +33,8 @@
                       <th><?php echo get_phrase('no_of_courses'); ?></th>
                       <th><?php echo get_phrase('no_of_classes'); ?></th>
                       <th><?php echo get_phrase('no_minutes_per_live_session_per_course'); ?></th>
-                      <th><?php echo get_phrase('no_of_students_per_course'); ?></th>
-                      <th><?php echo get_phrase('cloud_space_per_course'); ?></th>
+                      <th><?php echo get_phrase('no_of_students_per_class'); ?></th>
+                      <th><?php echo get_phrase('cloud_space'); ?></th>
                       <th><?php echo get_phrase('Institute'); ?></th>
                       <th><?php echo get_phrase('private'); ?></th>
                       <th><?php echo get_phrase('actions'); ?></th>
@@ -56,7 +56,7 @@
                             <td><?php echo $plan['classes']; ?></td>
                             <td><?php echo $plan['course_minutes']; ?></td>
                             <td><?php echo $plan['students']; ?></td>
-                            <td><?php echo $plan['cloud_space']; ?></td>
+                            <td><?php echo $plan['cloud_space'].'GB'; ?></td>
                             <td><?php
                             if($institute[0] == ''){
                               echo '-';

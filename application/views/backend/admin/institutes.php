@@ -31,12 +31,13 @@ echo $page_title; ?>
                       <th>#</th>
                       <th><?php echo get_phrase('photo'); ?></th>
                       <th><?php echo get_phrase('name'); ?></th>
-                      <th><?php echo get_phrase('email'); ?></th>
-                      <th><?php echo get_phrase('no_of_active_courses'); ?></th>
+                      <th><?php echo get_phrase('plan_name'); ?></th>
+                      <th><?php echo get_phrase('live_minutes'); ?></th>
+                      <th><?php echo get_phrase('cloud_space'); ?></th>
                       <th><?php echo get_phrase('no_of_classes'); ?></th>
                       <th><?php echo get_phrase('no_of_students'); ?></th>
-                      <th><?php echo get_phrase('no_of_instructor'); ?></th>
-                      <th><?php echo get_phrase('plan_name'); ?></th>
+                      <th><?php echo get_phrase('no_of_courses'); ?></th>
+                      <!-- <th><?php echo get_phrase('no_of_instructor'); ?></th> -->
                       <th><?php echo get_phrase('actions'); ?></th>
                     </tr>
                   </thead>
@@ -45,21 +46,28 @@ echo $page_title; ?>
                        foreach ($institutes as $key => $user): ?>
                         <tr>
                           <?php
-                          $plan = $this->crud_model->get_plan_by_id($user['plan_id']);
+                          $plan = $this->crud_model->check_plan($user['id'])->row_array();
+                          if($plan['remaining_cloud_space'])
+                          {
+                            $cloud_space = $plan['remaining_cloud_space'] /1024;
+                            $cloud_space = $cloud_space/1024;
+                          }
                           ?>
                             <td><?php echo $key+1; ?></td>
                             <td><img src="<?php echo $this->user_model->get_user_image_url($user['id']);?>" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail"></td>
                             <td><?php echo $user['first_name'].' '.$user['last_name']; ?></td>
-                            <td><?php echo $user['email']; ?></td>
-                            <td>
-                                <?php echo $this->user_model->get_number_of_active_courses_of_instructor($user['id']).' '.strtolower(get_phrase('active_courses')); ?>
-                            </td>
-                            <td>classes</td>
-                            <td>students</td>
-                            <td>
-                                <?php echo $this->user_model->get_number_of_instructor($user['id']).' '.strtolower(get_phrase('instructors')); ?>
-                            </td>
                             <td><?php echo $plan['name']; ?></td>
+                            <td><?php echo $plan['remaining_minutes']; ?></td>
+                            <td><?php echo $cloud_space .'GB'; ?></td>
+                            <td><?php echo $plan['classes']; ?></td>
+                            <td><?php echo $plan['students']; ?></td>
+                            <td>
+                                <!-- <?php echo $this->user_model->get_number_of_active_courses_of_instructor($user['id']).' '.strtolower(get_phrase('active_courses')); ?> -->
+                                <?php echo $plan['courses']; ?>
+                            </td>
+                            <!-- <td>
+                                <?php echo $this->user_model->get_number_of_instructor($user['id']).' '.strtolower(get_phrase('instructors')); ?>
+                            </td> -->
                             <td>
                                 <div class="dropright dropright">
                                   <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
