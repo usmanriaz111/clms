@@ -747,7 +747,7 @@ class Crud_model extends CI_Model
            $data['date_added'] = strtotime(date('D, d-M-Y'));
            $data['start_time'] = strtotime($this->input->post('start_session'));
            $data['end_time'] = strtotime($this->input->post('end_session'));
-           $data['status'] = 1;
+           $data['status'] = 0;
            $this->db->insert('live_sessions', $data);
            $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
            $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
