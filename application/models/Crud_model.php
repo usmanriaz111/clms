@@ -1854,6 +1854,19 @@ class Crud_model extends CI_Model
         }
     }
 
+    public function enrol_a_student($course_id = '', $user_id = '')
+    {
+        $data['course_id'] = $course_id;
+        $data['user_id'] = $user_id;
+        if ($this->db->get_where('enrol', $data)->num_rows() > 0) {
+            $this->session->set_flashdata('error_message', get_phrase('student_has_already_been_enrolled_to_this_class_course'));
+        } else {
+            $data['date_added'] = strtotime(date('D, d-M-Y'));
+            $this->db->insert('enrol', $data);
+            $this->session->set_flashdata('flash_message', get_phrase('student_has_been_enrolled_to_that_class_course'));
+        }
+    }
+
     public function enrol_to_free_course($course_id = "", $user_id = "")
     {
         $course_details = $this->get_course_by_id($course_id)->row_array();
