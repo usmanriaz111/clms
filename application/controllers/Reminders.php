@@ -27,8 +27,10 @@
         $live_sessions = $this->Appointment_model->get_days_appointments();
         if(!empty($live_sessions))
         {
+           
               // starting my ec2 server
             $ec2_server->switch_ec2_on_server();
+           
             sleep(10);
             foreach($live_sessions as $live_session)
             {
@@ -54,23 +56,24 @@
                            continue;
                        }
                         if($i == 0){
-                         
+                            
                             $this->db->where('id =', $live_session['class_id']);
                             $class = $this->db->get('classes')->result_array();
-                          
+                            
                             $this->db->where('id =', $class[0]['course_id']);
                             $course = $this->db->get('course')->result_array();
                            
                             $this->db->where('id =', $course[0]['instructor_id']);
                             $instructor = $this->db->get('users')->result_array();
                           
+                           
                             $mail_body = 'your live session is going to start in '.gmdate("Y-m-d\TH:i:s\Z",$live_session['start_time']).'and end at '.gmdate("Y-m-d\TH:i:s\Z",$live_session['end_time']);
                             $mail_subject = 'live sessions start links  Teacher Url: '.$data['admin_url'];
-                            $this->email_model->send_mail_for_live_session_confirmation($class_students[$i]['email'], $mail_body,$mail_subject);
+                            $this->email_model->send_mail_for_live_session_confirmation($instructor[0]['email'], $mail_body,$mail_subject);
                         }     
-                                            
+                                           
                         $mail_body = 'your live session is going to start in '.gmdate("Y-m-d\TH:i:s\Z",$live_session['start_time']).'and end at '.gmdate("Y-m-d\TH:i:s\Z",$live_session['end_time']);
-                        $mail_subject = 'live sessions start links <br />   Url: '.$data['student_urls'][i];
+                        $mail_subject = 'student live sessions start links <br />   Url: '.$data['student_urls'][$i];
                         $this->email_model->send_mail_for_live_session_confirmation($class_students[$i]['email'], $mail_body,$mail_subject);
                         $this->Appointment_model->mark_continue($live_session['id']);
                                         
