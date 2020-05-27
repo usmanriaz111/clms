@@ -21,6 +21,7 @@ class EC2_model {
         $result = $ec2->startInstances(array(
             'InstanceIds' => $instanceIds,
         ));
+        return true;
     }
     public function switch_ec2_off_server(){
         echo $_ENV["version"];

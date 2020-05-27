@@ -732,6 +732,9 @@ class Crud_model extends CI_Model
     }
 
     public function insert_live_session(){
+        $offset = 5 * 60 * 60;
+        $session_start_time = $this->input->post('start_session');
+        $session_end_time = $this->input->post('end_session');
        $class_id = $this->input->post('live_session_class');
        $minutes = $this->input->post('time');
        $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
@@ -745,8 +748,8 @@ class Crud_model extends CI_Model
            $data['name'] = html_escape($this->input->post('session_name'));
            $data['mints'] = html_escape($minutes);
            $data['date_added'] = strtotime(date('D, d-M-Y'));
-           $data['start_time'] = strtotime($this->input->post('start_session'));
-           $data['end_time'] = strtotime($this->input->post('end_session'));
+           $data['start_time'] = strtotime($session_start_time) - $offset;
+           $data['end_time'] = strtotime($session_end_time) - $offset;
            $data['status'] = 0;
            $this->db->insert('live_sessions', $data);
            $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
