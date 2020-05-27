@@ -771,12 +771,16 @@ class Crud_model extends CI_Model
         return $name_str;
         // $name='Test+Meeting&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444';
     } 
-    function get_moderator_url($meeting_id,$current_instructor_name){
-        
+    function get_moderator_url($meeting_id,$current_instructor_name, $live_session_id){
         $name = 'fullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=333444&redirect=true';
         $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=333444&redirect=true'.$_ENV["shared_secret"];
         $sh1_checksum = sha1($query_secret);
         $name = 'https://dynamiclogicltd.info/bigbluebutton/api/join?'.$name.'&checksum='.$sh1_checksum;
+
+        $data['checksum'] = $sh1_checksum;
+        $this->db->where('id', $live_session_id);
+        $this->db->update('live_sessions', $data);
+
         return $name;
     } 
     function get_student_url($meeting_id,$current_instructor_name){
@@ -790,8 +794,10 @@ class Crud_model extends CI_Model
     public function create_live_session($current_instructor_name, $student_list, $live_session){
        
        $meeting_id = (rand(100,100000));
+       $live_session_id = $live_session['id'];
+       $data['meeting_id'] = $meeting_id;
        $url = $this->get_create_url($meeting_id,'DynamicLogic', $live_session['mins']+15);
-       $institute_url =$this->get_moderator_url($meeting_id, $current_instructor_name);
+       $institute_url =$this->get_moderator_url($meeting_id, $current_instructor_name,  $live_session_id);
        $student_urls = [];
        foreach ($student_list as $student) 
        {
@@ -816,6 +822,10 @@ class Crud_model extends CI_Model
        if ( ( $http_code == "200" ) || ( $http_code == "302" ) ) {
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);
+
+        $this->db->where('id', $live_session_id);
+        $live_session=$this->db->update('live_sessions', $data);
+
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
          $response = curl_exec($ch);
          $xml = simplexml_load_string($response);

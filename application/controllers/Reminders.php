@@ -53,7 +53,21 @@
                        $current_time = strtotime("now"); 
                        if ($live_session['end_time'] <=  $current_time){
                            $this->Appointment_model->mark_end($live_session['id']);
+                           $currest_live_session = $this->db->get_where('live_sessions', array('id' => $live_session['id']))->row_array();
+                          $url = 'https://dynamiclogicltd.info/bigbluebutton/api/end?meetingID='.$currest_live_session['meeting_id'].'&password=333444&checksum='.$currest_live_session['checksum'];
+
+                           $ch = curl_init();
+                            curl_setopt ( $ch, CURLOPT_URL, $url );
+                            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+                            curl_setopt ( $ch, CURLOPT_TIMEOUT, 10 );
+                            $http_respond = curl_exec($ch);
+                            $http_respond = trim( strip_tags( $http_respond ) );
+                            $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+                            curl_close( $ch );
+
                            continue;
+                           
+
                        }
                         if($i == 0){
                             
