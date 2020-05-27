@@ -66,8 +66,7 @@
     dateFormat: "Y-m-d H:i:s",
     altInput: true,
     minDate: dateToday,
-    autoclose: true,
-    orientation: "bottom auto",
+    static: true,
    
 });
 document.getElementById("datepicker2").flatpickr({
@@ -75,5 +74,6 @@ document.getElementById("datepicker2").flatpickr({
     dateFormat: "Y-m-d H:i:s",
     altInput: true,
     minDate: dateToday,
+    static: true,
 });
 </script>
