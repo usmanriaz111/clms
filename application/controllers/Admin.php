@@ -17,6 +17,25 @@ class Admin extends CI_Controller
         }
     }
 
+    public function get_plans(){
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $page_data['plans'] = $this->crud_model->get_all_plans();
+        $page_data['page_name'] = 'purchase_plan';
+        $page_data['institute_id'] = $this->input->get('institute_id');
+        $page_data['page_title'] = get_phrase('purchase_plan');
+        $this->load->view('backend/index.php', $page_data);
+      }
+
+      public function purchase_plan(){
+        $institute_id = $this->input->post('institute_id');
+        $plan_id = $this->input->post('plan_id');
+        $this->crud_model->purchased_plan($plan_id, $institute_id);
+        $this->session->set_flashdata('flash_message', get_phrase('plan_purchased_successfully'));
+        redirect(site_url('admin/institutes'), 'refresh');
+      }
+
     public function amazons3_setting($param1='', $param2=''){
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');

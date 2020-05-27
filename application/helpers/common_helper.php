@@ -24,6 +24,16 @@ if (! function_exists('get_settings')) {
     }
 }
 
+function get_currency(){
+    $CI	=&	get_instance();
+    $CI->load->database();
+    $CI->db->where('key', 'system_currency');
+    $currency_code = $CI->db->get('settings')->row()->value;
+
+    $CI->db->where('code', $currency_code);
+    return  $CI->db->get('currency')->row()->symbol;
+}
+
 if (! function_exists('currency')) {
     function currency($price = "") {
         $CI	=&	get_instance();

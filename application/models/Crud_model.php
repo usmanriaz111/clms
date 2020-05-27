@@ -276,6 +276,12 @@ class Crud_model extends CI_Model
         return $query;
     }
 
+    public function get_all_plans()
+    {
+        $query = $this->db->get('plans')->result_array();
+        return $query;
+    }
+
     // Adding plan functionalities
     public function add_plan()
     {

@@ -95,9 +95,9 @@ color: #4e5bf2 !important;
       <div class="col-lg-4">
         <div class="card mb-5 mb-lg-0">
           <div class="card-body">
-          <?php if($this->user_model->get_current_user_plan() == $plan['id']){ ?>
+          <!-- <?php if($this->user_model->get_current_user_plan() == $plan['id']){ ?>
               <span class="text-success">Active</span>
-          <?php }?>
+          <?php }?> -->
             <h5 class="card-title text-uppercase text-center"><?php echo strtoupper($plan['name'])?></h5>
             <h6 class="card-price text-center"><?php echo get_currency(); ?> <?php echo number_format((float)$plan['price'], 2, '.', '')?></h6>
             <h5 class="period text-center">Per Month</h5>
@@ -109,8 +109,9 @@ color: #4e5bf2 !important;
               <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['students'] ?> students / Class</li>
               <li><span class="fa-li"><i class="fas fa-clock"></i></span><?php echo $plan['course_minutes']?> Live / Plan</li>
             </ul>
-            <form action="<?php echo site_url('institute/plan_price'); ?>" method="post">
+            <form action="<?php echo site_url('admin/purchase_plan'); ?>" method="post">
                 <input type="hidden" name="plan_id" value="<?php echo $plan['id']; ?>" />
+                <input type="hidden" name="institute_id" value="<?php echo $institute_id; ?>" />
                 <button class = "btn btn-block btn-primary text-uppercase" type="submit" name="button" ><?php echo get_phrase('GET STARRED'); ?></button>
             </form>
           </div>
@@ -126,24 +127,3 @@ color: #4e5bf2 !important;
   </div>
 </div>
 
-<script>
-function handlePlanNow(elem) {
-  url1 = '<?php echo site_url('institute/handlePlanItemForPurchanseNowButton');?>';
-  var explodedArray = elem.id.split("_");
-  var plan_id = explodedArray[1];
-
-  $.ajax({
-    url: url1,
-    type : 'POST',
-    data : {plan_id : plan_id},
-    success: function(response)
-    {
-    console.log(response);
-    // debugger;
-    },
-    error : function(response) {
-        console.log(response);
-    }
-  });
-}
-</script>

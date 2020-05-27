@@ -117,6 +117,7 @@ $user_details = $this->user_model->get_user($this->session->userdata('user_id'))
                     <button type="button" class="btn btn-sign-in" data-toggle="modal" data-target="#signInModal">Log In</button>
 
                     <button type="button" class="btn btn-sign-up" data-toggle="modal" data-target="#signUpModal">Sign Up</button>
+                    <button type="button" class="btn btn-sign-up" data-toggle="modal" data-target="#signUpModal">Institute Sign Up</button>
 
                 </div> <!--  sign-in-box end -->
 

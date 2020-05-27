@@ -75,6 +75,7 @@ echo $page_title; ?>
                                   </button>
                                   <ul class="dropdown-menu">
                                       <li><a class="dropdown-item" href="<?php echo site_url('admin/courses?category_id=all&status=all&institute_id='.$user['id'].'&price=all') ?>"><?php echo get_phrase('view_courses'); ?></a></li>
+                                      <li><a class="dropdown-item" href="<?php echo site_url('admin/get_plans?institute_id='.$user['id']) ?>"><?php echo get_phrase('assign_plan'); ?></a></li>
                                       <li><a class="dropdown-item" href="<?php echo site_url('admin/institute_form/edit_institute_form/'.$user['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
                                       <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/institutes/delete/'.$user['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
                                   </ul>

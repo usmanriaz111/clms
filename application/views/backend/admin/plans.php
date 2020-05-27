@@ -51,7 +51,7 @@
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo $plan['name']; ?></td>
-                            <td><?php echo $plan['price']; ?></td>
+                            <td><?php echo get_currency() .' '.$plan['price']; ?></td>
                             <td><?php echo $plan['courses']; ?></td>
                             <td><?php echo $plan['classes']; ?></td>
                             <td><?php echo $plan['course_minutes']; ?></td>
