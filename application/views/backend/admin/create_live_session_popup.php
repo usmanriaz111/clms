@@ -1,4 +1,8 @@
-
+<style>
+   .flatpickr-wrapper{
+  width: 100% !important;
+}
+   </style>
 <form class="required-form" action="<?php echo site_url('admin/live_session/add'); ?>" method="post" enctype="multipart/form-data">
    <div class="row">
       <div class="col-xl-12">

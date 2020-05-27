@@ -8,6 +8,9 @@
     left: 45%;
     opacity: 1!important;
 }
+   .flatpickr-wrapper{
+  width: 100% !important;
+}
 </style>
 <div class="preload">
 <img src="http://i.imgur.com/KUJoe.gif">
