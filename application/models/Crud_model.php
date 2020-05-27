@@ -736,23 +736,28 @@ class Crud_model extends CI_Model
        $minutes = $this->input->post('time');
        $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
        $course = $this->db->get_where('course', array('id' => $current_class['course_id']))->row_array();
-       $course_instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
-       $institute = $this->user_model->get_single_institute($course_instructor['institute_id']);
-       $plan = $this->check_plan($institute['id'])->row_array();
-       $remaining_minutes = $plan['remaining_minutes'];
-       if ($remaining_minutes > 0 && $remaining_minutes >= $minutes) {
-           $data['class_id'] = html_escape($class_id);
-           $data['name'] = html_escape($this->input->post('session_name'));
-           $data['mints'] = html_escape($minutes);
-           $data['date_added'] = strtotime(date('D, d-M-Y'));
-           $data['start_time'] = strtotime($this->input->post('start_session'));
-           $data['end_time'] = strtotime($this->input->post('end_session'));
-           $data['status'] = 1;
-           $this->db->insert('live_sessions', $data);
-           $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
-           $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
-       }else{
-            $this->session->set_flashdata('error_message', get_phrase('you_have_only '.$remaining_minutes.' remaining_minutes'));
+       if ($course['status'] == 'active') {
+           $course_instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
+           $institute = $this->user_model->get_single_institute($course_instructor['institute_id']);
+           $plan = $this->check_plan($institute['id'])->row_array();
+           $remaining_minutes = $plan['remaining_minutes'];
+           if ($remaining_minutes > 0 && $remaining_minutes >= $minutes) {
+               $data['class_id'] = html_escape($class_id);
+               $data['name'] = html_escape($this->input->post('session_name'));
+               $data['mints'] = html_escape($minutes);
+               $data['date_added'] = strtotime(date('D, d-M-Y'));
+               $data['start_time'] = strtotime($this->input->post('start_session'));
+               $data['end_time'] = strtotime($this->input->post('end_session'));
+               $data['status'] = 1;
+               $this->db->insert('live_sessions', $data);
+               $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
+               $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
+           } else {
+               $this->session->set_flashdata('error_message', get_phrase('you_have_only '.$remaining_minutes.' remaining_minutes'));
+           }
+       }
+       else{
+        $this->session->set_flashdata('error_message', get_phrase('course_is_not_active_please_contact_with_adminstration'));
        }
        
     }
