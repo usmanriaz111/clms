@@ -140,9 +140,13 @@ class User_model extends CI_Model {
             );
             array_push($stripe_info, $stripe_keys);
             $data['stripe_keys'] = json_encode($stripe_info);
-
             $this->db->insert('users', $data);
             $user_id = $this->db->insert_id();
+            if ($data['class_id'] != '' && $data['class_id'] > 0) {
+                $cls = $this->db->get_where('classes', array('id' => $data['class_id']))->row_array();
+                $course_id = $cls['course_id'];
+                $this->crud_model->enrol_a_student($course_id, $user_id);
+            }
             $this->upload_user_image($user_id);
             $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
         }

@@ -8,6 +8,9 @@
     left: 45%;
     opacity: 1!important;
 }
+   .flatpickr-wrapper{
+  width: 100% !important;
+}
 </style>
 <div class="preload">
 <img src="http://i.imgur.com/KUJoe.gif">
@@ -66,8 +69,7 @@
     dateFormat: "Y-m-d H:i:s",
     altInput: true,
     minDate: dateToday,
-    autoclose: true,
-    orientation: "bottom auto",
+    static: true,
    
 });
 document.getElementById("datepicker2").flatpickr({
@@ -75,5 +77,6 @@ document.getElementById("datepicker2").flatpickr({
     dateFormat: "Y-m-d H:i:s",
     altInput: true,
     minDate: dateToday,
+    static: true,
 });
 </script>
