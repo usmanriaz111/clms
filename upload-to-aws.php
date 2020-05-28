@@ -27,7 +27,8 @@ class S3_model {
         $video_extensions = ['FLV', 'MP4', 'WMV','AVI', 'MOV'];
         $ext_index = array_search($ext_name, $video_extensions);
         $tmp_path = '.'.strtolower($video_extensions[$ext_index]);  
-        $key = basename($video_path) . $tmp_path; 
+        $key = basename($video_path) . $tmp_path;
+        
         try {
             $result = $s3->putObject([
                 'Bucket' => $bucketName,

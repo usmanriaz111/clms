@@ -8,7 +8,9 @@ class EC2_model {
    }
 
    public function switch_ec2_on_server(){
+      
        echo $_ENV["version"];
+       
         $ec2 = new  Aws\Ec2\Ec2Client([
             'version' => $_ENV["version"],
             'region'  => 'eu-west-1',
@@ -21,6 +23,7 @@ class EC2_model {
         $result = $ec2->startInstances(array(
             'InstanceIds' => $instanceIds,
         ));
+        
     }
     public function switch_ec2_off_server(){
         echo $_ENV["version"];
