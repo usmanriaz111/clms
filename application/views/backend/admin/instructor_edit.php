@@ -30,7 +30,7 @@
                             <li class="nav-item">
                                 <a href="#instructor_type" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
-                                    <span class="d-none d-sm-inline"><?php echo get_phrase('instructor_type'); ?></span>
+                                    <span class="d-none d-sm-inline"><?php echo get_phrase('institute'); ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -71,32 +71,6 @@
                                 </div> <!-- end row -->
                             </div>
 
-                            <div class="tab-pane" id="instructor_type">
-                                <div class="row">
-                                    <div class="col-12">
-                                    <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
-                                            <div class="col-md-9">
-                                            <input type="radio" id="freelancer" name="type" value="freelancer" <?php echo $user_data['type'] == 'freelancer' ? 'checked' : ''; ?> class="js-instructor-type">
-                                            <label for="male">Freelancer</label>
-                                           
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-3 js-instructor-institute">
-                                            <label class="col-md-3 col-form-label" for="institutes"><?php echo get_phrase('select_institute'); ?> <span class="required">*</span> </label>
-                                            <div class="col-md-9">
-                                            <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
-                                            <?php foreach ($institutes as $institute): ?>
-                                            <option value="<?php echo $institute['id']; ?>" <?php if ($user_data['institute_id'] == $institute['id'])echo 'selected';?>><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
-                                            <?php endforeach; ?>
-                                            </select>
-                                            </div>
-                                        </div>
-
-                                    </div> <!-- end col -->
-                                </div> <!-- end row -->
-                            </div>
-
                             <div class="tab-pane" id="login_credentials">
                                 <div class="row">
                                     <div class="col-12">
@@ -106,6 +80,29 @@
                                                 <input type="email" id="email" name="email" class="form-control" value="<?php echo $user_data['email']; ?>" required>
                                             </div>
                                         </div>
+                                    </div> <!-- end col -->
+                                </div> <!-- end row -->
+                            </div>
+                            <div class="tab-pane" id="instructor_type">
+                                <div class="row">
+                                    <div class="col-12">
+                                    <div class="form-group row mb-3">
+                                            <div class="col-md-9">
+                                            <input type="hidden" id="instructor_institute" name="type" checked value="institute" class="js-instructor-type">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="institutes"><?php echo get_phrase('select_institute'); ?> <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                            <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes">
+                                            <?php foreach ($institutes as $institute): ?>
+                                            <option value="<?php echo $institute['id']; ?>"><?php echo $institute['first_name'].' '.$institute['last_name'];?></option>
+                                            <?php endforeach; ?>
+                                            </select>
+                                            <p class="text-success">Note: Institute create Before Instructor creation, if already created then processed next </p>
+                                            </div>
+                                        </div>
+
                                     </div> <!-- end col -->
                                 </div> <!-- end row -->
                             </div>

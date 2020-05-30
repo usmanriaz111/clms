@@ -458,6 +458,7 @@ class Admin extends CI_Controller
             $page_data['page_title'] = get_phrase('student_add');
             $this->load->view('backend/index', $page_data);
             }elseif($param2 == 'users'){
+                $page_data['class_id'] = $param1;
                 $page_data['page_name'] = 'users';
                 $page_data['page_title'] = get_phrase('students');
                 $page_data['users'] = $this->user_model->get_class_enrolled_students($param1);

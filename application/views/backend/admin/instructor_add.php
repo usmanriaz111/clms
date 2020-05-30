@@ -30,7 +30,7 @@
                             <li class="nav-item">
                                 <a href="#instructor_type" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
-                                    <span class="d-none d-sm-inline"><?php echo get_phrase('instructor'); ?></span>
+                                    <span class="d-none d-sm-inline"><?php echo get_phrase('institute'); ?></span>
                                 </a>
                             </li>
                             <li class="nav-item">

@@ -45,7 +45,7 @@
                                                 <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user_data['last_name']; ?>" required>
                                             </div>
                                         </div>
-                                        <div class="form-group row mb-3 js-instructors">
+                                        <!-- <div class="form-group row mb-3 js-instructors">
                                             <label class="col-md-3 col-form-label" for="instructors"><?php echo get_phrase('select_instructor'); ?> <span class="required">*</span> </label>
                                             <div class="col-md-9">
                                             <select class="form-control select2" multiple="multiple" data-toggle="select2" name="instructors[]" id="instructors">
@@ -54,11 +54,18 @@
                                             <?php endforeach; ?>
                                             </select>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="email"> <?php echo get_phrase('email'); ?> <span class="required">*</span> </label>
                                             <div class="col-md-9">
                                                 <input type="email" id="email" name="email" class="form-control" value="<?php echo $user_data['email']; ?>" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="type"><?php echo get_phrase('type'); ?> <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                            <input type="checkbox" id="freelancer" name="type" value="freelancer" <?php echo $user_data['type']=="freelancer" ? 'checked' : '' ?>>
+                                            <label for="male">Freelancer</label>
                                             </div>
                                         </div>
                                         <div class="col-12">

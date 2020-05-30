@@ -4,6 +4,7 @@
             <div class="card-body">
                 <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo $page_title; ?>
                 <a href = "<?php echo site_url('admin/user_form/add_user_form'); ?>" class="btn btn-outline-primary btn-rounded alignToTitle"><i class="mdi mdi-plus"></i><?php echo get_phrase('add_student'); ?></a>
+                <a href = "<?php echo site_url('admin/import_students/class_id/'.$class_id); ?>" class="btn btn-outline-primary btn-rounded alignToTitle mr-4"><i class="mdi mdi-plus"></i><?php echo get_phrase('important_student'); ?></a>
             </h4>
             </div> <!-- end card body-->
         </div> <!-- end card -->
