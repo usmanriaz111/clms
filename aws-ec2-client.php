@@ -8,7 +8,9 @@ class EC2_model {
    }
 
    public function switch_ec2_on_server(){
+      
        echo $_ENV["version"];
+       
         $ec2 = new  Aws\Ec2\Ec2Client([
             'version' => $_ENV["version"],
             'region'  => 'eu-west-1',

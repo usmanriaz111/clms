@@ -79,8 +79,7 @@
                                             <div class="col-md-9">
                                             <input type="radio" id="freelancer" name="type" value="freelancer" <?php echo $user_data['type'] == 'freelancer' ? 'checked' : ''; ?> class="js-instructor-type">
                                             <label for="male">Freelancer</label>
-                                            <input type="radio" id="instructor_institute" name="type" value="institute" <?php echo $user_data['type'] == 'institute' ? 'checked' : ''; ?> class="js-instructor-type">
-                                            <label for="male">Instructor Institute</label>
+                                           
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3 js-instructor-institute">

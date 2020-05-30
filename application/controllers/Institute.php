@@ -623,8 +623,14 @@ class Institute extends CI_Controller {
         }
         $this->user_model->check_plan(true);
         if ($param1 == 'add') {
+          $this->db->where('id =', $course_id);
+          $course = $this->db->get('course')->result_array();
+          $this->db->where('id =', $course[0]['institute_id']);
+          $institute = $this->db->get('users')->result_array();
+          $institute_name = $institute[0]['first_name'] . '_'.$institute[0]['last_name'];  
+          
             // $this->is_the_course_belongs_to_current_instructor($course_id);
-            $this->crud_model->add_lesson();
+            $this->crud_model->add_lesson($institute_name);
             redirect('institute/course_form/course_edit/'.$course_id);
         }
         elseif ($param1 == 'edit') {
