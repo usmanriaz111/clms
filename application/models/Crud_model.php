@@ -17,6 +17,31 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+    public function fetch_all_event(){
+        
+        $this->db->order_by('id');
+        $event_data = $this->db->get('live_sessions')->result_array();
+        foreach($event_data as $row)
+        {
+            $start_date = date('Y-m-d h:i:s', $row['start_time']);
+            $start_time = date('h:i a', $row['start_time']);
+            $end_date = date('Y-m-d h:i:s', $row['end_time']);
+            $cls = $this->db->get_where('classes', array('id' => $row['class_id']))->row_array();
+            $course = $this->db->get_where('course', array('id' => $cls['course_id']))->row_array();
+            $instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
+            $institute = $this->db->get_where('users', array('id' => $instructor['institute_id']))->row_array();
+
+                $data[] = array(
+                'id' => $row['id'],
+                'title' => $row['name'],
+                'description' => $start_time.'-Duration ('.ucfirst($institute['first_name']).' '.ucfirst($institute['last_name']).', '.ucfirst($course['title']).', '. ucfirst($cls['name']),
+                'start' => $start_date,
+                'end' => $end_date
+                );
+        }
+          return json_encode($data);
+       }
+
     public function add_s3_settings(){
        $user_id = $this->session->userdata('user_id');
        $data['access_key'] = html_escape($this->input->post('aws_access_key'));

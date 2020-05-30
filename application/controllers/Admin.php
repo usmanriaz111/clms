@@ -17,6 +17,19 @@ class Admin extends CI_Controller
         }
     }
 
+  
+
+    public function sessions()
+    {
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $page_data['page_name'] = 'sessions';
+        $page_data['page_title'] = get_phrase('live_sessions');
+        $this->load->view('backend/index', $page_data);
+    }
+
+
     public function get_plans(){
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
@@ -303,6 +316,7 @@ class Admin extends CI_Controller
         // $page_data['courses'] = $this->crud_model->get_classes_course();
         // $page_data['instructors'] = $this->user_model->get_classes_instructor();
         // $page_data['institutes'] = $this->user_model->get_classes_institute();
+        // $page_data['live_sessions'] = $arr;
         $page_data['classes'] = $this->crud_model->get_classes($page_data['selected_course_id'],$page_data['selected_institute_id'],$page_data['selected_instructor_id']);
         
         $this->load->view('backend/index', $page_data);
