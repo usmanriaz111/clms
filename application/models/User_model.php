@@ -320,6 +320,10 @@ public function update_user_plan($user_id, $plan_id){
         $this->db->insert('users', $data);
         return $this->db->insert_id();
     }
+    public function register_institute($data) {
+        $this->db->insert('users', $data);
+        return $this->db->insert_id();
+    }
 
     public function my_courses($user_id = "") {
         if ($user_id == "") {

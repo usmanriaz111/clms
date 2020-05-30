@@ -752,6 +752,17 @@ class Home extends CI_Controller {
         $this->load->view('frontend/'.get_frontend_settings('theme').'/index', $page_data);
     }
 
+    public function institute_sign_up() {
+        if ($this->session->userdata('admin_login')) {
+            redirect(site_url('admin'), 'refresh');
+        }elseif ($this->session->userdata('user_login')) {
+            redirect(site_url('user'), 'refresh');
+        }
+        $page_data['page_name'] = 'institute_sign_up';
+        $page_data['page_title'] = get_phrase('sign_up');
+        $this->load->view('frontend/'.get_frontend_settings('theme').'/index', $page_data);
+    }
+
     public function forgot_password() {
         if ($this->session->userdata('admin_login')) {
             redirect(site_url('admin'), 'refresh');

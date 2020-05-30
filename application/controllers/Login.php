@@ -65,6 +65,7 @@ class Login extends CI_Controller {
     public function register() {
         $data['first_name'] = html_escape($this->input->post('first_name'));
         $data['last_name']  = html_escape($this->input->post('last_name'));
+        $role_id  = html_escape($this->input->post('role_id'));
         $data['email']  = html_escape($this->input->post('email'));
         $data['password']  = sha1($this->input->post('password'));
 
@@ -86,7 +87,20 @@ class Login extends CI_Controller {
             'linkedin' => ""
         );
         $data['social_links'] = json_encode($social_links);
-        $data['role_id']  = 2;
+        if ($role_id == "3"){
+            $type  = html_escape($this->input->post('type'));
+            if($type == "freelancer"){
+                $data['type'] = "freelancer";
+            }
+            else{
+                $data['type'] = "institute";
+            }
+            $data['role_id']  = 3;
+        }
+        else{
+            $data['role_id']  = 2;
+        }
+        
 
         // Add paypal keys
         $paypal_info = array();
