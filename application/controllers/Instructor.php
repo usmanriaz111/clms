@@ -271,4 +271,15 @@ class Instructor extends CI_Controller {
         $response = $this->crud_model->save_course_progress();
         echo $response;
     }
+
+    public function sessions()
+    {
+      if ($this->session->userdata('user_login') != true) {
+        redirect(site_url('login'), 'refresh');
+      }
+        $page_data['page_name'] = 'sessions';
+        $page_data['page_title'] = get_phrase('live_sessions');
+        $this->load->view('backend/index', $page_data);
+    }
+
 }
