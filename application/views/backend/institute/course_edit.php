@@ -26,49 +26,49 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                             <div id="basicwizard">
                                 <ul class="nav nav-pills nav-justified form-wizard-header mb-3">
                                     <li class="nav-item">
-                                        <a href="#basic" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#basic" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-fountain-pen-tip mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('basic'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#requirements" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#requirements" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-bell-alert mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('requirements'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#outcomes" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#outcomes" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-camera-control mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('outcomes'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#pricing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#pricing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-currency-cny mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('pricing'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#media" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#media" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-library-video mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('media'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#seo" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#seo" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-tag-multiple mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('live_session'); ?></span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                       <a href="#curriculum" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                       <a href="#curriculum" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                            <i class="mdi mdi-account-circle mr-1"></i>
                                            <span class="d-none d-sm-inline"><?php echo get_phrase('curriculum'); ?></span>
                                        </a>
                                    </li>
                                    <li class="nav-item">
-                                        <a href="#finish" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <a href="#finish" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 js-tab">
                                             <i class="mdi mdi-checkbox-marked-circle-outline mr-1"></i>
                                             <span class="d-none d-sm-inline"><?php echo get_phrase('update'); ?></span>
                                         </a>
@@ -502,3 +502,16 @@ $('.on-hover-action').mouseleave(function() {
     $('#widgets-of-'+id).hide();
 });
 </script>
+<script>
+$('.js-tab').click(function(e){
+   localStorage.setItem('activeTab', $(this).attr('href'));
+});
+
+var activeTab = localStorage.getItem('activeTab');
+if(activeTab){
+   setTimeout(function(){
+      $('.nav-pills a[href="' + activeTab + '"]').click();
+}, 180);    
+}
+</script>
+

@@ -44,10 +44,12 @@ class Crud_model extends CI_Model
 
        public function fetch_instructor_events(){
         $instructor_classes = $this->curret_user_classes();
+        // echo '<pre>',print_r($instructor_classes),'</pre>';
+        //     die;
         foreach($instructor_classes as $cls)
         {
             $this->db->order_by('id');
-            $event_data = $this->db->get_where('live_sessions', array('id' => $cls['id']))->row_array();
+            $event_data = $this->db->get_where('live_sessions', array('class_id' => $cls['id']))->row_array();
             $start_date = date('Y-m-d h:i:s', $event_data['start_time']);
             $start_time = date('h:i a', $event_data['start_time']);
             $end_date = date('Y-m-d h:i:s', $event_data['end_time']);
@@ -56,8 +58,8 @@ class Crud_model extends CI_Model
             $institute = $this->db->get_where('users', array('id' => $instructor['institute_id']))->row_array();
 
                 $data[] = array(
-                'id' => $row['id'],
-                'title' => $row['name'],
+                'id' => $course['id'],
+                'title' => $course['title'],
                 'description' => $start_time.'-Duration ('.ucfirst($institute['first_name']).' '.ucfirst($institute['last_name']).', '.ucfirst($course['title']).', '. ucfirst($cls['name']),
                 'start' => $start_date,
                 'end' => $end_date
@@ -1131,6 +1133,7 @@ class Crud_model extends CI_Model
         $data['instructor_id'] = $this->input->post('instructors');
         $data['institute_id'] = $this->input->post('institutes');
         $data['last_modified'] = strtotime(date('D, d-M-Y'));
+        $data['type'] = $type;
 
         if ($this->input->post('is_top_course') != 1) {
             $data['is_top_course'] = 0;
