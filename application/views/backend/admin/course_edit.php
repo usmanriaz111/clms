@@ -561,6 +561,6 @@ var activeTab = localStorage.getItem('activeTab');
 if(activeTab){
    setTimeout(function(){
       $('.nav-pills a[href="' + activeTab + '"]').click();
-}, 180);    
+}, 300);    
 }
 </script>
