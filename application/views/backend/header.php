@@ -40,12 +40,21 @@
                 <i class="mdi mdi-account-circle mr-1"></i>
                 <span><?php echo get_phrase('my_account'); ?></span>
             </a>
-
+           
             <?php if (strtolower($this->session->userdata('role')) == 'admin'): ?>
                 <!-- settings-->
                 <a href="<?php echo site_url('admin/system_settings'); ?>" class="dropdown-item notify-item">
                     <i class="mdi mdi-settings mr-1"></i>
                     <span><?php echo get_phrase('settings'); ?></span>
+                </a>
+
+            <?php endif; ?>
+
+            <?php if (strtolower($this->session->userdata('role')) == 'admin'): ?>
+                <!-- settings-->
+                <a href="<?php echo site_url('home/my_messages'); ?>" class="dropdown-item notify-item">
+                    <i class="mdi mdi-settings mr-1"></i>
+                    <span><?php echo get_phrase('my_messages'); ?></span>
                 </a>
 
             <?php endif; ?>

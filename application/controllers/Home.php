@@ -154,7 +154,7 @@ class Home extends CI_Controller {
     }
 
     public function my_messages($param1 = "", $param2 = "") {
-        if ($this->session->userdata('user_login') != true) {
+        if ($this->session->userdata('user_login') != true && $this->session->userdata('admin_login') != true) {
             redirect(site_url('home'), 'refresh');
         }
         if ($param1 == 'read_message') {
