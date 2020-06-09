@@ -784,8 +784,12 @@ class Crud_model extends CI_Model
 
     public function insert_live_session(){
         $offset = 5 * 60 * 60;
+        $timezone = $this->input->post('timezone_offset');
+        
         $session_start_time = $this->input->post('start_session');
         $session_end_time = $this->input->post('end_session');
+        $session_start_time =  strtotime($session_start_time .$timezone."hours");
+        $session_end_time =  strtotime($session_end_time .$timezone."hours");
        $class_id = $this->input->post('live_session_class');
        $minutes = $this->input->post('time');
        $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
