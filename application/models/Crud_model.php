@@ -26,10 +26,10 @@ class Crud_model extends CI_Model
         {
             
             $start_date = $row['start_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
-            $start_date = date('Y-m-d h:i:s', $start_date); 
-            $start_time = date('h:i a', $start_date);
+            $start_time = gmdate('h:i a', $start_date);
+            $start_date = gmdate('Y-m-d h:i:s', $start_date);
             $end_date = $row['end_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
-            // $end_date = date('Y-m-d h:i:s', $row['end_time']);
+            $end_date = gmdate('Y-m-d h:i:s', $end_date);
             $cls = $this->db->get_where('classes', array('id' => $row['class_id']))->row_array();
             $course = $this->db->get_where('course', array('id' => $cls['course_id']))->row_array();
             $instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
