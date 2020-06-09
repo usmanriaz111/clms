@@ -1,3 +1,27 @@
+<?php 
+  
+function select_Timezone($selected = '') { 
+  
+    // Create a list of timezone 
+    $OptionsArray = timezone_identifiers_list(); 
+        $select= '<select name="SelectContacts"> 
+                    <option disabled selected> 
+                        Please Select Timezone 
+                    </option>'; 
+          
+        while (list ($key, $row) = each ($OptionsArray) ){ 
+            $select .='<option value="'.$key.'"'; 
+            $select .= ($key == $selected ? : ''); 
+            $select .= '>'.$row.'</option>'; 
+        }  
+          
+        $select.='</select>'; 
+    return $select; 
+} 
+  
+ 
+  
+?>
 <style>
    .flatpickr-wrapper{
   width: 100% !important;
@@ -20,6 +44,10 @@
                      <option value="<?php echo $class['id']; ?>"><?php echo $class['name']; ?></option>
                      <?php endforeach; ?>
                   </select>
+               </div>
+               <div class="form-group">
+               <label for="classes"><?php echo get_phrase('select timezone'); ?></label><br>
+                       <?php echo select_Timezone() . '<br>'; ?> 
                </div>
                <div class="form-group">
                   <label for="cloud_space"><?php echo get_phrase('live_session_time_in_mins'); ?></label>
