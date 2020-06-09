@@ -21,11 +21,15 @@ class Crud_model extends CI_Model
         
         $this->db->order_by('id');
         $event_data = $this->db->get('live_sessions')->result_array();
+      
         foreach($event_data as $row)
         {
-            $start_date = date('Y-m-d h:i:s', $row['start_time']);
-            $start_time = date('h:i a', $row['start_time']);
-            $end_date = date('Y-m-d h:i:s', $row['end_time']);
+            
+            $start_date = $row['start_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
+            $start_date = date('Y-m-d h:i:s', $start_date); 
+            $start_time = date('h:i a', $start_date);
+            $end_date = $row['end_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
+            // $end_date = date('Y-m-d h:i:s', $row['end_time']);
             $cls = $this->db->get_where('classes', array('id' => $row['class_id']))->row_array();
             $course = $this->db->get_where('course', array('id' => $cls['course_id']))->row_array();
             $instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
@@ -785,7 +789,6 @@ class Crud_model extends CI_Model
     public function insert_live_session(){
         $offset = 5 * 60 * 60;
         $timezone = $this->input->post('timezone_offset');
-        
         $session_start_time = $this->input->post('start_session');
         $session_end_time = $this->input->post('end_session');
         $session_start_time =  strtotime($session_start_time .$timezone."hours");
@@ -807,6 +810,7 @@ class Crud_model extends CI_Model
                $data['start_time'] = $session_start_time;
                $data['end_time'] = $session_end_time;
                $data['status'] = 1;
+               $data['timezone'] = $timezone;
                $this->db->insert('live_sessions', $data);
                $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
                $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
