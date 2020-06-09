@@ -804,8 +804,8 @@ class Crud_model extends CI_Model
                $data['name'] = html_escape($this->input->post('session_name'));
                $data['mints'] = html_escape($minutes);
                $data['date_added'] = strtotime(date('D, d-M-Y'));
-               $data['start_time'] = strtotime($session_start_time) - $offset;
-               $data['end_time'] = strtotime($session_end_time) - $offset;
+               $data['start_time'] = $session_start_time;
+               $data['end_time'] = $session_end_time;
                $data['status'] = 1;
                $this->db->insert('live_sessions', $data);
                $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
