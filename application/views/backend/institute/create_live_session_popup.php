@@ -79,10 +79,10 @@
                   </select>
                   
                </div>
-               <div class="form-group">
+               <!-- <div class="form-group">
                   <label for="cloud_space"><?php echo get_phrase('live_session_time_in_mins'); ?></label>
                   <input class="form-control" type="number" name="time" id="time" required>
-               </div>
+               </div> -->
                <div class="form-group">
                <label for="cloud_space"><?php echo get_phrase('start_time'); ?></label>
                <input type="text" id="datepicker" name="start_session" class="form-control" required>
