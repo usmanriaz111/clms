@@ -797,7 +797,9 @@ class Crud_model extends CI_Model
         $session_start_time =  strtotime($session_start_time .$timezone."hours");
         $session_end_time =  strtotime($session_end_time .$timezone."hours");
        $class_id = $this->input->post('live_session_class');
-       $minutes = $this->input->post('time');
+       
+    //    $minutes = $this->input->post('time');
+       $minutes = ($session_end_time - $session_start_time)/60;
        $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
        $course = $this->db->get_where('course', array('id' => $current_class['course_id']))->row_array();
        if ($course['status'] == 'active') {
