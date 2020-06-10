@@ -24,6 +24,7 @@
                <div class="form-group">
                   <label for="name"><?php echo get_phrase('session_name'); ?></label>
                   <input class="form-control" type="text" name="session_name" id="session_name" required>
+                  <input class="form-control d-none" type="number" name="course_id" value="<?php echo $course_id;?>">
                </div>
                <div class="form-group">
                   <label for="classes"><?php echo get_phrase('select a class'); ?></label>

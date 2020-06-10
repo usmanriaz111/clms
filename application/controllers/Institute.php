@@ -44,7 +44,10 @@ class Institute extends CI_Controller {
         // $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
         // $this->load->view('backend/index.php', $page_data);
         redirect('institute/courses');
-      }
+      }elseif ($param1 == "delete") {
+        $this->crud_model->delete_live_session($param2);
+        redirect(site_url('institute/courses'), 'refresh');
+    }
   }
 
     public function change_course_type($updated_type = "", $course_id)

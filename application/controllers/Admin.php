@@ -73,6 +73,9 @@ class Admin extends CI_Controller
             // $page_data['page_name'] = $data['page_name'];
             // $this->load->view('backend/index.php', $page_data);
             redirect('admin/courses');
+        }elseif ($param1 == "delete") {
+            $this->crud_model->delete_live_session($param2);
+            redirect(site_url('admin/courses'), 'refresh');
         }
     }
 

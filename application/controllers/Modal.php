@@ -63,6 +63,7 @@ class Modal extends CI_Controller {
 		$logged_in_user_role = strtolower($this->session->userdata('role'));
 		$page_data['page_title'] = get_phrase('create_live)session');
 		$page_data['classes'] = $classes;
+		$page_data['course_id'] = $param1;
  		$page_name = 'create_live_session_popup';
 		$this->load->view( 'backend/'.$logged_in_user_role.'/'.$page_name.'.php' ,$page_data);
 

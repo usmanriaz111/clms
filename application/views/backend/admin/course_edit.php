@@ -1,5 +1,6 @@
 <?php
    $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
+   $live_sessions = $this->db->get_where('live_sessions', array('course_id' => $course_id))->result_array();
        // echo '<pre>',print_r($course_details),'</pre>';
        // die;
    ?>
@@ -388,6 +389,46 @@
                               <div class="row justify-content-center mb-4">
                               <a class="btn btn-outline-primary btn-rounded alignToTitle" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/create_live_session/<?php echo $course_id;?>/')"><?php echo get_phrase('Create Live Session'); ?></a>
                               </div>
+                              <table id="basic-datatable" class="table table-striped table-centered mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th><?php echo get_phrase('name'); ?></th>
+                      <th><?php echo get_phrase('start_time'); ?></th>
+                      <th><?php echo get_phrase('end_time'); ?></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <?php
+                       foreach ($live_sessions as $key => $ls): ?>
+                       <?php
+                       
+                        $start_date = $ls['start_time'] + $ls["timezone"][0] + $ls["timezone"]*60*60;
+                        $start_date = gmdate('Y-m-d h:i a', $start_date);
+                        $end_date = $ls['end_time'] + $ls["timezone"][0] + $ls["timezone"]*60*60;
+                        $end_date = gmdate('Y-m-d h:i a', $end_date);
+                       ?>
+                        <tr>
+                            <td><?php echo $key+1; ?></td>
+                            <td><?php echo get_phrase($ls['name']); ?></td>
+                            <td><?php echo get_phrase($start_date); ?></td>
+                            <td><?php echo get_phrase($end_date); ?></td>
+                            
+                        </td>
+                            <td>
+                                  <div class="dropright dropright">
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/live_session/delete/'.$ls['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
+                                    </ul>
+                                </div>
+                              </td>
+                        </tr>
+                      <?php endforeach; ?>
+                  </tbody>
+              </table>
                               <!-- end row -->
                            </div>
                            <div class="tab-pane" id="finish">

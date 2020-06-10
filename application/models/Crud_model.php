@@ -291,11 +291,11 @@ class Crud_model extends CI_Model
         // }
     }
 
-    public function delete_class($class_id = "")
+    public function delete_live_session($ls_id = "")
     {
-        $this->db->where('id', $class_id);
-        $this->db->delete('classes');
-        $this->session->set_flashdata('flash_message', get_phrase('class_deleted_successfully'));
+        $this->db->where('id', $ls_id);
+        $this->db->delete('live_sessiions');
+        $this->session->set_flashdata('flash_message', get_phrase('live_session_deleted_successfully'));
     }
 
     public function get_classes()
@@ -790,6 +790,7 @@ class Crud_model extends CI_Model
 
     public function insert_live_session(){
         $offset = 5 * 60 * 60;
+        $course_id = $this->input->post('course_id');
         $timezone = $this->input->post('timezone_offset');
         $session_start_time = $this->input->post('start_session');
         $session_end_time = $this->input->post('end_session');
@@ -805,6 +806,7 @@ class Crud_model extends CI_Model
            $plan = $this->check_plan($institute['id'])->row_array();
            $remaining_minutes = $plan['remaining_minutes'];
            if ($remaining_minutes > 0 && $remaining_minutes >= $minutes) {
+               $data['course_id'] = $course_id;
                $data['class_id'] = html_escape($class_id);
                $data['name'] = html_escape($this->input->post('session_name'));
                $data['mints'] = html_escape($minutes);
