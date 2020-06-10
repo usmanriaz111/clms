@@ -394,6 +394,7 @@
                     <tr>
                       <th>#</th>
                       <th><?php echo get_phrase('name'); ?></th>
+                      <th><?php echo get_phrase('duration(min)'); ?></th>
                       <th><?php echo get_phrase('start_time'); ?></th>
                       <th><?php echo get_phrase('end_time'); ?></th>
                     </tr>
@@ -411,6 +412,7 @@
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo get_phrase($ls['name']); ?></td>
+                            <td><?php echo get_phrase($ls['mints']); ?></td>
                             <td><?php echo get_phrase($start_date); ?></td>
                             <td><?php echo get_phrase($end_date); ?></td>
                             
