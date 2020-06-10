@@ -26,10 +26,10 @@ class Crud_model extends CI_Model
         {
             
             $start_date = $row['start_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
-            $start_date = date('Y-m-d h:i:s', $start_date); 
-            $start_time = date('h:i a', $start_date);
+            $start_time = gmdate('h:i a', $start_date);
+            $start_date = gmdate('Y-m-d h:i:s', $start_date);
             $end_date = $row['end_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
-            // $end_date = date('Y-m-d h:i:s', $row['end_time']);
+            $end_date = gmdate('Y-m-d h:i:s', $end_date);
             $cls = $this->db->get_where('classes', array('id' => $row['class_id']))->row_array();
             $course = $this->db->get_where('course', array('id' => $cls['course_id']))->row_array();
             $instructor = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
@@ -54,9 +54,11 @@ class Crud_model extends CI_Model
         {
             $this->db->order_by('id');
             $event_data = $this->db->get_where('live_sessions', array('class_id' => $cls['id']))->row_array();
-            $start_date = date('Y-m-d h:i:s', $event_data['start_time']);
-            $start_time = date('h:i a', $event_data['start_time']);
-            $end_date = date('Y-m-d h:i:s', $event_data['end_time']);
+            $start_date = $event_data['start_time'] + $event_data["timezone"][0] + $event_data["timezone"]*60*60;
+            $start_time = gmdate('h:i a', $start_date);
+            $start_date = gmdate('Y-m-d h:i:s', $start_date);
+            $end_date = $event_data['end_time'] + $event_data["timezone"][0] + $event_data["timezone"]*60*60;
+            $end_date = gmdate('Y-m-d h:i:s', $end_date);
             $course = $this->db->get_where('course', array('id' => $cls['course_id']))->row_array();
             $instructor = $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
             $institute = $this->db->get_where('users', array('id' => $instructor['institute_id']))->row_array();
