@@ -36,7 +36,7 @@
                </div>
                <div class="form-group">
                   <label for="classes"><?php echo get_phrase('select a country'); ?></label>
-                  <select name="timezone_offset" id="timezone-offset" class="span5 select2"  data-toggle="select2">
+                  <select name="timezone_offset" id="timezone-offset" class="span5 select2 form-control"  data-toggle="select2">
                   <option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
 	               <option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
 	               <option value="-10:00">(GMT -10:00) Hawaii</option>
