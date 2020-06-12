@@ -1473,7 +1473,10 @@ class Crud_model extends CI_Model
     
         $data['attachment_type'] = $lesson_type_array[1];
         $data['lesson_type'] = $lesson_type;
-
+        if($course['title']){
+            $institute_name =$institute_name .'/'. $course['title'];
+        }
+ 
         if ($lesson_type == 'video') {
             // This portion is for web application's video lesson
             $lesson_provider = $this->input->post('lesson_provider');
@@ -1505,9 +1508,7 @@ class Crud_model extends CI_Model
                 $data['duration'] = $hour . ':' . $min . ':' . $sec;
                 $data['video_type'] = 'html5';
             }elseif($lesson_provider == 's3'){
-                if($course['title']){
-                    $institute_name =$institute_name .'/'. $course['title'];
-                }
+                
                 $space_validity = $this->check_institute_membory_limit($course['institute_id']);
                 if ($space_validity == false){
                     $this->session->set_flashdata('error_message', get_phrase('You do not have more storage'));
@@ -1593,20 +1594,29 @@ class Crud_model extends CI_Model
             $data['video_type_for_mobile_application'] = 'html5';
             $data['video_url_for_mobile_application'] = $mobile_app_lesson_url;
         } else {
+
             if ($_FILES['attachment']['name'] == "") {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_attachment'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             } else {
                 $fileName = $_FILES['attachment']['name'];
+                $tmppath = $_FILES['attachment']['tmp_name'];
+               
                 $tmp = explode('.', $fileName);
                 $fileExtension = end($tmp);
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
                 $data['attachment'] = $uploadable_file;
+                echo $fileExtension;
+                $s3_model = new S3_model();
+                $s3= $s3_model->create_s3_object();
+                $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
+                $result = $s3_model->upload_data($s3,$key , $tmppath, $fileExtension,  $institute_name);
+              
 
-                if (!file_exists('uploads/lesson_files')) {
-                    mkdir('uploads/lesson_files', 0777, true);
-                }
-                move_uploaded_file($_FILES['attachment']['tmp_name'], 'uploads/lesson_files/' . $uploadable_file);
+                // if (!file_exists('uploads/lesson_files')) {
+                //     mkdir('uploads/lesson_files', 0777, true);
+                // }
+                // move_uploaded_file($_FILES['attachment']['tmp_name'], 'uploads/lesson_files/' . $uploadable_file);
             }
         }
 
@@ -1645,6 +1655,7 @@ class Crud_model extends CI_Model
 
         $data['attachment_type'] = $lesson_type_array[1];
         $data['lesson_type'] = $lesson_type;
+        
         if ($lesson_type == 'video') {
             $lesson_provider = $this->input->post('lesson_provider');
             if ($lesson_provider == 'youtube' || $lesson_provider == 'vimeo') {
@@ -1757,6 +1768,7 @@ class Crud_model extends CI_Model
             $data['video_type_for_mobile_application'] = 'html5';
             $data['video_url_for_mobile_application'] = $mobile_app_lesson_url;
         }else {
+            
             if ($_FILES['attachment']['name'] != "") {
                 // unlinking previous attachments
                 if ($previous_data['attachment'] != "") {
@@ -1764,6 +1776,9 @@ class Crud_model extends CI_Model
                 }
 
                 $fileName = $_FILES['attachment']['name'];
+                $tmppath = $_FILES['attachment']['tmp_name'];
+                var_dump($_FILES);
+                die;
                 $tmp = explode('.', $fileName);
                 $fileExtension = end($tmp);
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
