@@ -377,6 +377,7 @@ $live_sessions = $this->db->get_where('live_sessions', array('course_id' => $cou
                     <tr>
                       <th>#</th>
                       <th><?php echo get_phrase('name'); ?></th>
+                      <th><?php echo get_phrase('duration(min)'); ?></th>
                       <th><?php echo get_phrase('start_time'); ?></th>
                       <th><?php echo get_phrase('end_time'); ?></th>
                     </tr>
@@ -393,6 +394,7 @@ $live_sessions = $this->db->get_where('live_sessions', array('course_id' => $cou
                        ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
+                            <td><?php echo get_phrase($ls['mints']); ?></td>
                             <td><?php echo get_phrase($ls['name']); ?></td>
                             <td><?php echo get_phrase($start_date); ?></td>
                             <td><?php echo get_phrase($end_date); ?></td>
