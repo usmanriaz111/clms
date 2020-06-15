@@ -1546,7 +1546,10 @@ class Crud_model extends CI_Model
                             $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
                             $s3_model = new S3_model();
                             $s3= $s3_model->create_s3_object();
+                            // echo $fileName;
+                            // die;
                             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
+                            
                             $result = $s3_model->upload_data($s3,$key ,$tmppath, $fileExtension,  $institute_name);
                             $data['video_url'] = $result['ObjectURL'];
                             $data['video_type'] = 'amazon';
@@ -1603,22 +1606,25 @@ class Crud_model extends CI_Model
                 $tmppath = $_FILES['attachment']['tmp_name'];
                
                 $tmp = explode('.', $fileName);
+                
+                
                 $fileExtension = end($tmp);
+               
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
                 $data['attachment'] = $uploadable_file;
-                echo $fileExtension;
                 $s3_model = new S3_model();
                 $s3= $s3_model->create_s3_object();
-                $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
-                $result = $s3_model->upload_data($s3,$key , $tmppath, $fileExtension,  $institute_name);
+                $key = str_replace(".", "-" . rand(1, 9999) . ".", $fileName['name']);  
+                $result = $s3_model->upload_data($s3,$fileName , $tmppath, $fileExtension,  $institute_name);
               
-
+                // $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
                 // if (!file_exists('uploads/lesson_files')) {
                 //     mkdir('uploads/lesson_files', 0777, true);
                 // }
                 // move_uploaded_file($_FILES['attachment']['tmp_name'], 'uploads/lesson_files/' . $uploadable_file);
             }
         }
+       
 
         $data['date_added'] = strtotime(date('D, d-M-Y'));
         $data['summary'] = $this->input->post('summary');
@@ -1777,8 +1783,7 @@ class Crud_model extends CI_Model
 
                 $fileName = $_FILES['attachment']['name'];
                 $tmppath = $_FILES['attachment']['tmp_name'];
-                var_dump($_FILES);
-                die;
+               
                 $tmp = explode('.', $fileName);
                 $fileExtension = end($tmp);
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
