@@ -18,7 +18,7 @@ $institute_id = $this->user_model->sync_institute_id($instructor_id);
         <div class="card">
             <div class="card-body">
 
-<h4 class="header-title mb-3"><?php echo get_phrase('plan_edit_form'); ?></h4>
+<h4 class="header-title mb-3"><?php echo get_phrase('class_edit_form'); ?></h4>
 
 <form action="<?php echo site_url('admin/classes/edit/' . $class_id); ?>" method="post">
 <div class="form-group">

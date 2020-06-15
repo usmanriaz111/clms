@@ -38,12 +38,13 @@ class Institute extends CI_Controller {
       
       if($param1 == "add"){
         $data = $this->crud_model->insert_live_session();
+        $course_id = $this->input->post('course_id');
         // $page_data['admin_url'] = $data['admin_url'];
         // $page_data['student_url'] = $data['student_url'];
         // $page_data['page_name'] = $data['page_name'];
         // $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
         // $this->load->view('backend/index.php', $page_data);
-        redirect('institute/courses');
+        redirect(site_url('admin/course_form/course_edit/'.$course_id), 'refresh');
       }elseif ($param1 == "delete") {
         $this->crud_model->delete_live_session($param2);
         redirect(site_url('institute/courses'), 'refresh');

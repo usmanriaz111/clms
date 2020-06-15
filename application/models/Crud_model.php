@@ -1612,6 +1612,8 @@ class Crud_model extends CI_Model
                
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
                 $data['attachment'] = $uploadable_file;
+
+                // echo $fileExtension;
                 $s3_model = new S3_model();
                 $s3= $s3_model->create_s3_object();
                 $key = str_replace(".", "-" . rand(1, 9999) . ".", $fileName['name']);  
@@ -1783,7 +1785,12 @@ class Crud_model extends CI_Model
 
                 $fileName = $_FILES['attachment']['name'];
                 $tmppath = $_FILES['attachment']['tmp_name'];
+<<<<<<< HEAD
                
+=======
+                // var_dump($_FILES);
+                // die;
+>>>>>>> 42285dfe516c10aece5b6d5a8a1bb8026ffb062d
                 $tmp = explode('.', $fileName);
                 $fileExtension = end($tmp);
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
