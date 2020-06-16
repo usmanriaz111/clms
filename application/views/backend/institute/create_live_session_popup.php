@@ -85,12 +85,13 @@
                   <input class="form-control" type="number" name="time" id="time" required>
                </div> -->
                <div class="form-group">
-               <label for="cloud_space"><?php echo get_phrase('start_time'); ?></label>
-               <input type="text" id="datepicker" name="start_session" class="form-control" required>
+                  <label for="datepicker" class="label-control" ><?php echo get_phrase('start_date_time'); ?></label><br/>
+                  <input type="datetime-local" id="" name="start_session" class="form-control" required>
                </div>
+
                <div class="form-group">
-               <label for="cloud_space"><?php echo get_phrase('end_time'); ?></label>
-               <input type="text" id="datepicker2" name="end_session" class="form-control" required>
+                  <label for="datepicker" class="label-control" ><?php echo get_phrase('duration'); ?></label><br/>
+                  <input type="number" name="duration" class="form-control" placeholder="45 Minutes" required>
                </div>
                <div class="text-center">
                   <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>

@@ -878,13 +878,11 @@ class Crud_model extends CI_Model
         $offset = 5 * 60 * 60;
         $course_id = $this->input->post('course_id');
         $timezone = $this->input->post('timezone_offset');
-        $session_start_time = $this->input->post('start_session');
-        $session_end_time = $this->input->post('end_session');
-        $session_start_time =  strtotime($session_start_time .$timezone."hours");
-        $session_end_time =  strtotime($session_end_time .$timezone."hours");
+        $session_start_time_input = $this->input->post('start_session');
+        $durations = $this->input->post('duration');
+        $session_start_time =  strtotime($session_start_time_input .$timezone."hours");
+        $session_end_time =  strtotime("+".$durations."minutes", $session_start_time);
        $class_id = $this->input->post('live_session_class');
-       
-    //    $minutes = $this->input->post('time');
        $minutes = ($session_end_time - $session_start_time)/60;
        $current_class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
        $course = $this->db->get_where('course', array('id' => $current_class['course_id']))->row_array();
