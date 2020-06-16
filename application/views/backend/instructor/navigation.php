@@ -36,6 +36,12 @@
 					<span><?php echo get_phrase('live_sessions'); ?></span>
 				</a>
 			</li>
+			<li class="side-nav-item">
+				<a href="<?php echo site_url('instructor/message'); ?>" class="side-nav-link <?php if ($page_name == 'message' || $page_name == 'message_new' || $page_name == 'message_read')echo 'active';?>">
+					<i class="dripicons-message"></i>
+					<span><?php echo get_phrase('message'); ?></span>
+				</a>
+			</li>
 			<!-- <li class="side-nav-item">
 				<a href="<?php echo site_url('instructor/instructor_revenue'); ?>" class="side-nav-link <?php if ($page_name == 'report' || $page_name == 'invoice')echo 'active';?>">
 					<i class="dripicons-media-shuffle"></i>

@@ -8,15 +8,8 @@
 		<span class="p-3"><?php echo get_phrase('write_new_messages');?></span>
 	</h3>
 	<div class="card-body">
-		<form method="post" class="mt-2" action="<?php echo site_url('admin/message/send_new'); ?>" enctype="multipart/form-data">
-		<div class="form-group">
-            <label><?php echo get_phrase('institute'); ?><span class="required">*</span></label>
-            <select class="form-control select2" data-toggle="select2" name="institutes" id="institutes" required>
-              <?php foreach ($institutes as $institute): ?>
-                <option value="<?php echo $institute['id']; ?>"><?php echo $institute['first_name'].' '.$institute['last_name'] ; ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
+		<form method="post" class="mt-2" action="<?php echo site_url('institute/message/send_new'); ?>" enctype="multipart/form-data">
+
 		<div class="form-group">
           <label><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
          <select class="form-control select2" data-toggle="select2" name="instructors" id="instructors" required>
@@ -124,7 +117,7 @@ $(document).ready(function(){
 
 </script>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   $(document).ready(function () {
     sync_courses();
     $('#instructors').on('change', function(){
@@ -141,7 +134,7 @@ function sync_courses(){
     let id = $("#instructors option:selected").val();
 
         $.ajax({
-        url : "<?php echo base_url();?>admin/ajax_sync_course",
+        url : "<?php echo base_url();?>institute/ajax_sync_course",
         type : "post",
         dataType : "json",
         data : {"instructor_id" : id},
@@ -155,6 +148,8 @@ function sync_courses(){
                 var newState = new Option(val.title, val.id);
                 $("#courses").append(newState);
             });
+            sync_classes();
+            sync_courses();
         },
         error : function(response) {
             console.log(response);
@@ -167,7 +162,7 @@ function sync_classes(){
     let id = $("#courses option:selected").val();
 	console.log(id);
         $.ajax({
-        url : "<?php echo base_url();?>admin/ajax_sync_classes",
+        url : "<?php echo base_url();?>institute/ajax_sync_classes",
         type : "post",
         dataType : "json",
         data : {"course_id" : id},
@@ -181,6 +176,7 @@ function sync_classes(){
                 var newState = new Option(val.name, val.id);
                 $("#classes").append(newState);
             });
+            sync_students();
         },
         error : function(response) {
             console.log(response);
@@ -192,7 +188,7 @@ function sync_students(){
     let id = $("#courses option:selected").val();
 	console.log(id);
         $.ajax({
-        url : "<?php echo base_url();?>admin/ajax_sync_students",
+        url : "<?php echo base_url();?>institute/ajax_sync_students",
         type : "post",
         dataType : "json",
         data : {"course_id" : id},
@@ -215,128 +211,4 @@ function sync_students(){
 }
 
   });
-  </script> -->
-
-
-  <script type="text/javascript">
-$(document).ready(function () {
-  sync_instructors();
-  $('#institutes').on('change', function(){
-    sync_instructors();
-  });
-
-  $('#instructors').on('change', function(){
-    sync_courses();
-  });
-  $('#courses').on('change', function(){
-    sync_classes();
-	sync_students();
-  });
-
-  function sync_instructors(){
-    let id = $("#institutes option:selected").val();
-    $.ajax({
-      url : "<?php echo base_url();?>admin/ajax_get_instructor",
-      type : "post",
-      dataType : "json",
-      data : {"institute_id" : id},
-      success : function(response) {
-        var select = document.getElementById("instructors");
-        var length = select.options.length;
-        for (i = length-1; i >= 0; i--) {
-          select.options[i] = null;
-        }
-        $.each( response, function( i, val ) {
-          var newState = new Option(val.first_name+' '+val.last_name, val.id);
-          $("#instructors").append(newState);
-        });
-        sync_courses();
-      },
-      error : function(response) {
-        console.log(response);
-      }
-    });
-  }
-
-  function sync_courses(){
-    let id = $("#instructors option:selected").val();
-    $.ajax({
-      url : "<?php echo base_url();?>admin/ajax_sync_course",
-      type : "post",
-      dataType : "json",
-      data : {"instructor_id" : id},
-      success : function(response) {
-        var select = document.getElementById("courses");
-        var length = select.options.length;
-        for (i = length-1; i >= 0; i--) {
-          select.options[i] = null;
-        }
-        $.each( response, function( i, val ) {
-          var newState = new Option(val.title, val.id);
-          $("#courses").append(newState);
-        });
-		sync_classes();
-		sync_students();
-      },
-      error : function(response) {
-        console.log(response);
-      }
-    });
-  }
-
-  function sync_classes(){
-    let id = $("#courses option:selected").val();
-	console.log(id);
-        $.ajax({
-        url : "<?php echo base_url();?>admin/ajax_sync_classes",
-        type : "post",
-        dataType : "json",
-        data : {"course_id" : id},
-        success : function(response) {
-            var select = document.getElementById("classes");
-            var length = select.options.length;
-            for (i = length-1; i >= 0; i--) {
-            select.options[i] = null;
-            }
-            $.each( response, function( i, val ) {
-                var newState = new Option(val.name, val.id);
-                $("#classes").append(newState);
-            });
-        },
-        error : function(response) {
-            console.log(response);
-        }
-    });
-}
-
-
-function sync_students(){
-    let id = $("#courses option:selected").val();
-	console.log(id);
-        $.ajax({
-        url : "<?php echo base_url();?>admin/ajax_sync_students",
-        type : "post",
-        dataType : "json",
-        data : {"course_id" : id},
-        success : function(response) {
-			debugger;
-            var select = document.getElementById("receiver_student");
-            var length = select.options.length;
-            for (i = length-1; i >= 0; i--) {
-            select.options[i] = null;
-            }
-            $.each( response, function( i, val ) {
-                var newState = new Option(val.first_name+' '+val.last_name, val.id);
-                $("#receiver_student").append(newState);
-            });
-        },
-        error : function(response) {
-            console.log(response);
-        }
-    });
-}
-
-
-
-});
-</script>
+  </script>

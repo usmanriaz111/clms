@@ -127,6 +127,92 @@ class Crud_model extends CI_Model
         return $this->db->get('classes')->result_array();
     }
 
+    public function instructor_cls($id= '')
+    {
+        $course_ids = array();
+        $courses = array();
+
+        $this->db->where('user_id', $id);
+        $this->db->select('id');
+        $courses = $this->db->get('course')->result_array();
+        foreach ($courses as $course) {
+            if (!in_array($course['id'], $course_ids)) {
+                array_push($course_ids, $course['id']);
+            }
+        }
+        if (sizeof($course_ids)) {
+            $this->db->where_in('course_id', $course_ids);
+        } else {
+            return array();
+        }
+
+        $this->db->order_by('date_added', 'desc');
+        return $this->db->get('classes')->result_array();
+    }
+
+    public function single_instructor_cls($course_id = '')
+    {
+        $this->db->where('course_id', $course_id);
+        $this->db->order_by('date_added', 'desc');
+        return $this->db->get('classes')->result_array();
+    }
+
+    public function get_course_students($course_id = '')
+    {
+        $this->db->where('course_id', $course_id);
+         $course_ids = $this->db->get('enrol')->result_array();
+         $user_ids = array();
+
+      foreach ($course_ids as $key => $course) {
+        array_push($user_ids, $course['user_id']);
+      }
+      if (sizeof($user_ids)) {
+        $this->db->where_in('id', $user_ids);
+        return $this->db->get('users')->result_array();
+    } else {
+        return array();
+    }
+      
+    }
+
+    public function get_instructor_course_students()
+    {
+        $this->db->where('user_id', $this->session->userdata('user_id'));
+        $instructor_courses = $this->db->get('course')->result_array();
+
+         $course_ids = array();
+         $user_ids = array();
+
+      foreach ($instructor_courses as $key => $course) {
+        array_push($course_ids, $course['id']);
+      }
+      if (sizeof($course_ids)) {
+        $this->db->where_in('course_id', $course_ids);
+        $enrols = $this->db->get('enrol')->result_array();
+        foreach ($enrols as $key => $enrol) {
+            array_push($user_ids, $enrol['user_id']);
+          }
+          if (sizeof($user_ids)) {
+            $this->db->where_in('id', $user_ids);
+            return $this->db->get('users')->result_array();
+          }else{
+            return array();
+          }
+
+    } else {
+        return array();
+    }
+      
+    }
+
+    public function get_class_students($class_id = '')
+    {
+        $this->db->where('role_id', 2);
+        $this->db->where('class_id', $class_id);
+        $this->db->order_by('date_added', 'desc');
+        return $this->db->get('users')->result_array();
+    }
+
     public function get_classes_course()
     {
       $courses = $this->get_classes('all','all','all');
@@ -2213,11 +2299,45 @@ class Crud_model extends CI_Model
     {
         $message = $this->input->post('message');
         $timestamp = strtotime(date("Y-m-d H:i:s"));
-
-        $receiver = $this->input->post('receiver');
+        
+        $receiver_type = $this->input->post('message_receiver_type');
         $sender = $this->session->userdata('user_id');
+        if ($receiver_type == 'class'){
+            $cls = $this->input->post('receiver_class');
+            $receivers = $this->user_model->get_class_enrolled_students($cls)->result_array();
+            foreach($receivers as $std) {
+                $receiver = $std['id'];
+                //check if the thread between those 2 users exists, if not create new thread
+                $num1 = $this->db->get_where('message_thread', array('sender' => $sender, 'receiver' => $receiver))->num_rows();
+                $num2 = $this->db->get_where('message_thread', array('sender' => $receiver, 'receiver' => $sender))->num_rows();
+                if ($num1 == 0 && $num2 == 0) {
+                    $message_thread_code = substr(md5(rand(100000000, 20000000000)), 0, 15);
+                    $data_message_thread['message_thread_code'] = $message_thread_code;
+                    $data_message_thread['sender'] = $sender;
+                    $data_message_thread['receiver'] = $receiver;
+                    $this->db->insert('message_thread', $data_message_thread);
+                }
+                if ($num1 > 0) {
+                    $message_thread_code = $this->db->get_where('message_thread', array('sender' => $sender, 'receiver' => $receiver))->row()->message_thread_code;
+                }
 
-        //check if the thread between those 2 users exists, if not create new thread
+                if ($num2 > 0) {
+                    $message_thread_code = $this->db->get_where('message_thread', array('sender' => $receiver, 'receiver' => $sender))->row()->message_thread_code;
+                }
+
+                $data_message['message_thread_code'] = $message_thread_code;
+                $data_message['message'] = $message;
+                $data_message['sender'] = $sender;
+                $data_message['timestamp'] = $timestamp;
+                $this->db->insert('message', $data_message);
+
+                // return $message_thread_code;
+
+            }
+            
+        }else{
+            $receiver = $this->input->post('receiver_student');
+            //check if the thread between those 2 users exists, if not create new thread
         $num1 = $this->db->get_where('message_thread', array('sender' => $sender, 'receiver' => $receiver))->num_rows();
         $num2 = $this->db->get_where('message_thread', array('sender' => $receiver, 'receiver' => $sender))->num_rows();
         if ($num1 == 0 && $num2 == 0) {
@@ -2242,6 +2362,9 @@ class Crud_model extends CI_Model
         $this->db->insert('message', $data_message);
 
         return $message_thread_code;
+
+        }
+                
     }
 
     public function send_reply_message($message_thread_code)

@@ -77,6 +77,21 @@
                   <label for="datepicker" class="label-control" ><?php echo get_phrase('start_time'); ?></label><br/>
                   <input type="text" id="datepicker" name="start_session" class="form-control" required>
                </div>
+               <div class="container">
+    <div class="row">
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                <div class="form-group">
                   <label for="datepicker2"><?php echo get_phrase('end_time'); ?></label><br/>
                   <input type="text" id="datepicker2" name="end_session" class="form-control" required>
@@ -89,30 +104,34 @@
       </div>
    </div>
 </form>
-
+<script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
 <script>
-   var dateToday = new Date();
-    $(document).ready(function() {
-        initTimepicker();
-        $('.preload').hide();
-        $('#session_create').click(function(){
-            if($('#session_name').val() != '' && $('#time').val() !='' && $('#datepicker') != ''){
-            $(".preload").fadeIn(1000, function() {});
-            }
-    });
-    });
-   document.getElementById("datepicker").flatpickr({
-    enableTime: true,
-    dateFormat: "Y-m-d H:i:s",
-    altInput: true,
-    minDate: dateToday,
-    static: true,
-});
-document.getElementById("datepicker2").flatpickr({
-    enableTime: true,
-    dateFormat: "Y-m-d H:i:s",
-    altInput: true,
-    minDate: dateToday,
-    static: true,
-});
+//    var dateToday = new Date();
+//     $(document).ready(function() {
+//         initTimepicker();
+//         $('.preload').hide();
+//         $('#session_create').click(function(){
+//             if($('#session_name').val() != '' && $('#time').val() !='' && $('#datepicker') != ''){
+//             $(".preload").fadeIn(1000, function() {});
+//             }
+//     });
+//     });
+//    document.getElementById("datepicker").flatpickr({
+//     enableTime: true,
+//     dateFormat: "Y-m-d H:i:s",
+//     altInput: true,
+//     minDate: dateToday,
+//    //  static: true,
+// });
+// document.getElementById("datepicker2").flatpickr({
+//     enableTime: true,
+//     dateFormat: "Y-m-d H:i:s",
+//     altInput: true,
+//     minDate: dateToday,
+//    //  static: true,
+// });
 </script>

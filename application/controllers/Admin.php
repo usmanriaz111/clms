@@ -1178,12 +1178,31 @@ class Admin extends CI_Controller
             $page_data['current_message_thread_code'] = $param2; // $param2 = message_thread_code
             $this->crud_model->mark_thread_messages_read($param2);
         }
-
+        $page_data['institutes'] = $this->user_model->get_institute();
         $page_data['message_inner_page_name'] = $param1;
         $page_data['page_name'] = 'message';
         $page_data['page_title'] = get_phrase('private_messaging');
         $this->load->view('backend/index', $page_data);
     }
+
+
+    public function ajax_sync_classes(){
+        if ($this->session->userdata('admin_login') != true) {
+          redirect(site_url('login'), 'refresh');
+        }
+        $course_id = $this->input->post('course_id');
+        $data = $this->crud_model->single_instructor_cls($course_id);
+          echo json_encode($data);
+      }
+
+      public function ajax_sync_students(){
+        if ($this->session->userdata('admin_login') != true) {
+          redirect(site_url('login'), 'refresh');
+        }
+        $course_id = $this->input->post('course_id');
+        $data = $this->crud_model->get_course_students($course_id);
+          echo json_encode($data);
+      }
 
     /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
     public function profile($param1 = '', $param2 = '', $param3 = '')

@@ -29,6 +29,38 @@ class Instructor extends CI_Controller {
       }
     }
 
+
+    public function message($param1 = 'message_home', $param2 = '', $param3 = '')
+    {
+        if ($this->session->userdata('user_login') != 1) {
+            redirect(site_url('login'), 'refresh');
+        }
+
+        if ($param1 == 'send_new') {
+            $message_thread_code = $this->crud_model->send_new_private_message();
+            $this->session->set_flashdata('flash_message', get_phrase('message_sent!'));
+            redirect(site_url('instructor/message/message_read/' . $message_thread_code), 'refresh');
+        }
+
+        if ($param1 == 'send_reply') {
+            $this->crud_model->send_reply_message($param2); //$param2 = message_thread_code
+            $this->session->set_flashdata('flash_message', get_phrase('message_sent!'));
+            redirect(site_url('instructor/message/message_read/' . $param2), 'refresh');
+        }
+
+        if ($param1 == 'message_read') {
+            $page_data['current_message_thread_code'] = $param2; // $param2 = message_thread_code
+            $this->crud_model->mark_thread_messages_read($param2);
+        }
+
+        $page_data['message_inner_page_name'] = $param1;
+        $page_data['page_name'] = 'message';
+        $page_data['page_title'] = get_phrase('private_messaging');
+        $this->load->view('backend/index', $page_data);
+    }
+
+
+
     public function index() {
          $role_id = $this->session->userdata('role_id');
         if ($this->session->userdata('user_login') == true && $this->session->userdata('role_name') == 'instructor') {
