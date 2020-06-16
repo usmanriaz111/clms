@@ -239,6 +239,7 @@ CREATE TABLE `live_sessions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `class_id` int(11) DEFAULT NULL,
+  `course_id` INT(11) DEFAULT NULL,
   `mints` int(11) DEFAULT NULL,
   `admin_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `student_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
