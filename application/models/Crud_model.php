@@ -1553,6 +1553,10 @@ class Crud_model extends CI_Model
 
     public function add_lesson( $institute_name = '')
     {
+        $s3_setting = $this->db->get('s3_settings')->row_array();
+        if($s3_setting == NULL ){
+            $this->session->set_flashdata('error_message', get_phrase('please_add_s3_settings_in_setting'));
+        }
         $course_id = html_escape($this->input->post('course_id'));
         $data['course_id'] = $course_id;
         $course = $this->db->get_where('course', array('id' => $course_id))->row_array();
@@ -1636,7 +1640,7 @@ class Crud_model extends CI_Model
                             $tmpfile = $_FILES['video_file_for_amazon_s3'];
                             $tmppath = $_FILES['video_file_for_amazon_s3']['tmp_name'];
                             $s3_model = new S3_model();
-                            $s3= $s3_model->create_s3_object();
+                            $s3= $s3_model->create_s3_object($s3_setting);
                             // echo $fileName;
                             // die;
                             $key = str_replace(".", "-" . rand(1, 9999) . ".", $tmpfile['name']);
@@ -1704,7 +1708,7 @@ class Crud_model extends CI_Model
                 $uploadable_file = md5(uniqid(rand(), true)) . '.' . $fileExtension;
                 $data['attachment'] = $uploadable_file;
                 $s3_model = new S3_model();
-                $s3= $s3_model->create_s3_object();
+                $s3= $s3_model->create_s3_object($s3_setting);
                
                 $key = str_replace(".", "-" . rand(1, 9999) . ".", $fileName['name']);
                 $result = $s3_model->upload_data($s3,$fileName , $tmppath, $fileExtension,  $institute_name);

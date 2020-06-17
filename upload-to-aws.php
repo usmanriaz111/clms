@@ -3,17 +3,21 @@ require 'vendor/autoload.php';
 use Aws\S3\S3Client;
 class S3_model {
     function __construct(){
+        // $this->load->database();
+        
         echo 'constructior called';
       
    }
 
-   public function create_s3_object(){
+   public function create_s3_object($s3_setting){
+    
+       
         $s3 = new S3Client([
             'version' => $_ENV["version"],
-            'region'  => $_ENV["region"],
+            'region'  => $s3_setting['region'],
             'credentials' => [
-            'key'    => $_ENV["key_admin"],
-            'secret' => $_ENV["secret_admin"]
+            'key'    => $s3_setting['access_key'],
+            'secret' => $s3_setting['secret_key']
         ]
         ]);
         return $s3;
