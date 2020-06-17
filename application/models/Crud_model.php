@@ -377,6 +377,13 @@ class Crud_model extends CI_Model
         // }
     }
 
+    public function delete_class($class_id = "")
+    {
+        $this->db->where('id', $class_id);
+        $this->db->delete('classes');
+        $this->session->set_flashdata('flash_message', get_phrase('claass_deleted_successfully'));
+    }
+
     public function delete_live_session($ls_id = "")
     {
         $this->db->where('id', $ls_id);
