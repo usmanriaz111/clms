@@ -47,6 +47,13 @@
         <input class="form-control" type="text" name="cloud_space"  value="<?php echo $plan_data['cloud_space']; ?>" id="cloud_space" required>
     </div>
     <div class="form-group">
+        <label for="cloud_space"><?php echo get_phrase('plan_type'); ?></label>
+        <select name="plan_type" class="form-control">
+        <option value="paid" <?php if(strtolower($plan_data['type']) == 'paid') echo 'selected'; ?>>Paid</option>
+        <option value="free" <?php if(strtolower($plan_data['type']) == 'free') echo 'selected'; ?>>Free</option>
+        </select>
+    </div>
+    <div class="form-group">
     <label for="cloud_space"><?php echo get_phrase('private'); ?></label></br>
         <input class="" type="radio" <?php if($plan_data['private'] == 'yes') echo 'checked'?> name="is_private" value="yes">yes
         <input class="" type="radio" <?php if($plan_data['private'] == 'no') echo 'checked'?> name="is_private" value="no">no

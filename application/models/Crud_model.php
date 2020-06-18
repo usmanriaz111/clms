@@ -436,6 +436,7 @@ class Crud_model extends CI_Model
     public function add_plan()
     {
         $data_plan['name'] = html_escape($this->input->post('name'));
+        $data_plan['type'] = html_escape($this->input->post('plan_type'));
         $data_plan['classes'] = html_escape($this->input->post('classes'));
         $data_plan['courses'] = html_escape($this->input->post('courses'));
         $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));
@@ -452,6 +453,7 @@ class Crud_model extends CI_Model
     public function edit_plan($plan_id = "")
     {
         $data_plan['name'] = html_escape($this->input->post('name'));
+        $data_plan['type'] = html_escape($this->input->post('plan_type'));
         $data_plan['classes'] = html_escape($this->input->post('classes'));
         $data_plan['courses'] = html_escape($this->input->post('courses'));
         $data_plan['course_minutes'] = html_escape($this->input->post('course_minutes'));

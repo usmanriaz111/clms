@@ -268,6 +268,7 @@ CREATE TABLE `plans` (
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
   `private` varchar(255) DEFAULT NULL,
+  `type` text(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

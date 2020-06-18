@@ -146,15 +146,28 @@ class Institute extends CI_Controller {
     }
 
     public function plan_price() {
+        $user_id = $this->session->userdata('user_id');
         $plan_id = $this->input->post('plan_id');
         $this->session->set_userdata('plan_id', $plan_id);
-        $this->db->select('price');
         $plan = $this->db->get_where('plans', array('id' => $plan_id))->row_array();
-        $this->session->set_userdata('plan_price', $plan['price']);
-        $page_data['page_title'] = get_phrase("payment_gateway");
-        $page_data['plan_price'] = $plan['price'];
-        $this->session->set_userdata('plan_price', $plan['price']);
-        $this->load->view('backend/institute/payment/index.php', $page_data);
+        if ($plan['price'] > 0 && $plan['type'] == 'paid') {
+            $this->session->set_userdata('plan_price', $plan['price']);
+            $page_data['page_title'] = get_phrase("payment_gateway");
+            $page_data['plan_price'] = $plan['price'];
+            $this->session->set_userdata('plan_price', $plan['price']);
+            $this->load->view('backend/institute/payment/index.php', $page_data);
+        }else{
+          $plan_exist = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
+          if (count($plan_exist) > 0) {
+              $this->session->set_flashdata('error_message', get_phrase('please_upgrade_your_plan'));
+              redirect('institute/purchase_plan', 'refresh');
+          }else{
+            $this->crud_model->plan_purchase($user_id, 'stripe', $plan['price']);
+            $this->email_model->course_purchase_notification($user_id, 'free', $plan['price']);
+            $this->session->set_flashdata('flash_message', get_phrase('free_plane_successfully_activated'));
+            redirect('institute/courses', 'refresh');
+          }
+        }
 
     }
 

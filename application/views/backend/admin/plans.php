@@ -32,7 +32,7 @@
                       <th><?php echo get_phrase('price'); ?></th>
                       <th><?php echo get_phrase('no_of_courses'); ?></th>
                       <th><?php echo get_phrase('no_of_classes'); ?></th>
-                      <th><?php echo get_phrase('no_minutes_per_live_session_per_course'); ?></th>
+                      <th><?php echo get_phrase('no_of_live_minutes'); ?></th>
                       <th><?php echo get_phrase('no_of_students_per_class'); ?></th>
                       <th><?php echo get_phrase('cloud_space'); ?></th>
                       <th><?php echo get_phrase('Institute'); ?></th>

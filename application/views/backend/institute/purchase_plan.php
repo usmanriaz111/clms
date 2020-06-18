@@ -88,12 +88,12 @@ color: #4e5bf2 !important;
       <div class="card-body">
         <h4 class="header-title mb-3"><?php echo get_phrase('choose_a_plan'); ?></h4>
         <div class="container">
-        <section class="pricing py-5">
+        <section class="pricing py-2">
   <div class="container">
     <div class="row">
     <?php foreach ($plans as $key => $plan) { ?>
       <div class="col-lg-4">
-        <div class="card mb-5 mb-lg-0">
+        <div class="card mb-5 mt-2 mb-lg-0">
           <div class="card-body">
           <?php if($this->user_model->get_current_user_plan() == $plan['id']){ ?>
               <span class="text-success">Active</span>
