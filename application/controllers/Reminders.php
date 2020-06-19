@@ -25,7 +25,8 @@
         // }
         $ec2_server = new EC2_model();
         $live_sessions = $this->Appointment_model->get_days_appointments();
-        $this->update_continued_appointments();    
+        $live_continued_sessions = $this->Appointment_model->get_continued_appointments();
+        $this->update_continued_appointments($live_continued_sessions);    
         if(!empty($live_sessions))
         {
            
@@ -102,7 +103,9 @@
         else{
             echo 'no record of live session found';
             // stop ec2 server
-            $ec2_server->switch_ec2_off_server();
+            if (empty($live_continued_sessions)){
+                $ec2_server->switch_ec2_off_server(); 
+            }
         }
    }
    function destroy_appointments(){
@@ -112,9 +115,7 @@
         }
 
    }
-   function update_continued_appointments(){
-        $live_continued_sessions = $this->Appointment_model->get_continued_appointments();
-        
+   function update_continued_appointments($live_continued_sessions){
         $current_time = strtotime("now");
         foreach($live_continued_sessions as $live_session){
             if ($live_session['end_time'] <=  $current_time){
