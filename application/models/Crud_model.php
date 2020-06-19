@@ -387,7 +387,7 @@ class Crud_model extends CI_Model
     public function delete_live_session($ls_id = "")
     {
         $this->db->where('id', $ls_id);
-        $this->db->delete('live_sessiions');
+        $this->db->delete('live_sessions');
         $this->session->set_flashdata('flash_message', get_phrase('live_session_deleted_successfully'));
     }
 

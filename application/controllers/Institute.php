@@ -75,10 +75,11 @@ class Institute extends CI_Controller {
         // $page_data['page_name'] = $data['page_name'];
         // $this->session->set_flashdata('flash_message', get_phrase('live_session_successfully_created'));
         // $this->load->view('backend/index.php', $page_data);
-        redirect(site_url('admin/course_form/course_edit/'.$course_id), 'refresh');
+        redirect(site_url('institute/course_form/course_edit/'.$course_id), 'refresh');
       }elseif ($param1 == "delete") {
+        $live_session = $this->db->get_where('live_sessions', array('id' => $param2))->row_array();
         $this->crud_model->delete_live_session($param2);
-        redirect(site_url('institute/courses'), 'refresh');
+        redirect(site_url('institute/course_form/course_edit/'.$live_session['course_id']), 'refresh');
     }
   }
 
@@ -690,11 +691,10 @@ class Institute extends CI_Controller {
         $this->user_model->check_plan(true);
         if ($param1 == 'add') {
           $this->db->where('id =', $course_id);
-          $course = $this->db->get('course')->result_array();
-          $this->db->where('id =', $course[0]['institute_id']);
-          $institute = $this->db->get('users')->result_array();
-          $institute_name = $institute[0]['first_name'] . '_'.$institute[0]['last_name'];  
-          
+          $course = $this->db->get_where('course', array('id' => $course_id))->row_array();
+          $institute = $this->db->get_where('users', array('id' => $course['user_id']))->row_array();
+          $institute_name = $institute['first_name'] . '_'.$institute['last_name']; 
+         
             // $this->is_the_course_belongs_to_current_instructor($course_id);
             $this->crud_model->add_lesson($institute_name);
             redirect('institute/course_form/course_edit/'.$course_id);

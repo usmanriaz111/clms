@@ -75,8 +75,9 @@ class Admin extends CI_Controller
             // $this->load->view('backend/index.php', $page_data);
             redirect(site_url('admin/course_form/course_edit/'.$course_id), 'refresh');
         }elseif ($param1 == "delete") {
+            $live_session = $this->db->get_where('live_sessions', array('id' => $param2))->row_array();
             $this->crud_model->delete_live_session($param2);
-            redirect(site_url('admin/courses'), 'refresh');
+            redirect(site_url('admin/course_form/course_edit/'.$live_session['course_id']), 'refresh');
         }
     }
 
@@ -1072,10 +1073,9 @@ class Admin extends CI_Controller
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-        $instructor_id = $this->crud_model->sync_instructor_id($course_id);
-        $institute_id = $this->user_model->sync_institute_id($instructor_id);
-        $institute = $this->db->get_where('users', array('id' => $institute_id['id']))->row_array();
-        $institute_name = $institute['first_name'] . '_'.$institute['last_name'];       
+        $course = $this->db->get_where('course', array('id' => $course_id))->row_array();
+        $institute = $this->db->get_where('users', array('id' => $course['institute_id']))->row_array();
+        $institute_name = $institute['first_name'] . '_'.$institute['last_name'];
         if ($param1 == 'add') {
             $this->crud_model->add_lesson( $institute_name);
             // $this->session->set_flashdata('flash_message', get_phrase('lesson_has_been_added_successfully'));
