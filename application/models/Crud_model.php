@@ -908,7 +908,7 @@ class Crud_model extends CI_Model
                $data['date_added'] = strtotime(date('D, d-M-Y'));
                $data['start_time'] = $session_start_time;
                $data['end_time'] = $session_end_time;
-               $data['status'] = 1;
+               $data['status'] = 0;
                $data['timezone'] = $timezone;
                $this->db->insert('live_sessions', $data);
                $this->update_plan_minutes($plan['id'], $remaining_minutes, $minutes);
@@ -928,6 +928,20 @@ class Crud_model extends CI_Model
         $this->db->where('id', $plan_id);
         $this->db->update('purchased_plans', $plan);
     }
+
+    public function destroy_live_session_by_id($sesson_id, $checksum){
+        $url = 'https://dynamiclogicltd.info/bigbluebutton/api/end?meetingID='.$sesson_id.'&password=333444'.'&checksum='.$sh1_checksum;
+        $timeout = 10;
+        $ch = curl_init();
+        curl_setopt ( $ch, CURLOPT_URL, $url );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt ( $ch, CURLOPT_TIMEOUT, $timeout );
+        $http_respond = curl_exec($ch);
+        $http_respond = trim( strip_tags( $http_respond ) );
+        $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+        curl_close( $ch );
+        
+    }
     
     function get_create_url($meeting_id, $name, $mins){
         $query_str = 'name='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins;
@@ -944,6 +958,7 @@ class Crud_model extends CI_Model
         $name = 'https://dynamiclogicltd.info/bigbluebutton/api/join?'.$name.'&checksum='.$sh1_checksum;
 
         $data['checksum'] = $sh1_checksum;
+        $data['live_session_id'] = $meeting_id;
         $this->db->where('id', $live_session_id);
         $this->db->update('live_sessions', $data);
 

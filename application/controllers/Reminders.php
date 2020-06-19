@@ -25,6 +25,7 @@
         // }
         $ec2_server = new EC2_model();
         $live_sessions = $this->Appointment_model->get_days_appointments();
+        $this->update_continued_appointments();    
         if(!empty($live_sessions))
         {
            
@@ -49,7 +50,6 @@
                 }
                 for ($i = 0; $i < count($class_students); $i++){
                 // foreach($class_students as $class_student ){
-               
                        $current_time = strtotime("now"); 
                        if ($live_session['end_time'] <=  $current_time){
                            $this->Appointment_model->mark_end($live_session['id']);
@@ -83,7 +83,8 @@
                            
                             $mail_body = 'your live session is going to start in '.gmdate("Y-m-d\TH:i:s\Z",$live_session['start_time']).'and end at '.gmdate("Y-m-d\TH:i:s\Z",$live_session['end_time']);
                             $mail_subject = 'live sessions start links  Teacher Url: '.$data['admin_url'];
-                            $this->email_model->send_mail_for_live_session_confirmation($instructor[0]['email'], $mail_body,$mail_subject);
+                          
+                             $this->email_model->send_mail_for_live_session_confirmation($instructor[0]['email'], $mail_body,$mail_subject);
                         }     
                                            
                         $mail_body = 'your live session is going to start in '.gmdate("Y-m-d\TH:i:s\Z",$live_session['start_time']).'and end at '.gmdate("Y-m-d\TH:i:s\Z",$live_session['end_time']);
@@ -103,5 +104,23 @@
             // stop ec2 server
             $ec2_server->switch_ec2_off_server();
         }
+   }
+   function destroy_appointments(){
+        $live_continued_sessions = $this->Appointment_model->get_ended_appointments();
+        foreach($live_continued_sessions as $live_session){
+            $this->crud_model->destroy_live_session_by_id($live_session['live_session_id'], $live_session['checksum']);
+        }
+
+   }
+   function update_continued_appointments(){
+        $live_continued_sessions = $this->Appointment_model->get_continued_appointments();
+        
+        $current_time = strtotime("now");
+        foreach($live_continued_sessions as $live_session){
+            if ($live_session['end_time'] <=  $current_time){
+                $this->Appointment_model->mark_end($live_session['id']);   
+            }
+        }   
+                 
    }
 }
