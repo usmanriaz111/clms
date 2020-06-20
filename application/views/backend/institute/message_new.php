@@ -149,7 +149,6 @@ function sync_courses(){
                 $("#courses").append(newState);
             });
             sync_classes();
-            sync_courses();
         },
         error : function(response) {
             console.log(response);
@@ -193,7 +192,6 @@ function sync_students(){
         dataType : "json",
         data : {"course_id" : id},
         success : function(response) {
-			debugger;
             var select = document.getElementById("receiver_student");
             var length = select.options.length;
             for (i = length-1; i >= 0; i--) {

@@ -47,6 +47,13 @@
 			</li>
 
 			<li class="side-nav-item">
+				<a href="<?php echo site_url('institute/sessions'); ?>" class="side-nav-link <?php if ($page_name == 'sessions')echo 'active';?>">
+					<i class="dripicons-archive"></i>
+					<span><?php echo get_phrase('live_sessions'); ?></span>
+				</a>
+			</li>
+
+			<li class="side-nav-item">
 				<a href="<?php echo site_url('institute/message'); ?>" class="side-nav-link <?php if ($page_name == 'message' || $page_name == 'message_new' || $page_name == 'message_read')echo 'active';?>">
 					<i class="dripicons-message"></i>
 					<span><?php echo get_phrase('message'); ?></span>

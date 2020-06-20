@@ -27,8 +27,6 @@ class Institute extends CI_Controller {
 
         if ($param1 == 'send_new') {
             $message_thread_code = $this->crud_model->send_new_private_message();
-            $this->session->set_flashdata('flash_message', get_phrase('message_sent!'));
-            redirect(site_url('institute/message/message_read/' . $message_thread_code), 'refresh');
         }
 
         if ($param1 == 'send_reply') {
@@ -301,6 +299,16 @@ class Institute extends CI_Controller {
         $this->load->view('backend/index', $page_data);
     }
 
+    public function sessions()
+    {
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $page_data['page_name'] = 'sessions';
+        $page_data['page_title'] = get_phrase('live_sessions');
+        $this->load->view('backend/index', $page_data);
+    }
+
     /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
   function profile($param1 = '', $param2 = '', $param3 = '')
   {
@@ -314,6 +322,7 @@ class Institute extends CI_Controller {
     }
     $page_data['page_name']  = 'manage_profile';
     $page_data['page_title'] = get_phrase('manage_profile');
+    $page_data['user_id'] = $this->session->userdata('user_id');
     $page_data['edit_data']  = $this->db->get_where('users', array(
       'id' => $this->session->userdata('user_id')
     ))->result_array();
