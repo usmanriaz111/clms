@@ -980,11 +980,13 @@ class Crud_model extends CI_Model
         $query_str = 'name='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins;
         $query_secret = 'createname='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins.$_ENV["shared_secret"];
         $sh1_checksum = sha1($query_secret);
+        // $call_back = 'http%3A%2F%2Flocalhost%3A3000%2Fadmin%2Fmycallback%3FmeetingID%3D'.$meeting_id.'&recordingmarks%3Dtrue';
         $name_str = 'https://dynamiclogicltd.info/bigbluebutton/api/create?'.$query_str.'&checksum='.$sh1_checksum;
         return $name_str;
         // $name='Test+Meeting&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444';
     } 
     function get_moderator_url($meeting_id,$current_instructor_name, $live_session_id){
+        $current_instructor_name =str_replace(' ', '-', $current_instructor_name);
         $name = 'fullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=333444&redirect=true';
         $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=333444&redirect=true'.$_ENV["shared_secret"];
         $sh1_checksum = sha1($query_secret);
@@ -998,6 +1000,7 @@ class Crud_model extends CI_Model
         return $name;
     } 
     function get_student_url($meeting_id,$current_instructor_name){
+        $current_instructor_name =str_replace(' ', '-', $current_instructor_name);
         $name = 'fullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true';
         $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true'.$_ENV["shared_secret"];
         // $query_secret = 'joinfullName='.$current_instructor_name.'&meetingID='.$meeting_id.'&password=111222&redirect=true'.$_ENV["shared_secret"];
