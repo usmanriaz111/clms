@@ -20,6 +20,7 @@
 <script>
     $(document).ready(function(){
         $('#calendar').fullCalendar({   //Removed function() from here
+            firstDay: 6,
         eventAfterRender: function(event, element) {
             $(element).tooltip({
                 title: event.description,

@@ -395,6 +395,45 @@ class Crud_model extends CI_Model
         }
     }
 
+    public function count_class_limit($institute_id = ''){
+        if ($institute_id > 0) {
+            $institute_courses_count = $this->count_institute_courses($institute_id);
+            $course_ids = array();
+
+            foreach ($institute_courses_count as $row) {
+                array_push($course_ids, $row['id']);
+            }
+
+            if (sizeof($course_ids)) {
+                $this->db->where_in('course_id', $course_ids);
+            } else {
+                return array();
+            }
+
+            return $this->db->get('classes');
+        }
+    }
+
+
+    public function count_institute_courses($institute_id)
+    {
+        $instructor_ids = array();
+
+        $this->db->where('institute_id', $institute_id);
+        $instructors = $this->db->get('users')->result_array();
+        foreach ($instructors as $instructor) {
+            array_push($instructor_ids, $instructor['id']);
+        }
+
+        if (sizeof($instructor_ids)) {
+            $this->db->where_in('user_id', $instructor_ids);
+        } else {
+            return array();
+        }
+
+        return $this->db->get('course')->result_array();
+    }
+
     public function edit_class($class_id = "")
     {
         // $validity_name = $this->check_name_duplication($this->input->post('name'));

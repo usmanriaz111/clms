@@ -1,7 +1,19 @@
 <?php
 		$plan_data = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
 		$plan = $this->db->get_where('plans', array('id' => $plan_data['plan_id']))->row_array();
+		$course = $this->crud_model->count_institute_courses($user_id);
+		$classes_count = $this->crud_model->count_class_limit($user_id)->num_rows();
+		$classes = $this->crud_model->count_class_limit($user_id)->result_array();
+		$students = 0;
+		foreach ($classes as $cls) {
+			$cl = $this->user_model->check_students_limit($cls['id']);
+           $students += $cl;
+		}
 ?>
+<?php
+// echo '<pre>', print_r($this->crud_model->count_class_limit($user_id)->result_array()), '</pre>';
+// die;
+?>	
 <div class="row ">
 	<div class="col-xl-12">
 		<div class="card">
@@ -122,34 +134,22 @@
 			<tr>
 				<td>Courses</td>
 				<td><?php echo $plan_data['courses']?></td>
-				<td><?php echo $plan_data['courses'] - $plan['courses']?></td>
+				<td><?php echo count($course)?></td>
 			</tr>
 			<tr>
 				<td>Classes</td>
 				<td><?php echo $plan_data['classes']?></td>
-				<td><?php echo $plan_data['classes'] - $plan['classes']?></td>
+				<td><?php echo $classes_count ?></td>
 			</tr>
 			<tr>
 				<td>Students</td>
-				<td><?php echo $plan_data['students']?></td>
-				<td><?php echo $plan_data['students'] - $plan['students']?></td>
+				<td><?php echo $plan_data['students'] * $plan_data['courses'] ?></td>
+				<td><?php echo $students ?></td>
 			</tr>
 			<tr>
 				<td>Live Minutes</td>
 				<td><?php echo $plan_data['course_minutes']?></td>
 				<td><?php echo $plan_data['course_minutes'] - $plan_data['remaining_minutes']?></td>
-			</tr>
-			<tr>
-				<td>Cloud Space</td>
-				<?php
-				$cloud_space = $plan_data['cloud_space']/1024;
-				$cloud_space = $cloud_space/1024;
-				$remaining_cloud_space = $plan_data['remaining_cloud_space']/1024;
-				$remaining_cloud_space = $remaining_cloud_space/1024;
-				$space = $cloud_space-$remaining_cloud_space;
-				?>
-				<td><?php echo round($cloud_space, 2)?>GB</td>
-				<td><?php echo round($space, 2)?>GB</td>
 			</tr>
 		</table>
 	</div>
