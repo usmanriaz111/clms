@@ -26,7 +26,7 @@ class Crud_model extends CI_Model
         {
             
             $start_date = $row['start_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
-            $start_time = gmdate('h:i a', $start_date);
+            $start_time = gmdate('h:i A', $start_date);
             $start_date = gmdate('Y-m-d h:i:s', $start_date);
             $end_date = $row['end_time'] + $row["timezone"][0] + $row["timezone"]*60*60;
             $end_date = gmdate('Y-m-d h:i:s', $end_date);

@@ -41,7 +41,6 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
     <div class="form-group">
         <label for="section_id"><?php echo get_phrase('lesson_type'); ?></label>
         <select class="form-control select2" data-toggle="select2" name="lesson_type" id="lesson_type" required onchange="show_lesson_type_form(this.value)">
-            <option value=""><?php echo get_phrase('select_type_of_lesson'); ?></option>
             <option value="video-url"><?php echo get_phrase('video'); ?></option>
             <option value="other-txt"><?php echo get_phrase('text_file'); ?></option>
             <option value="other-pdf"><?php echo get_phrase('pdf_file'); ?></option>

@@ -21,6 +21,7 @@
     $(document).ready(function(){
         $('#calendar').fullCalendar({   //Removed function() from here
             firstDay: 6,
+            timeFormat: 'HH:mm A',
         eventAfterRender: function(event, element) {
             $(element).tooltip({
                 title: event.description,
