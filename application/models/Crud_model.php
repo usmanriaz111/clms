@@ -947,7 +947,7 @@ class Crud_model extends CI_Model
         $query_str = 'name='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins;
         $query_secret = 'createname='.$name.'&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444&allowStartStopRecording=true&autoStartRecording=false&duration='.$mins.$_ENV["shared_secret"];
         $sh1_checksum = sha1($query_secret);
-        // $call_back = 'http%3A%2F%2Flocalhost%3A3000%2Fadmin%2Fmycallback%3FmeetingID%3D'.$meeting_id.'&recordingmarks%3Dtrue';
+        // $call_back = 'https%3A%2F%2Fdynamic-learn.com%2Fadmin%2Fmycallback%3FmeetingID%3D'.$meeting_id.'&recordingmarks%3Dtrue';
         $name_str = 'https://dynamiclogicltd.info/bigbluebutton/api/create?'.$query_str.'&checksum='.$sh1_checksum;
         return $name_str;
         // $name='Test+Meeting&meetingID='.$meeting_id.'&attendeePW=111222&moderatorPW=333444';
@@ -994,6 +994,7 @@ class Crud_model extends CI_Model
     //    $url = 'https://dynamiclogicltd.info/bigbluebutton/api/create?allowStartStopRecording=true&attendeePW=ap&autoStartRecording=false&meetingID=meeting-room-2256245&moderatorPW=mp&name=meeting-room-2256245&record=false&voiceBridge=73424&welcome=%3Cbr%3EWelcome+to+%3Cb%3E%25%25CONFNAME%25%25%3C%2Fb%3E%21&checksum=eb8582046c4c0575d04380b58fe42bf63e38f600';
     //    $institute_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=mp&redirect=true&checksum=3dd5db03cd89407e4206357ab811c55d55e0dc1a';
     //    $student_url = 'https://dynamiclogicltd.info/bigbluebutton/api/join?fullName=User+4576832&meetingID=meeting-room-2256245&password=ap&redirect=true&checksum=38a15d8d41739cc42c3ceedb85345a54ce4d826c';
+     
        $timeout = 10;
        $ch = curl_init();
        curl_setopt ( $ch, CURLOPT_URL, $url );
@@ -1003,6 +1004,7 @@ class Crud_model extends CI_Model
        $http_respond = trim( strip_tags( $http_respond ) );
        $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
        curl_close( $ch ); 
+      
        if ( ( $http_code == "200" ) || ( $http_code == "302" ) ) {
          $ch = curl_init();
          curl_setopt($ch, CURLOPT_URL, $url);

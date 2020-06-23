@@ -14,7 +14,23 @@
     $instructor = $this->db->get('users')->result_array();
     return $instructor;
   }
- 
+  public function switch_server_status(){
+    $ec2_server = new EC2_model();
+    $live_sessions = $this->Appointment_model->get_days_appointments();
+    $live_continued_sessions = $this->Appointment_model->get_continued_appointments();
+    if(!empty($live_sessions))
+    {
+        $ec2_server->switch_ec2_on_server();
+        echo 'server is going to on';
+    }
+    else{
+        echo 'server is going to off';
+        if (empty($live_continued_sessions)){
+            $ec2_server->switch_ec2_off_server(); 
+        }
+    }
+   
+  }
   public function index()
   {
            
@@ -23,7 +39,7 @@
         //     echo "This script can only be accessed via the command line" . PHP_EOL;
         //     return;
         // }
-        $ec2_server = new EC2_model();
+        // $ec2_server = new EC2_model();
         $live_sessions = $this->Appointment_model->get_days_appointments();
         $live_continued_sessions = $this->Appointment_model->get_continued_appointments();
         $this->update_continued_appointments($live_continued_sessions);    
@@ -31,7 +47,7 @@
         {
            
               // starting my ec2 server
-            $ec2_server->switch_ec2_on_server();
+            // $ec2_server->switch_ec2_on_server();
            
             sleep(10);
             foreach($live_sessions as $live_session)
@@ -40,7 +56,6 @@
                 $class_students = $this->user_model->get_class_enrolled_students($live_session['class_id'])->result_array();
                 $current_instructor=$this->get_instructor($live_session['class_id']);
                 $data= $this->crud_model->create_live_session($current_instructor[0]['first_name'],$class_students, $live_session);
-                
                 if ($data == -1 || empty($class_students)){
                     // admin email
                     $admin_email = 'fixyourcell.ca@gmail.com';
@@ -103,9 +118,9 @@
         else{
             echo 'no record of live session found';
             // stop ec2 server
-            if (empty($live_continued_sessions)){
-                $ec2_server->switch_ec2_off_server(); 
-            }
+            // if (empty($live_continued_sessions)){
+            //     $ec2_server->switch_ec2_off_server(); 
+            // }
         }
    }
    function destroy_appointments(){
