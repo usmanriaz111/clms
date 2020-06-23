@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label for="price"><?php echo get_phrase('plane_price'); ?></label>
-        <input class="form-control" type="text" name="price" id="price" required>
+        <input class="form-control" min="1" type="text" name="price" id="price" required>
     </div>
     <div class="form-group">
         <label for="courses"><?php echo get_phrase('no_of_courses'); ?></label>
@@ -33,7 +33,7 @@
     </div>
     <div class="form-group">
         <label for="course_minutes"><?php echo get_phrase('no_of_minutes_per_live_session_per_class'); ?></label>
-        <input class="form-control" type="text" min="1" name="course_minutes" id="course_minutes" required>
+        <input class="form-control" type="number" min="1" name="course_minutes" id="course_minutes" required>
     </div>
     <div class="form-group">
         <label for="students"><?php echo get_phrase('no_of_students'); ?></label>
@@ -41,7 +41,7 @@
     </div>
     <div class="form-group">
         <label for="cloud_space"><?php echo get_phrase('cloud_space'); ?></label>
-        <input class="form-control" min="1" type="text" name="cloud_space" id="cloud_space" required>
+        <input class="form-control" min="1" type="number" name="cloud_space" id="cloud_space" required>
     </div>
     <div class="form-group">
         <label for="cloud_space"><?php echo get_phrase('plan_type'); ?></label>
@@ -76,7 +76,7 @@
                 message: 'plan name is not valid',
                 validators: {
                     notEmpty: {
-                        message: 'plan name is required and cannot be empty'
+                        message: 'Plan name is required and cannot be empty'
                     }
                 }
             },
@@ -90,21 +90,21 @@
             courses: {
                 validators: {
                     notEmpty: {
-                        message: 'courses value is required and cannot be empty'
+                        message: 'Courses value is required and cannot be empty'
                     }
                 }
             },
             classes: {
                 validators: {
                     notEmpty: {
-                        message: 'classes value is required and cannot be empty'
+                        message: 'Classes value is required and cannot be empty'
                     }
                 }
             },
             live_minutes: {
                 validators: {
                     notEmpty: {
-                        message: 'live minutes value is required and cannot be empty'
+                        message: 'Live minutes value is required and cannot be empty'
                     }
                 }
             }

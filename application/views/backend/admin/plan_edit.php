@@ -17,38 +17,38 @@
 
                 <h4 class="header-title mb-3"><?php echo get_phrase('plan_edit_form'); ?></h4>
 
-<form action="<?php echo site_url('admin/plans/edit/'.$plan_id); ?>" method="post">
+<form action="<?php echo site_url('admin/plans/edit/'.$plan_id); ?>" class="editPlanForm" method="post">
 <div class="form-group">
         <label for="name"><?php echo get_phrase('plane_name'); ?></label>
         <input class="form-control" type="text" name="name" id="name" value="<?php echo $plan_data['name']; ?>" required>
     </div>
     <div class="form-group">
         <label for="price"><?php echo get_phrase('plane_price'); ?></label>
-        <input class="form-control" type="text" name="price" id="price" value="<?php echo $plan_data['price']; ?>" required>
+        <input class="form-control" min="1" type="text" name="price" id="price" value="<?php echo $plan_data['price']; ?>" required>
     </div>
     <div class="form-group">
         <label for="title"><?php echo get_phrase('no_of_courses'); ?></label>
-        <input class="form-control" type="number" name="courses" value="<?php echo $plan_data['courses']; ?>" id="courses" required>
+        <input class="form-control" min="1" type="number" name="courses" value="<?php echo $plan_data['courses']; ?>" id="courses" required>
     </div>
     <div class="form-group">
         <label for="classes"><?php echo get_phrase('no_of_classes_per_course'); ?></label>
-        <input class="form-control" type="number" name="classes" id="classes" value="<?php echo $plan_data['classes']; ?>" required>
+        <input class="form-control" min="1" type="number" name="classes" id="classes" value="<?php echo $plan_data['classes']; ?>" required>
     </div>
     <div class="form-group">
         <label for="title"><?php echo get_phrase('no_of_minutes_per_live_session_per_class'); ?></label>
-        <input class="form-control" type="text" name="course_minutes" value="<?php echo $plan_data['course_minutes']; ?>" id="course_minutes" required>
+        <input class="form-control" min="1" type="number" name="course_minutes" value="<?php echo $plan_data['course_minutes']; ?>" id="course_minutes" required>
     </div>
     <div class="form-group">
         <label for="title"><?php echo get_phrase('no_of_students'); ?></label>
-        <input class="form-control" type="number" name="students"  value="<?php echo $plan_data['students']; ?>" id="students" required>
+        <input class="form-control" min="1" type="number" name="students"  value="<?php echo $plan_data['students']; ?>" id="students" required>
     </div>
     <div class="form-group">
         <label><?php echo get_phrase('cloud_space'); ?></label>
-        <input class="form-control" type="text" name="cloud_space"  value="<?php echo $plan_data['cloud_space']; ?>" id="cloud_space" required>
+        <input class="form-control" min="1" type="number" name="cloud_space"  value="<?php echo $plan_data['cloud_space']; ?>" id="cloud_space" required>
     </div>
     <div class="form-group">
         <label for="cloud_space"><?php echo get_phrase('plan_type'); ?></label>
-        <select name="plan_type" class="form-control">
+        <select name="plan_type" class="form-control" required>
         <option value="paid" <?php if(strtolower($plan_data['type']) == 'paid') echo 'selected'; ?>>Paid</option>
         <option value="free" <?php if(strtolower($plan_data['type']) == 'free') echo 'selected'; ?>>Free</option>
         </select>
@@ -76,4 +76,52 @@
             $(this).removeAttr('checked');
         }
       });
+</script>
+<script>
+    $('.editPlanForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                message: 'plan name is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'Plan name is required and cannot be empty'
+                    }
+                }
+            },
+            price: {
+                validators: {
+                    notEmpty: {
+                        message: 'Plan price is required and cannot be empty'
+                    }
+                }
+            },
+            courses: {
+                validators: {
+                    notEmpty: {
+                        message: 'Courses value is required and cannot be empty'
+                    }
+                }
+            },
+            classes: {
+                validators: {
+                    notEmpty: {
+                        message: 'Classes value is required and cannot be empty'
+                    }
+                }
+            },
+            live_minutes: {
+                validators: {
+                    notEmpty: {
+                        message: 'Live minutes value is required and cannot be empty'
+                    }
+                }
+            }
+        },
+    });
 </script>
