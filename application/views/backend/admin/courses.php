@@ -215,11 +215,11 @@
                         <td class="text-center">
                            <?php if ($course['type'] == 'public'): ?>
                            <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/type_popup/mail_on_course_type_changing_modal/private/<?php echo $course['id']; ?>', '<?php echo get_phrase('inform_instructor'); ?>');">
-                           <input type="checkbox">Enable
+                           <input type="checkbox" checked>Enable
                            </a>
                            <?php else: ?>
                            <a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo base_url();?>modal/type_popup/mail_on_course_type_changing_modal/public/<?php echo $course['id']; ?>','<?php echo get_phrase('inform_instructor'); ?>');">
-                           <input type="checkbox" checked>Disabled
+                           <input type="checkbox"> Enable
                            </a>
                            <?php endif; ?>
                         </td>

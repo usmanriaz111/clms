@@ -32,8 +32,8 @@
                       <th><?php echo get_phrase('price'); ?></th>
                       <th><?php echo get_phrase('no_of_courses'); ?></th>
                       <th><?php echo get_phrase('no_of_classes'); ?></th>
-                      <th><?php echo get_phrase('no_of_live_minutes'); ?></th>
                       <th><?php echo get_phrase('no_of_students_per_class'); ?></th>
+                      <th><?php echo get_phrase('no_of_live_minutes'); ?></th>
                       <th><?php echo get_phrase('cloud_space'); ?></th>
                       <th><?php echo get_phrase('Institute'); ?></th>
                       <th><?php echo get_phrase('private'); ?></th>
@@ -44,9 +44,8 @@
                       <?php
                        foreach ($plans as $key => $plan): ?>
                        <?php
-                       if ($plan['institute_id'] != ''){
-                        $institute =  $this->user_model->get_institute($plan['institute_id']);
-                      }
+                       $institute = '';
+                       $institute = $this->db->get_where('purchased_plans', array('plan_id' => $plan['id']))->num_rows();
                        ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
@@ -54,15 +53,11 @@
                             <td><?php echo get_currency() .' '.$plan['price']; ?></td>
                             <td><?php echo $plan['courses']; ?></td>
                             <td><?php echo $plan['classes']; ?></td>
-                            <td><?php echo $plan['course_minutes']; ?></td>
                             <td><?php echo $plan['students']; ?></td>
+                            <td><?php echo $plan['course_minutes']; ?></td>
                             <td><?php echo $plan['cloud_space'].'GB'; ?></td>
                             <td><?php
-                            if($institute[0] == ''){
-                              echo '-';
-                            }else{
-                              echo $institute[0]['first_name'].' '.$institute[0]['last_name'];
-                            }
+                            echo $institute;
                             ?></td>
                             
                             <td><?php echo $plan['private']; ?></td>

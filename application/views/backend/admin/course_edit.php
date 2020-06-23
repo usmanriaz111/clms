@@ -395,6 +395,7 @@
                       <th>#</th>
                       <th><?php echo get_phrase('name'); ?></th>
                       <th><?php echo get_phrase('duration(min)'); ?></th>
+                      <th><?php echo get_phrase('class'); ?></th>
                       <th><?php echo get_phrase('start_time'); ?></th>
                       <th><?php echo get_phrase('end_time'); ?></th>
                     </tr>
@@ -408,11 +409,13 @@
                         $start_date = gmdate('Y-m-d h:i a', $start_date);
                         $end_date = $ls['end_time'] + $ls["timezone"][0] + $ls["timezone"]*60*60;
                         $end_date = gmdate('Y-m-d h:i a', $end_date);
+                        $class_name = $this->db->get_where('classes', array('id' => $ls['class_id']))->row_array();
                        ?>
                         <tr>
                             <td><?php echo $key+1; ?></td>
                             <td><?php echo get_phrase($ls['name']); ?></td>
                             <td><?php echo get_phrase($ls['mints']); ?></td>
+                            <td><?php echo get_phrase($class_name['name']); ?></td>
                             <td><?php echo get_phrase($start_date); ?></td>
                             <td><?php echo get_phrase($end_date); ?></td>
                             

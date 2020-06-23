@@ -14,7 +14,7 @@
 
                 <h4 class="header-title mb-3"><?php echo get_phrase('class_add_form'); ?></h4>
 
-<form action="<?php echo site_url('institute/classes/'.$param1.'add'); ?>" method="post">
+<form action="<?php echo site_url('institute/classes/'.$param1.'add'); ?>" class="addClassForm" method="post">
     <div class="form-group">
         <label for="title"><?php echo get_phrase('name'); ?><span class="required">*</span></label>
         <input class="form-control" type="text" name="name" id="name" required>
@@ -77,4 +77,38 @@ function sync_courses(){
 }
 
   });
+</script>
+<script>
+    $('.addClassForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                message: 'Class name is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'Class name is required and cannot be empty'
+                    }
+                }
+            },
+            instructors: {
+                validators: {
+                    notEmpty: {
+                        message: 'Class instructor is required and cannot be empty'
+                    }
+                }
+            },
+            courses: {
+                validators: {
+                    notEmpty: {
+                        message: 'Class course is required and cannot be empty'
+                    }
+                }
+            }
+        },
+    });
 </script>

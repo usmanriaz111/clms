@@ -270,3 +270,6 @@ body.show {
   padding-top: 100px;
 }
 
+.help-block{
+  color: red!important;
+}

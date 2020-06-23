@@ -1,3 +1,19 @@
+<?php
+		$plan_data = $this->db->get_where('purchased_plans', array('user_id' => $user_id))->row_array();
+		$plan = $this->db->get_where('plans', array('id' => $plan_data['plan_id']))->row_array();
+		$course = $this->crud_model->count_institute_courses($user_id);
+		$classes_count = $this->crud_model->count_class_limit($user_id)->num_rows();
+		$classes = $this->crud_model->count_class_limit($user_id)->result_array();
+		$students = 0;
+		foreach ($classes as $cls) {
+			$cl = $this->user_model->check_students_limit($cls['id']);
+           $students += $cl;
+		}
+?>
+<?php
+// echo '<pre>', print_r($this->crud_model->count_class_limit($user_id)->result_array()), '</pre>';
+// die;
+?>	
 <div class="row ">
 	<div class="col-xl-12">
 		<div class="card">
@@ -109,6 +125,33 @@
 				</div>
 			</form>
 		<?php endforeach; ?>
+		<table class="table mt-3">
+			<tr>
+				<th>Item</th>
+				<th><?php echo $plan['name']?> Plan</th>
+				<th>Used</th>
+			</tr>
+			<tr>
+				<td>Courses</td>
+				<td><?php echo $plan_data['courses']?></td>
+				<td><?php echo count($course)?></td>
+			</tr>
+			<tr>
+				<td>Classes</td>
+				<td><?php echo $plan_data['classes']?></td>
+				<td><?php echo $classes_count ?></td>
+			</tr>
+			<tr>
+				<td>Students</td>
+				<td><?php echo $plan_data['students'] * $plan_data['courses'] ?></td>
+				<td><?php echo $students ?></td>
+			</tr>
+			<tr>
+				<td>Live Minutes</td>
+				<td><?php echo $plan_data['course_minutes']?></td>
+				<td><?php echo $plan_data['course_minutes'] - $plan_data['remaining_minutes']?></td>
+			</tr>
+		</table>
 	</div>
 </div>
 </div>

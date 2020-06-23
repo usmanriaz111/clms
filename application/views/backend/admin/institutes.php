@@ -60,7 +60,7 @@ echo $page_title; ?>
                             <td><?php echo $plan['remaining_minutes']; ?></td>
                             <td><?php 
                             if($cloud_space > 0){
-                              echo $cloud_space .'GB'; 
+                              echo round($cloud_space, 2) .'GB'; 
                               $cloud_space = 0;
                             }else{
                               echo '0 GB'; 

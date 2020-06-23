@@ -1,5 +1,7 @@
 <?php
- $live_sessions = $this->crud_model->fetch_instructor_events();
+ $live_sessions = $this->crud_model->get_institute_live_sessions();
+//  echo '<pre>', print_r($live_sessions), '</pre>';
+//  die;
 ?>
 <div class="row ">
     <div class="col-xl-12">
