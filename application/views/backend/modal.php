@@ -65,9 +65,6 @@ function showLargeModal(url, header)
         <div class="modal-body ml-2 mr-2">
 
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" data-dismiss="modal"><?php echo get_phrase("close"); ?></button>
-        </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
 </div>

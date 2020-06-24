@@ -32,8 +32,11 @@
     <?php endforeach; ?>
     </select>
 </div>
+<div class="text-left">
+<button class="btn btn-secondary" data-dismiss="modal"><?php echo get_phrase("close"); ?></button>
+</div>
 <div class="text-right">
-<button type="button" class="btn btn-primary text-center" onclick="checkRequiredFields()"><?php echo get_phrase('submit'); ?></button>
+<button type="button" class="btn btn-primary text-right" onclick="checkRequiredFields()"><?php echo get_phrase('submit'); ?></button>
     </div>
 </form>
 

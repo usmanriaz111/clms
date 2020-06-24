@@ -14,7 +14,9 @@
   <input type="hidden" name="instructor_id" value="<?php echo $param5; ?>">
   <input type="hidden" name="price" value="<?php echo $param6; ?>">
   <input type="hidden" name="type" value="<?php echo $param2; ?>">
-
+<div class="float-left">
+<button class="btn btn-secondary" data-dismiss="modal"><?php echo get_phrase("close"); ?></button>
+</div>
   <div class="text-right">
       <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('send_mail'); ?></button>
   </div>

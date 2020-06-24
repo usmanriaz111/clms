@@ -93,7 +93,10 @@
                   <label for="datepicker" class="label-control" ><?php echo get_phrase('duration'); ?></label><br/>
                   <input type="number" name="duration" class="form-control" placeholder="45 Minutes" required>
                </div>
-               <div class="text-center">
+               <div class="float-left">
+               <button class="btn btn-secondary" data-dismiss="modal"><?php echo get_phrase("close"); ?></button>
+               </div>
+               <div class="text-right">
                   <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('submit'); ?></button>
                </div>
             </div>
