@@ -72,22 +72,9 @@ class User_model extends CI_Model {
 
 
     public function add_user($role_id = 2, $class_id = '') {
-        $email_check = $this->db->get_where('users', array('email' => $this->input->post('email')));
-        if ($email_check->num_rows() > 0)
-        {
-            $exist_email = $email_check->row_array();
-            if($exist_email['role_id'] == 2){
-            if ($class_id == ''){
-                $this->session->set_flashdata('flash_message', get_phrase('you_are_enrolled_into_any_class_please_contact_with_admnistrator'));
-            }else{
-                $data['class_id'] = $class_id;
-                $this->db->where('id', $exist_email['id']);
-                $this->db->update('users', $data);
-                $this->session->set_flashdata('flash_message', get_phrase('user_enrollment_update_successfully'));
-            }
-            }else{
-                $this->session->set_flashdata('flash_message', get_phrase('invalide_email_please_contact_with_admnistrator'));
-            }
+        $validity = $this->check_duplication('on_create', $this->input->post('email'));
+        if ($validity == false) {
+            $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
         }else {
 
             $data['first_name'] = html_escape($this->input->post('first_name'));

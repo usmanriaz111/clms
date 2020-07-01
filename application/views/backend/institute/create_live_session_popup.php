@@ -52,9 +52,9 @@
 	               <option value="-03:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
 	               <option value="-02:00">(GMT -2:00) Mid-Atlantic</option>
 	               <option value="-01:00">(GMT -1:00) Azores, Cape Verde Islands</option>
-	               <option value="+00:00" selected="selected">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+	               <option value="+00:00">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
 	               <option value="+01:00">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
-	               <option value="+02:00">(GMT +2:00) Kaliningrad, South Africa</option>
+	               <option value="+02:00" selected="selected">(GMT +2:00) Kaliningrad, South Africa</option>
 	               <option value="+03:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
 	               <option value="+03:50">(GMT +3:30) Tehran</option>
 	               <option value="+04:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
@@ -91,7 +91,7 @@
 
                <div class="form-group">
                   <label for="datepicker" class="label-control" ><?php echo get_phrase('duration'); ?></label><br/>
-                  <input type="number" name="duration" class="form-control" placeholder="45 Minutes" required>
+                  <input type="number" min="15" name="duration" class="form-control" placeholder="45 Minutes" required>
                </div>
                <div class="float-left">
                <button class="btn btn-secondary" data-dismiss="modal"><?php echo get_phrase("close"); ?></button>

@@ -2,6 +2,14 @@
 
 $my_courses = $this->user_model->my_courses()->result_array();
 
+$live_sessions_arr = array();
+foreach ($my_courses as $my_course) {
+    array_push($live_sessions_arr, $my_course['course_id']);
+}
+
+$this->db->where_in('course_id', $live_sessions_arr);
+$live_sessions = $this->db->get('live_sessions')->result_array();
+
 $categories = array();
 foreach ($my_courses as $my_course) {
     $course_details = $this->crud_model->get_course_by_id($my_course['course_id'])->row_array();
@@ -21,6 +29,7 @@ foreach ($my_courses as $my_course) {
                   <li><a href="<?php echo site_url('home/my_messages'); ?>"><?php echo get_phrase('my_messages'); ?></a></li>
                   <li><a href="<?php echo site_url('home/purchase_history'); ?>"><?php echo get_phrase('purchase_history'); ?></a></li>
                   <li><a href="<?php echo site_url('home/profile/user_profile'); ?>"><?php echo get_phrase('user_profile'); ?></a></li>
+                  <li><a href="<?php echo site_url('home/live_sessions'); ?>"><?php echo get_phrase('live_sessions'); ?></a></li>
                   <!-- <li><a href="<?php echo site_url('home/amazons3_setting_form/add_form'); ?>"><?php echo get_phrase('s3_settngs'); ?></a></li> -->
                 </ul>
             </div>

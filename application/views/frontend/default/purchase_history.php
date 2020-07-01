@@ -14,6 +14,7 @@ $purchase_history = $this->db->get('payment',$per_page, $this->uri->segment(3));
                     <li class="active"><a href="<?php echo site_url('home/purchase_history'); ?>"><?php echo get_phrase('purchase_history'); ?></a></li>
                     <!-- <li><a href="<?php echo site_url('home/amazons3_setting_form/add_form'); ?>"><?php echo get_phrase('s3_settngs'); ?></a></li> -->
                     <li><a href="<?php echo site_url('home/profile/user_profile'); ?>"><?php echo get_phrase('user_profile'); ?></a></li>
+                    <li><a href="<?php echo site_url('home/live_sessions'); ?>"><?php echo get_phrase('live_sessions'); ?></a></li>
                 </ul>
             </div>
         </div>

@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label for="price"><?php echo get_phrase('plane_price'); ?></label>
-        <input class="form-control" min="1" type="text" name="price" id="price" required>
+        <input class="form-control" min="0" type="text" name="price" id="price" required>
     </div>
     <div class="form-group">
         <label for="courses"><?php echo get_phrase('no_of_courses'); ?></label>

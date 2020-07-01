@@ -153,6 +153,17 @@ class Home extends CI_Controller {
         $this->load->view('frontend/'.get_frontend_settings('theme').'/index', $page_data);
     }
 
+    public function live_sessions() {
+
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('home'), 'refresh');
+        }
+
+        $page_data['page_name'] = "live_sessions";
+        $page_data['page_title'] = get_phrase("live_sessions");
+        $this->load->view('frontend/'.get_frontend_settings('theme').'/index', $page_data);
+    }
+
     public function my_messages($param1 = "", $param2 = "") {
         if ($this->session->userdata('user_login') != true && $this->session->userdata('admin_login') != true) {
             redirect(site_url('home'), 'refresh');

@@ -273,3 +273,6 @@ body.show {
 .help-block{
   color: red!important;
 }
+.fc-day-grid-event .fc-content{
+  text-align: left!important;
+}

@@ -159,6 +159,9 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
     </form>
     <script type="text/javascript">
     $(document).ready(function() {
+        $('#other').hide();
+        $('#video').show();
+        $('#amazon-s3').hide();
         initSelect2(['#section_id','#lesson_type', '#lesson_provider', '#lesson_provider_for_mobile_application']);
         initTimepicker();
         $('.preload').hide();
