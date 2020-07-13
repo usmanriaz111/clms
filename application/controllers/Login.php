@@ -34,24 +34,15 @@ class Login extends CI_Controller {
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
-            $role = $this->db->get_where('role', array('id' => $row->role_id))->row_array();
-            $role_name = strtolower($role['name']);
             $this->session->set_userdata('user_id', $row->id);
             $this->session->set_userdata('role_id', $row->role_id);
-            $this->session->set_userdata('role_name', $role_name);
             $this->session->set_userdata('role', get_user_role('user_role', $row->id));
             $this->session->set_userdata('name', $row->first_name.' '.$row->last_name);
             $this->session->set_flashdata('flash_message', get_phrase('welcome').' '.$row->first_name.' '.$row->last_name);
-            if ($role_name == 'admin') {
+            if ($row->role_id == 1) {
                 $this->session->set_userdata('admin_login', '1');
                 redirect(site_url('admin/dashboard'), 'refresh');
-            }else if($role_name == 'user'){
-                $this->session->set_userdata('user_login', '1');
-                redirect(site_url('home'), 'refresh');
-            }else if($role_name == 'institute'){
-                $this->session->set_userdata('user_login', '1');
-                redirect(site_url('admin/dashboard'), 'refresh');
-            }else if($role_name == 'instructor'){
+            }else if($row->role_id == 2){
                 $this->session->set_userdata('user_login', '1');
                 redirect(site_url('home'), 'refresh');
             }

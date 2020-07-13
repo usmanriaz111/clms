@@ -28,18 +28,10 @@ $user_details = $this->user_model->get_user($this->session->userdata('user_id'))
                         </div>
                     </form>
 
-                    <?php if (get_settings('allow_instructor') == 1 && ($this->session->userdata('role_id') == 4)): ?>
+                    <?php if (get_settings('allow_instructor') == 1): ?>
                         <div class="instructor-box menu-icon-box">
                             <div class="icon">
                                 <a href="<?php echo site_url('user'); ?>" style="border: 1px solid transparent; margin: 10px 10px; font-size: 14px; width: 100%; border-radius: 0;"><?php echo get_phrase('instructor'); ?></a>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (get_settings('allow_instructor') == 1 && ($this->session->userdata('role_id') == 3)): ?>
-                        <div class="instructor-box menu-icon-box">
-                            <div class="icon">
-                                <a href="<?php echo site_url('user'); ?>" style="border: 1px solid transparent; margin: 10px 10px; font-size: 14px; width: 100%; border-radius: 0;"><?php echo get_phrase('institute'); ?></a>
                             </div>
                         </div>
                     <?php endif; ?>

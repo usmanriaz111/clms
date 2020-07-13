@@ -229,20 +229,6 @@ CREATE TABLE `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `plans`;
-CREATE TABLE `plans` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `courses` int(255) NULL,
-  `course_minutes` decimal(65) NULL,
-  `students` int(255) NULL,
-  `cloud_space` decimal(65) NULL,
-  `institute_id` int(65) DEFAULT NULL,
-  `date_added` int(11) DEFAULT NULL,
-  `last_modified` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
 DROP TABLE IF EXISTS `section`;
 CREATE TABLE `section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -281,8 +267,6 @@ CREATE TABLE `users` (
   `social_links` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `biography` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `role_id` int(11) DEFAULT NULL,
-  `institute_id` int(11) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
   `date_added` int(11) DEFAULT NULL,
   `last_modified` int(11) DEFAULT NULL,
   `watch_history` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
@@ -1018,9 +1002,7 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `Bengali`) VALUES
 
 INSERT INTO `role` (`id`, `name`, `date_added`, `last_modified`) VALUES
 ('1', 'Admin', '1234567890', '1234567890'),
-('2', 'User', '1234567890', '1234567890'),
-('3', 'Institute', '1234567890', '1234567890'),
-('4', 'Instructor', '1234567890', '1234567890');
+('2', 'User', '1234567890', '1234567890');
 
 INSERT INTO `settings` (`id`, `key`, `value`) VALUES
 ('1', 'language', 'english'),

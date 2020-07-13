@@ -30,14 +30,7 @@ class User_model extends CI_Model {
         return $this->db->get('users');
     }
 
-    public function get_all_instructor($institute_id = 0) {
-        if ($institute_id > 0) {
-            $this->db->where('institute_id', $institute_id);
-        }
-        return $this->db->get('users')->result_array();
-    }
-
-    public function add_user($role_id = 2) {
+    public function add_user() {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));
         if ($validity == false) {
             $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
@@ -46,38 +39,12 @@ class User_model extends CI_Model {
             $data['last_name'] = html_escape($this->input->post('last_name'));
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
-            $user_type = html_escape($this->input->post('type'));
-            $instructor_logged_in = html_escape($this->input->post('current_instructor'));
-            if ($user_type == "institute"){
-                $data['type'] = $user_type;
-                if ($instructor_logged_in == "present"){
-                    $data['institute_id'] = $this->session->userdata('user_id');
-                }
-                else {
-                    $data['institute_id'] = html_escape($this->input->post('institutes'));      
-                }
-                
-            }elseif($user_type == "freelancer"){
-                $data['type'] = $user_type;
-                $data['institute_id'] = NULL;
-            }
-            else{
-                $data['type'] = NULL;
-                $data['institute_id'] = NULL;
-            }
             $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
             $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
             $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
             $data['social_links'] = json_encode($social_link);
             $data['biography'] = $this->input->post('biography');
-            if($role_id == 4){
-                $data['role_id'] = 4;
-            }elseif($role_id == 3){
-                $data['role_id'] = 3;
-            }
-            else{
-                $data['role_id'] = 2;
-            }
+            $data['role_id'] = 2;
             $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
             $data['wishlist'] = json_encode(array());
             $data['watch_history'] = json_encode(array());
@@ -103,16 +70,6 @@ class User_model extends CI_Model {
             $user_id = $this->db->insert_id();
             $this->upload_user_image($user_id);
             $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
-        }
-    }
-    
-
-    public function check_institute($institute){
-        $duplicate_email_check = $this->db->get_where('users', array('institute_id' => $institute));
-        if ($duplicate_email_check->num_rows() > 0) {
-            return false;
-        }else {
-            return true;
         }
     }
 
@@ -143,29 +100,6 @@ class User_model extends CI_Model {
         if ($validity) {
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
-            $user_type = html_escape($this->input->post('type'));
-            
-            //Association multiple instructors to institute
-            // $instructor_list = $this->input->post('instructors');
-            // foreach ($instructor_list as $instructor_id) {
-            //     $data_user['institute_id'] = $instructor_id;
-            //     $this->db->where('id', $instructor_id);
-            //     $this->db->update('users', $data);
-            // }
-            // $this->session->set_flashdata('flash_message', get_phrase('instructor_add_successfully'));
-            //end
-
-            if ($user_type == "institute"){
-                $data['type'] = $user_type;
-                $data['institute_id'] = html_escape($this->input->post('institutes'));
-            }elseif($user_type == "freelancer"){
-                $data['type'] = $user_type;
-                $data['institute_id'] = NULL;
-            }
-            else{
-                $data['type'] = NULL;
-                $data['institute_id'] = NULL;
-            }
 
             if (isset($_POST['email'])) {
                 $data['email'] = html_escape($this->input->post('email'));
@@ -279,32 +213,6 @@ class User_model extends CI_Model {
     }
 
 
-    public function get_institute($id = 0){
-        if ($id > 0){
-            $this->db->where('id', $id);
-            return $this->db->get('users')->result_array();
-        }else{
-            $this->db->where('role_id', 3);
-            return $this->db->get('users')->result_array();
-        }
-    }
-
-    public function get_instructors(){
-        $this->db->where('role_id', 4);
-            return $this->db->get('users')->result_array();
-    }
-
-    // public function get_unassigned_instructors(){
-    //     $checker = array(
-    //         'role_id' => 4,
-    //         'institute_id'  => NULL,
-    //         'type' => NULL
-    //       );
-
-    //       $result = $this->db->get_where('users', $checker)->result_array();
-    //       return $result;
-    // }
-
     public function get_instructor($id = 0) {
         if ($id > 0) {
             return $this->db->get_all_user($id);
@@ -346,20 +254,6 @@ class User_model extends CI_Model {
         );
         $result = $this->db->get_where('course', $checker)->num_rows();
         return $result;
-    }
-
-    public function get_number_of_instructor($institute_id) {
-        $checker = array(
-          'institute_id' => $institute_id,
-          'status'  => '1'
-        );
-        $result = $this->db->get_where('users', $checker)->num_rows();
-        return $result;
-    }
-
-    public function get_institute_name($institute_id){
-        $this->db->where('id', $institute_id);
-        return $this->db->get('users')->result();
     }
 
     public function get_user_image_url($user_id) {

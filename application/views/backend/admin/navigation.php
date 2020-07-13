@@ -43,16 +43,9 @@
 			</li>
 
 			<li class="side-nav-item">
-				<a href="<?php echo site_url('admin/institutes'); ?>" class="side-nav-link <?php if ($page_name == 'institutes' || $page_name == 'institute_add' || $page_name == 'institute_edit')echo 'active';?>">
-					<i class="mdi mdi-incognito"></i>
-					<span><?php echo get_phrase('institutes'); ?></span>
-				</a>
-			</li>
-
-			<li class="side-nav-item">
-				<a href="<?php echo site_url('admin/plans'); ?>" class="side-nav-link <?php if ($page_name == 'plans' || $page_name == 'plan_add' || $page_name == 'plan_edit')echo 'active';?>">
-					<i class="mdi mdi-incognito"></i>
-					<span><?php echo get_phrase('plans'); ?></span>
+				<a href="<?php echo site_url('admin/courses'); ?>" class="side-nav-link <?php if ($page_name == 'courses' || $page_name == 'course_add' || $page_name == 'course_edit')echo 'active';?>">
+					<i class="dripicons-archive"></i>
+					<span><?php echo get_phrase('courses'); ?></span>
 				</a>
 			</li>
 
@@ -60,13 +53,6 @@
 				<a href="<?php echo site_url('admin/instructors'); ?>" class="side-nav-link <?php if ($page_name == 'instructors' || $page_name == 'instructor_add' || $page_name == 'instructor_edit')echo 'active';?>">
 					<i class="mdi mdi-incognito"></i>
 					<span><?php echo get_phrase('instructors'); ?></span>
-				</a>
-			</li>
-
-			<li class="side-nav-item">
-				<a href="<?php echo site_url('admin/courses'); ?>" class="side-nav-link <?php if ($page_name == 'courses' || $page_name == 'course_add' || $page_name == 'course_edit')echo 'active';?>">
-					<i class="dripicons-archive"></i>
-					<span><?php echo get_phrase('courses'); ?></span>
 				</a>
 			</li>
 
